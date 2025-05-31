@@ -1,0 +1,61 @@
+name: jeff
+
+options:
+  bundleIdPrefix: io.github.takeiteasy
+  createIntermediateGroups: true
+  deploymentTarget:
+    macOS: "15.0"
+
+settings:
+  GCC_C_LANGUAGE_STANDARD: c11
+  CLANG_WARN_DOCUMENTATION_COMMENTS: false
+
+targets:
+  jeff:
+    type: application
+    platform: macOS
+    info:
+        path: Info.plist
+    sources:
+        - path: src/
+        - path: scenes/
+        - path: deps/
+          type: folder
+        - path: assets/
+          type: folder
+        - path: build/
+          type: folder
+        - path: README.md
+          type: folder
+        - path: project.yml
+          type: folder
+        - path: Makefile
+          type: folder
+    dependencies:
+        - target: cimgui
+        - sdk: Cocoa.framework
+        - sdk: Metal.framework
+        - sdk: MetalKit.framework
+        - sdk: Quartz.framework
+        - sdk: AudioToolbox.framework
+    settings:
+        HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps,
+                              $(PROJECT_DIR)/deps/cimgui,
+                              $(PROJECT_DIR)/src,
+                              $(PROJECT_DIR)/scenes,
+                              $(PROJECT_DIR)/build]
+        OTHER_CFLAGS: [-x objective-c,
+                       -DSOKOL_METAL,
+                       -fobjc-arc]
+  cimgui:
+    type: library.dynamic
+    platform: macOS
+    sources:
+        - path: deps/cimgui/
+          includes:
+            - "cimgui.*"
+        - path: deps/cimgui/imgui/
+          includes:
+            - "*.cpp"
+    settings:
+        HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps/cimgui]
