@@ -3,9 +3,17 @@
 > [!WARNING]
 > Work in progress
 
+**Jeff** is a framework + build system built off [sokol](https://github.com/floooh/sokol). If we use a pizza as a metaphore, sokol would be the dough base and jeff would be the cheese, sauce and toppings.
+
+I'd just like to interject for a moment. What you're refering to as sokol, is in fact, jeff/sokol, or as I've recently taken to calling it, jeff plus sokol. Sokol is not an engine unto itself, but rather another free component of a fully functioning jeff system made useful by the jeff corelibs, shell utilities and vital system components comprising a full engine as defined by POSIX.
+
+Many computer users run a modified version of the jeff system every day, without realizing it. Through a peculiar turn of events, the version of jeff which is widely used today is often called sokol, and many of its users are not aware that it is basically the jeff system, developed by the Jeff Project.
+
+There really is a sokol, and these people are using it, but it is just a part of the system they use. sokol is the kernel: the program in the system that allocates the machine's resources to the other programs that you run. The kernel is an essential part of an operating system, but useless by itself; it can only function in the context of a complete engine. Sokol is normally used in combination with the jeff operating system: the whole system is basically jeff with sokol added, or jeff/sokol. All the so-called sokol distributions are really distributions of jeff/sokol!
+
 ## Goals
 
-- [ ] Cross platform
+- [ ] Cross platform (see: [paul](https://github.com/takeiteasy/paul))
     - [X] Mac, Windows, Linux
     - [ ] Web
     - [ ] iOS
@@ -20,6 +28,7 @@
 - [X] Timers + events
 - [ ] Audio manager
 - [ ] Generate simple meshes (quad, plane, cube, sphere)
+- [ ] Basic collision detection
 - [ ] Basic networking (TCP/UDP/HTTP)
 - [ ] Asset loading
     - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)
