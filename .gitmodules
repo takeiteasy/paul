@@ -4,3 +4,6 @@
 [submodule "deps/paul"]
 	path = deps/paul
 	url = git@github.com:takeiteasy/paul.git
+[submodule "deps/cimgui"]
+	path = deps/cimgui
+	url = https://github.com/cimgui/cimgui.git
