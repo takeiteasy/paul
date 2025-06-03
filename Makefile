@@ -1,5 +1,7 @@
+CC=clang
 UNAME:=$(shell uname -s)
 PROG_EXT=
+LIB_EXT=dylib
 CFLAGS=-x objective-c -DSOKOL_METAL -fobjc-arc -framework Metal -framework Cocoa -framework MetalKit -framework Quartz -framework AudioToolbox
 ARCH:=$(shell uname -m)
 ifeq ($(ARCH),arm64)
@@ -30,10 +32,13 @@ SHADER_OUT=$@
 shaders: $(SHADER_OUTS)
 
 cimgui:
-	$(CC)++ -shared -fpic -Ideps/cimgui deps/cimgui/*.cpp deps/cimgui/imgui/*.cpp -o build/libcimgui.dylib
+	$(CC)++ -shared -fpic -Ideps/cimgui deps/cimgui/*.cpp deps/cimgui/imgui/*.cpp -o build/libcimgui.$(LIB_EXT)
 
-app: cimgui shaders
-	$(CC) $(INC) $(CFLAGS) $(SOURCE) $(SCENES) -Lbuild -lcimgui -o $(EXE)
+paul:
+	$(CC) -shared -fpic -x objective-c -fno-objc-arc -Ideps/paul deps/paul/native/macos/*.m -framework Cocoa -framework IOKit -o build/libpaul.$(LIB_EXT)
+
+app: paul cimgui shaders
+	$(CC) $(INC) $(CFLAGS) $(SOURCE) $(SCENES) -Lbuild -lcimgui -lpaul -o $(EXE)
 
 run: $(EXE)
 	./$(EXE)

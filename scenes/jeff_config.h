@@ -1,5 +1,5 @@
-#define JEFF_NO_CONFIG
-#define JEFF_NO_ARGUMENTS
+//#define JEFF_NO_CONFIG
+//#define JEFF_NO_ARGUMENTS
 //#define JEFF_NO_INPUT
 //#define JEFF_NO_COLORS
 //#define JEFF_NO_THREADS
