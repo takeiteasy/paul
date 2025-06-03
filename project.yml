@@ -33,6 +33,7 @@ targets:
           type: folder
     dependencies:
         - target: cimgui
+        - target: paul
         - sdk: Cocoa.framework
         - sdk: Metal.framework
         - sdk: MetalKit.framework
@@ -40,13 +41,12 @@ targets:
         - sdk: AudioToolbox.framework
     settings:
         HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps,
+                              $(PROJECT_DIR)/deps/paul,
                               $(PROJECT_DIR)/deps/cimgui,
                               $(PROJECT_DIR)/src,
                               $(PROJECT_DIR)/scenes,
                               $(PROJECT_DIR)/build]
-        OTHER_CFLAGS: [-x objective-c,
-                       -DSOKOL_METAL,
-                       -fobjc-arc]
+        OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fobjc-arc]
   cimgui:
     type: library.dynamic
     platform: macOS
@@ -59,3 +59,13 @@ targets:
             - "*.cpp"
     settings:
         HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps/cimgui]
+  paul:
+    type: library.dynamic
+    platform: macOS
+    sources:
+        - path: deps/paul/native/macos
+    dependencies:
+        - sdk: Cocoa.framework
+    settings:
+        HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps/paul]
+        OTHER_CFLAGS: [-x objective-c, -fno-objc-arc]

@@ -529,7 +529,7 @@ sg_image sg_empty_texture(unsigned int width, unsigned int height) {
         .width = width,
         .height = height,
         .pixel_format = SG_PIXELFORMAT_RGBA8,
-        .usage = SG_USAGE_STREAM
+        .usage.stream_update = true
     };
     return sg_make_image(&desc);
 }

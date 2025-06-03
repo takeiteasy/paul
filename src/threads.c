@@ -18,7 +18,7 @@
 #include "jeff.h"
 
 #ifndef JEFF_NO_THREADS
-static void* thread_pool_worker(void *arg) {
+static int thread_pool_worker(void *arg) {
     thread_pool_t *pool = (thread_pool_t*)arg;
     while (!pool->kill) {
         while (!pool->head && !pool->kill)
@@ -46,9 +46,9 @@ static void* thread_pool_worker(void *arg) {
     }
 
     pool->threadCount--;
-    paul_cnd_signal(pool->workingCond);
+    paul_cnd_signal(&pool->workingCond);
     paul_mtx_unlock(&pool->workMutex);
-    return NULL;
+    return 0;
 }
 
 thread_pool_t* thread_pool(size_t maxThreads) {
@@ -108,7 +108,7 @@ int thread_pool_push_work_priority(thread_pool_t *pool, void(*func)(void*), void
     work->arg = arg;
     work->func = func;
     work->next = NULL;
-    pthread_mutex_lock(&pool->workMutex);
+    paul_mtx_lock(&pool->workMutex);
     if (!pool->head) {
         pool->head = work;
         pool->tail = pool->head;
