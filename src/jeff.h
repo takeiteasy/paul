@@ -21,6 +21,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 extern "C" {
 #endif
 
+#define PAUL_NO_CLIPBOARD
+#ifdef JEFF_NO_THREADS
+#define PAUL_NO_THREADS
+#endif
 #include "paul/paul.h"
 
 #ifndef __has_include
@@ -126,7 +130,6 @@ typedef enum bool { false = 0, true = !false } bool;
 #include "sokol/sokol_audio.h"
 #include "sokol/sokol_log.h"
 #include "sokol/sokol_time.h"
-#include "pthread_shim.h"
 
 typedef struct scene_t scene_t;
 
@@ -543,10 +546,7 @@ void timer_emit_after(const char *name, int64_t ms, const char *event, void *use
 void remove_timer_named(const char *name);
 void clear_all_timers(void);
 
-void thread_sleep(const struct timespec *timeout);
-void thread_yield(void);
-struct timespec thread_timeout(unsigned int milliseconds);
-
+#ifndef JEFF_NO_THREADS
 typedef struct thread_work {
     void(*func)(void*);
     void *arg;
@@ -555,11 +555,9 @@ typedef struct thread_work {
 
 typedef struct thread_pool {
     thread_work_t *head, *tail;
-    pthread_mutex_t workMutex;
-    pthread_cond_t workCond;
-    pthread_cond_t workingCond;
-    size_t workingCount;
-    size_t threadCount;
+    paul_mtx_t workMutex;
+    paul_cnd_t workCond, workingCond;
+    size_t workingCount, threadCount;
     int kill;
 } thread_pool_t;
 
@@ -577,7 +575,7 @@ typedef struct thread_queue_entry {
 
 typedef struct thread_queue {
     thread_queue_entry_t *head, *tail;
-    pthread_mutex_t readLock, writeLock;
+    paul_mtx_t readLock, writeLock;
     size_t count;
 } thread_queue_t;
 
@@ -585,6 +583,7 @@ thread_queue_t* thread_queue(void);
 void thread_queue_push(thread_queue_t *queue, void *data);
 void* thread_queue_pop(thread_queue_t *queue);
 void thread_queue_destroy(thread_queue_t *queue);
+#endif
 
 #ifdef __cplusplus
 }
