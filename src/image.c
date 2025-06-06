@@ -21,8 +21,20 @@
 #define QOI_IMPLEMENTATION
 #include "qoi.h"
 
+#define __SWAP(a, b)  \
+    do                \
+    {                 \
+        int temp = a; \
+        a = b;        \
+        b = temp;     \
+    } while (0)
+#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define __CLAMP(X, MINX, MAXX) __MIN(__MAX((X), (MINX)), (MAXX))
+#define __D2R(a) ((a) * M_PI / 180.0)
+
 int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    return ((uint8_t)a << 24) | ((uint8_t)r << 16) | ((uint8_t)g << 8) | b;
+    return ((uint8_t)r << 24) | ((uint8_t)g << 16) | ((uint8_t)b << 8) | a;
 }
 
 int RGB(uint8_t r, uint8_t g, uint8_t b) {
@@ -38,35 +50,35 @@ int RGB1(uint8_t c) {
 }
 
 uint8_t Rgba(int c) {
-    return (uint8_t)((c >> 16) & 0xFF);
-}
-
-uint8_t rGba(int c) {
-    return (uint8_t)((c >>  8) & 0xFF);
-}
-
-uint8_t rgBa(int c) {
-    return (uint8_t)(c & 0xFF);
-}
-
-uint8_t rgbA(int c) {
     return (uint8_t)((c >> 24) & 0xFF);
 }
 
+uint8_t rGba(int c) {
+    return (uint8_t)((c >>  16) & 0xFF);
+}
+
+uint8_t rgBa(int c) {
+    return (uint8_t)((c >> 8) & 0xFF);
+}
+
+uint8_t rgbA(int c) {
+    return (uint8_t)(c & 0xFF);
+}
+
 int rGBA(int c, uint8_t r) {
-    return (c & ~0x00FF0000) | (r << 16);
+    return (c & ~0x00FF0000) | (r << 24);
 }
 
 int RgBA(int c, uint8_t g) {
-    return (c & ~0x0000FF00) | (g << 8);
+    return (c & ~0x0000FF00) | (g << 16);
 }
 
 int RGbA(int c, uint8_t b) {
-    return (c & ~0x000000FF) | b;
+    return (c & ~0x000000FF) | (b << 8);
 }
 
 int RGBa(int c, uint8_t a) {
-    return (c & ~0x00FF0000) | (a << 24);
+    return (c & ~0x00FF0000) | a;
 }
 
 image_t* image_empty(unsigned int w, unsigned int h) {
@@ -290,10 +302,6 @@ void image_resize(image_t *src, int nw, int nh) {
     memcpy(src, result, sizeof(image_t));
 }
 
-#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define __D2R(a) ((a) * M_PI / 180.0)
-
 image_t* image_rotated(image_t *src, float angle) {
     float theta = __D2R(angle);
     float c = cosf(theta), s = sinf(theta);
@@ -332,8 +340,6 @@ void image_rotate(image_t *src, float angle) {
     image_destroy(src);
     src = result;
 }
-
-#define __CLAMP(X, MINX, MAXX) __MIN(__MAX((X), (MINX)), (MAXX))
 
 image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh) {
     int ox = __CLAMP(rx, 0, src->width);
@@ -463,14 +469,6 @@ void image_draw_rectangle(image_t *img, int x, int y, int w, int h, int col, int
         vline(img, w, y, h, col);
     }
 }
-
-#define __SWAP(a, b)  \
-    do                \
-    {                 \
-        int temp = a; \
-        a = b;        \
-        b = temp;     \
-    } while (0)
 
 void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill) {
     if (y0 ==  y1 && y0 ==  y2)

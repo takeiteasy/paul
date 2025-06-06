@@ -21,10 +21,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 extern "C" {
 #endif
 
-#define PAUL_NO_CLIPBOARD
 #ifdef JEFF_NO_THREADS
 #define PAUL_NO_THREADS
 #endif
+#define PAUL_NO_CLIPBOARD
 #include "paul/paul.h"
 
 #ifndef __has_include
@@ -94,20 +94,6 @@ extern "C" {
 #define JEFF_RNG_SEED 0
 #endif
 
-#ifndef LANG_CPP
-#if defined(COMPILER_CL) && COMPILER_CL_YEAR < 2017
-#include <windef.h>
-#define bool BOOL
-#define true 1
-#define false 0
-#else
-#if defined(__STDC__) && __STDC_VERSION__ < 199901L
-typedef enum bool { false = 0, true = !false } bool;
-#else
-#include <stdbool.h>
-#endif // __STDC__
-#endif // COMPILER_CL
-#endif // LANG_CPP
 #include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
@@ -120,16 +106,15 @@ typedef enum bool { false = 0, true = !false } bool;
 #include <time.h>
 #include <limits.h>
 
-#if defined(__EMSCRIPTEN__) || defined(EMSCRIPTEN)
-#include <emscripten.h>
-#endif
-
 #include "sokol/sokol_gfx.h"
 #include "sokol/sokol_app.h"
 #include "sokol/sokol_glue.h"
 #include "sokol/sokol_audio.h"
 #include "sokol/sokol_log.h"
 #include "sokol/sokol_time.h"
+//#include "sokol/sokol_fetch.h"
+#include "sokol/util/sokol_color.h"
+#include "sokol/util/sokol_shape.h"
 
 typedef struct scene_t scene_t;
 
@@ -149,6 +134,7 @@ JEFF_SCENES
 
 void jeff_set_scene(scene_t *scene);
 void jeff_set_scene_named(const char *name);
+bool jeff_set_working_dir(const char *path);
 
 #define sg_make(OBJ)                                                           \
   _Generic((OBJ),                                                              \
@@ -219,13 +205,6 @@ void jeff_set_scene_named(const char *name);
       const sg_pipeline *: sg_query_pipeline_defaults,                         \
       const sg_attachments *: sg_query_attachments_defaults)(OBJ)
 
-#ifndef N_ARGS
-#define N_ARGS(...) _NARG_(__VA_ARGS__, _RSEQ())
-#define _NARG_(...) _SEQ(__VA_ARGS__)
-#define _SEQ(_1, _2, _3, _4, _5, _6, _7, _8, _9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_39,_40,_41,_42,_43,_44,_45,_46,_47,_48,_49,_50,_51,_52,_53,_54,_55,_56,_57,_58,_59,_60,_61,_62,_63,_64,_65,_66,_67,_68,_69,_70,_71,_72,_73,_74,_75,_76,_77,_78,_79,_80,_81,_82,_83,_84,_85,_86,_87,_88,_89,_90,_91,_92,_93,_94,_95,_96,_97,_98,_99,_100,_101,_102,_103,_104,_105,_106,_107,_108,_109,_110,_111,_112,_113,_114,_115,_116,_117,_118,_119,_120,_121,_122,_123,_124,_125,_126,_127,N,...) N
-#define _RSEQ() 127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
-#endif
-
 // returns sapp_width + scale
 int sapp_framebuffer_width(void);
 // returns sapp_height + scale
@@ -237,7 +216,6 @@ float sapp_framebuffer_heightf(void);
 // returns monitor scale factor (Mac) or 1.f (other platforms)
 float sapp_framebuffer_scalefactor(void);
 
-#ifndef JEFF_NO_INPUT
 typedef struct input_state {
     int keys[MAX_INPUT_STATE_KEYS];
     int modifiers;
@@ -252,25 +230,20 @@ bool sapp_was_key_pressed(int key);
 // Returns true if key is up and key was down last frame
 bool sapp_was_key_released(int key);
 // If any of the keys passed are not down returns false
-bool __sapp_are_keys_down(int n, ...);
-#define sapp_are_keys_down(...) __sapp_are_keys_down(N_ARGS(__VA_ARGS__), __VA_ARGS__)
+bool sapp_are_keys_down(int n, ...);
 // If none of the keys passed are down returns false
-bool __sapp_any_keys_down(int n, ...);
-#define sapp_any_keys_down(...) __sapp_any_keys_down(N_ARGS(__VA_ARGS__), __VA_ARGS__)
+bool sapp_any_keys_down(int n, ...);
 bool sapp_is_button_down(int button);
 bool sapp_is_button_held(int button);
 bool sapp_was_button_pressed(int button);
 bool sapp_was_button_released(int button);
-bool __sapp_are_buttons_down(int n, ...);
-#define sapp_are_buttons_down(...) __sapp_are_buttons_down(N_ARGS(__VA_ARGS__), __VA_ARGS__)
-bool __sapp_any_buttons_down(int n, ...);
-#define sapp_any_buttons_down(...) __sapp_any_buttons_down(N_ARGS(__VA_ARGS__), __VA_ARGS__)
+bool sapp_are_buttons_down(int n, ...);
+bool sapp_any_buttons_down(int n, ...);
 bool sapp_has_mouse_move(void);
 bool sapp_modified_equals(int mods);
 bool sapp_modifier_down(int mod);
 bool sapp_check_input(const char *str); // WIP
-void __sapp_create_input(input_state_t *dst, int modifiers, int n, ...);
-#define sapp_create_input(dst, mods ...) __sapp_create_input(dst, mods, N_ARGS(__VA_ARGS__), __VA_ARGS__)
+void sapp_create_input(input_state_t *dst, int modifiers, int n, ...);
 bool sapp_create_input_str(input_state_t *dst, const char *str);
 bool sapp_check_state(input_state_t *state);
 int sapp_cursor_x(void);
@@ -287,9 +260,7 @@ float sapp_scroll_y(void);
 // TODO: Add 'action' type to keymap_set (match sapp events)
 bool keymap_set(const char *input_str, const char *event, void *userdata);
 void keymap_unset(const char *event);
-#endif
 
-bool jeff_set_working_dir(const char *path);
 void vfs_mount(const char *path);
 bool vfs_exists(const char *filename);
 unsigned char *vfs_read(const char *filename, size_t *size);
@@ -308,152 +279,6 @@ uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned
 uint8_t* perlin_noise_map(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
 float perlin_noise(float x, float y, float z);
 // TODO: Poisson disc sampling
-
-#ifndef JEFF_NO_COLORS
-enum {
-    IndianRed = -3318692,
-    LightCoral = -1015680,
-    Salmon = -360334,
-    DarkSalmon = -1468806,
-    LightSalmon = -24454,
-    Crimson = -2354116,
-    Red = -65536,
-    FireBrick = -5103070,
-    DarkRed = -7667712,
-    Pink = -16181,
-    LightPink = -18751,
-    HotPink = -38476,
-    DeepPink = -60269,
-    MediumVioletRed = -3730043,
-    PaleVioletRed = -2396013,
-    Coral = -32944,
-    Tomato = -40121,
-    OrangeRed = -47872,
-    DarkOrange = -29696,
-    Orange = -23296,
-    Gold = -10496,
-    Yellow = -256,
-    LightYellow = -32,
-    LemonChiffon = -1331,
-    LightGoldenrodYellow = -329006,
-    PapayaWhip = -4139,
-    Moccasin = -6987,
-    PeachPuff = -9543,
-    PaleGoldenrod = -1120086,
-    Khaki = -989556,
-    DarkKhaki = -4343957,
-    Lavender = -1644806,
-    Thistle = -2572328,
-    Plum = -2252579,
-    Violet = -1146130,
-    Orchid = -2461482,
-    Fuchsia = -65281,
-    Magenta = -65281,
-    MediumOrchid = -4565549,
-    MediumPurple = -7114533,
-    RebeccaPurple = -10079335,
-    BlueViolet = -7722014,
-    DarkViolet = -7077677,
-    DarkOrchid = -6737204,
-    DarkMagenta = -7667573,
-    Purple = -8388480,
-    Indigo = -11861886,
-    SlateBlue = -9807155,
-    DarkSlateBlue = -12042869,
-    MediumSlateBlue = -8689426,
-    GreenYellow = -5374161,
-    Chartreuse = -8388864,
-    LawnGreen = -8586240,
-    Lime = -16711936,
-    LimeGreen = -13447886,
-    PaleGreen = -6751336,
-    LightGreen = -7278960,
-    MediumSpringGreen = -16713062,
-    SpringGreen = -16711809,
-    MediumSeaGreen = -12799119,
-    SeaGreen = -13726889,
-    ForestGreen = -14513374,
-    Green = -16744448,
-    DarkGreen = -16751616,
-    YellowGreen = -6632142,
-    OliveDrab = -9728477,
-    Olive = -8355840,
-    DarkOliveGreen = -11179217,
-    MediumAquamarine = -10039894,
-    DarkSeaGreen = -7357301,
-    LightSeaGreen = -14634326,
-    DarkCyan = -16741493,
-    Teal = -16744320,
-    Aqua = -16711681,
-    Cyan = -16711681,
-    LightCyan = -2031617,
-    PaleTurquoise = -5247250,
-    Aquamarine = -8388652,
-    Turquoise = -12525360,
-    MediumTurquoise = -12004916,
-    DarkTurquoise = -16724271,
-    CadetBlue = -10510688,
-    SteelBlue = -12156236,
-    LightSteelBlue = -5192482,
-    PowderBlue = -5185306,
-    LightBlue = -5383962,
-    SkyBlue = -7876885,
-    LightSkyBlue = -7876870,
-    DeepSkyBlue = -16728065,
-    DodgerBlue = -14774017,
-    CornflowerBlue = -10185235,
-    RoyalBlue = -12490271,
-    Blue = -16776961,
-    MediumBlue = -16777011,
-    DarkBlue = -16777077,
-    Navy = -16777088,
-    MidnightBlue = -15132304,
-    Cornsilk = -1828,
-    BlanchedAlmond = -5171,
-    Bisque = -6972,
-    NavajoWhite = -8531,
-    Wheat = -663885,
-    BurlyWood = -2180985,
-    Tan = -2968436,
-    RosyBrown = -4419697,
-    SandyBrown = -744352,
-    Goldenrod = -2448096,
-    DarkGoldenrod = -4684277,
-    Peru = -3308225,
-    Chocolate = -2987746,
-    SaddleBrown = -7650029,
-    Sienna = -6270419,
-    Brown = -5952982,
-    Maroon = -8388608,
-    White = -1,
-    Snow = -1286,
-    HoneyDew = -983056,
-    MintCream = -655366,
-    Azure = -983041,
-    AliceBlue = -984833,
-    GhostWhite = -460545,
-    WhiteSmoke = -657931,
-    SeaShell = -2578,
-    Beige = -657956,
-    OldLace = -133658,
-    FloralWhite = -1296,
-    Ivory = -16,
-    AntiqueWhite = -332841,
-    Linen = -331546,
-    LavenderBlush = -3851,
-    MistyRose = -6943,
-    Gainsboro = -2302756,
-    LightGray = -2894893,
-    Silver = -4144960,
-    DarkGray = -5658199,
-    Gray = -8355712,
-    DimGray = -9868951,
-    LightSlateGray = -8943463,
-    SlateGray = -9404272,
-    DarkSlateGray = -13676721,
-    Black = -16777216,
-};
-#endif // JEFF_NO_COLORS
 
 int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 int RGB(uint8_t r, uint8_t g, uint8_t b);
@@ -525,7 +350,9 @@ void audio_destroy(audio_t *audio);
 audio_t* audio_dupe(audio_t *audio);
 void audio_crop(audio_t *audio, int init_sample, int final_sample);
 audio_t* audio_cropped(audio_t *audio, int init_sample, int final_sample);
-float* audio_samples(audio_t *audio);
+float* audio_read_all_samples(audio_t *audio);
+float audio_sample(audio_t *audio, int frame);
+void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst);
 float audio_length(audio_t *audio);
 
 typedef void(*event_callback_t)(void*);

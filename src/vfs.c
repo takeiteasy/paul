@@ -68,6 +68,7 @@ typedef struct vfs_dir {
     struct vfs_dir *next;
 } vfs_dir;
 
+// TODO: Thread safety
 static vfs_dir *dir_head = NULL;
 
 bool jeff_set_working_dir(const char *path) {

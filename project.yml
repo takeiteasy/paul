@@ -23,6 +23,8 @@ targets:
           type: folder
         - path: assets/
           type: folder
+        - path: tools/
+          type: folder
         - path: build/
           type: folder
         - path: README.md
@@ -32,7 +34,6 @@ targets:
         - path: Makefile
           type: folder
     dependencies:
-        - target: cimgui
         - target: paul
         - sdk: Cocoa.framework
         - sdk: Metal.framework
@@ -41,24 +42,11 @@ targets:
         - sdk: AudioToolbox.framework
     settings:
         HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps,
-                              $(PROJECT_DIR)/deps/paul,
                               $(PROJECT_DIR)/deps/cimgui,
                               $(PROJECT_DIR)/src,
                               $(PROJECT_DIR)/scenes,
                               $(PROJECT_DIR)/build]
         OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fobjc-arc]
-  cimgui:
-    type: library.dynamic
-    platform: macOS
-    sources:
-        - path: deps/cimgui/
-          includes:
-            - "cimgui.*"
-        - path: deps/cimgui/imgui/
-          includes:
-            - "*.cpp"
-    settings:
-        HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps/cimgui]
   paul:
     type: library.dynamic
     platform: macOS

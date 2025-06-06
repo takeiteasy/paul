@@ -216,25 +216,58 @@ audio_t* audio_cropped(audio_t *audio, int init_sample, int final_sample) {
     return result;
 }
 
-float* audio_samples(audio_t *audio) {
-    float *samples = malloc(audio->count * audio->channels * sizeof(float));
-    for (unsigned int i = 0; i < audio->count * audio->channels; i++){
-        switch (audio->size) {
-            case 8:
-                samples[i] = (float)(((unsigned char*)audio->buffer)[i] - 127) / 256.f;
-                break;
-            case 16:
-                samples[i] = (float)(((short*)audio->buffer)[i]) / 32767.f;
-                break;
-            case 32:
-                samples[i] = ((float*)audio->buffer)[i];
-                break;
-            default:
-                free(samples);
-                return NULL;
-        }
+
+static float _sample(void *buffer, int size, int index, size_t max_index) {
+    if (index < 0 || index >= max_index)
+        return 0.f;
+    switch (size) {
+        case 8:
+            return (float)(((unsigned char*)buffer)[index] - 127) / 256.f;
+        case 16:
+            return (float)(((short*)buffer)[index]) / 32767.f;
+        case 32:
+            return ((float*)buffer)[index];
+        default:
+            return 0.f;
     }
+}
+
+float audio_sample(audio_t *audio, int frame) {
+    return _sample(audio->buffer, audio->size, frame, audio->count * audio->channels);
+}
+
+float* audio_read_all_samples(audio_t *audio) {
+    int sz = audio->count * audio->channels;
+    float *samples = malloc(sz * sizeof(float));
+    for (unsigned int i = 0; i < sz; i++)
+        samples[i] = _sample(audio->buffer, audio->size, i, sz);
     return samples;
+}
+
+#define __SWAP(a, b)  \
+    do                \
+    {                 \
+        int temp = a; \
+        a = b;        \
+        b = temp;     \
+    } while (0)
+#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define __CLAMP(X, MINX, MAXX) __MIN(__MAX((X), (MINX)), (MAXX))
+
+void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst) {
+    if (!dst)
+        return;
+    int sz = audio->count * audio->channels;
+    int _a = __CLAMP(start_frame, 0, sz);
+    int _b = __CLAMP(end_frame, 0, sz);
+    if (_a == _b)
+        return;
+    else if (_b > _a)
+        __SWAP(_a, _b);
+    int diff = _b - _a;
+    for (int i = 0; i < diff; i++)
+        dst[i] = _sample(audio->buffer, audio->size, _a + i, sz);
 }
 
 float audio_length(audio_t *audio) {

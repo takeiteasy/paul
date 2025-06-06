@@ -15,7 +15,6 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#ifndef JEFF_NO_INPUT
 #include "jeff.h"
 #include "garry.h"
 #include "table.h"
@@ -43,6 +42,7 @@ typedef struct keymap {
     void *userdata;
 } keymap_t;
 
+// TODO: Thread safety
 static table_t _keymap = {0};
 
 void init_keymap(void) {
@@ -107,7 +107,7 @@ bool sapp_was_key_released(int key) {
     return !sapp_is_key_down(key) && state.input_prev.keys[key].down;
 }
 
-bool __sapp_are_keys_down(int n, ...) {
+bool sapp_are_keys_down(int n, ...) {
     va_list args;
     va_start(args, n);
     int result = 1;
@@ -121,7 +121,7 @@ BAIL:
     return result;
 }
 
-bool __sapp_any_keys_down(int n, ...) {
+bool sapp_any_keys_down(int n, ...) {
     va_list args;
     va_start(args, n);
     int result = 0;
@@ -151,7 +151,7 @@ bool sapp_was_button_released(int button) {
     return !sapp_is_button_down(button) && state.input_prev.buttons[button].down;
 }
 
-bool __sapp_are_buttons_down(int n, ...) {
+bool sapp_are_buttons_down(int n, ...) {
     va_list args;
     va_start(args, n);
     int result = 1;
@@ -165,7 +165,7 @@ BAIL:
     return result;
 }
 
-bool __sapp_any_buttons_down(int n, ...) {
+bool sapp_any_buttons_down(int n, ...) {
     va_list args;
     va_start(args, n);
     int result = 0;
@@ -496,7 +496,7 @@ static int* _vaargs(int n, va_list args) {
 #define MIN(a, b)  ((a) < (b) ? (a) : (b))
 #define MAX(a, b)  ((a) > (b) ? (a) : (b))
 
-void __sapp_create_input(input_state_t *dst, int modifiers, int n, ...) {
+void sapp_create_input(input_state_t *dst, int modifiers, int n, ...) {
     dst->modifiers = modifiers;
     va_list args;
     va_start(args, n);
@@ -586,4 +586,3 @@ void clear_keymap(void) {
     table_free(&_keymap);
     _keymap = table_new();
 }
-#endif // JEFF_NO_INPUT
