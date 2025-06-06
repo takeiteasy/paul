@@ -28,7 +28,6 @@ There really is a sokol, and these people are using it, but it is just a part of
     - [ ] Input recording + playback
 - [X] Timers + events
 - [ ] Audio manager
-- [ ] Generate simple meshes (quad, plane, cube, sphere)
 - [ ] Basic collision detection
 - [ ] Basic networking (TCP/UDP/HTTP)
 - [ ] Asset loading
@@ -36,14 +35,12 @@ There really is a sokol, and these people are using it, but it is just a part of
         - [ ] Export image
     - [X] Audio (.wav, .qoa, .ogg, .mp3, .flac)
         - [ ] Export wave
-    - [ ] Fonts (truetype, opentype, aat)
-    - [ ] Models (.obj, .iqm, .fbx, .dae, .gltf)
-        - [ ] Meshes (.obj, .iqm, .fbx, .dae, .gltf)
+    - [ ] Fonts (truetype)
+    - [ ] Models (.obj, .iqm)
         - [ ] Materials (.mtl)
-        - [ ] Animations (.iqm, .fbx, .dae, .gltf)
-        - [ ] Scenes (.fbx, .dae, .gltf)
+    - [ ] Video (.mpg)
     - [X] Virtual filesystem (.zip)
-    - [ ] Async asset cache
+    - [ ] Cache
     
 ## LICENSE
 

@@ -19,6 +19,11 @@ targets:
     sources:
         - path: src/
         - path: scenes/
+        - path: deps/gamepad
+          includes:
+            - "Gamepad_private.c"
+            - "Gamepad_macosx.c"
+        - path: deps/paul/native/macos
         - path: deps/
           type: folder
         - path: assets/
@@ -34,8 +39,8 @@ targets:
         - path: Makefile
           type: folder
     dependencies:
-        - target: paul
         - sdk: Cocoa.framework
+        - sdk: IOKit.framework
         - sdk: Metal.framework
         - sdk: MetalKit.framework
         - sdk: Quartz.framework
@@ -45,16 +50,6 @@ targets:
                               $(PROJECT_DIR)/deps/cimgui,
                               $(PROJECT_DIR)/src,
                               $(PROJECT_DIR)/scenes,
+                              $(PROJECT_DIR)/deps/paul,
                               $(PROJECT_DIR)/build]
-        OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fobjc-arc]
-  paul:
-    type: library.dynamic
-    platform: macOS
-    sources:
-        - path: deps/paul/native/macos
-    dependencies:
-        - sdk: Cocoa.framework
-        - sdk: IOKit.framework
-    settings:
-        HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps/paul]
-        OTHER_CFLAGS: [-x objective-c, -fno-objc-arc]
+        OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fno-objc-arc]
