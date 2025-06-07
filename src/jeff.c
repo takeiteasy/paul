@@ -330,7 +330,6 @@ static void frame(void) {
 }
 
 static void event(const sapp_event *event) {
-    // TODO: ImGUI integration
 #ifdef JEFF_NO_INPUT
     state.scene_current->event(event);
 #else

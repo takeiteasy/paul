@@ -30,7 +30,7 @@
     } while (0)
 #define __MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define __MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define __CLAMP(X, MINX, MAXX) __MIN(__MAX((X), (MINX)), (MAXX))
+#define __CLAMP(v, low, high)  ((v) < (low) ? (low) : ((v) > (high) ? (high) : (v)))
 #define __D2R(a) ((a) * M_PI / 180.0)
 
 int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -270,7 +270,7 @@ image_t* image_dupe(image_t *src) {
     return result;
 }
 
-void image_pass_thru(image_t *img, int(*fn)(int x, int y, int col)) {
+void image_pass_thru(image_t *img, image_callback_t fn) {
     int x, y;
     for (x = 0; x < img->width; ++x)
         for (y = 0; y < img->height; ++y)

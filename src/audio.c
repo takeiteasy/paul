@@ -27,6 +27,17 @@
 #define DR_FLAC_NO_WIN32_IO
 #include "dr_flac.h"
 
+#define __SWAP(a, b)  \
+    do                \
+    {                 \
+        int temp = a; \
+        a = b;        \
+        b = temp;     \
+    } while (0)
+#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define __CLAMP(v, low, high)  ((v) < (low) ? (low) : ((v) > (high) ? (high) : (v)))
+
 audio_t* audio_load(const char *path) {
     size_t size = 0;
     unsigned char *data = vfs_read(path, &size);
@@ -243,17 +254,6 @@ float* audio_read_all_samples(audio_t *audio) {
         samples[i] = _sample(audio->buffer, audio->size, i, sz);
     return samples;
 }
-
-#define __SWAP(a, b)  \
-    do                \
-    {                 \
-        int temp = a; \
-        a = b;        \
-        b = temp;     \
-    } while (0)
-#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define __CLAMP(X, MINX, MAXX) __MIN(__MAX((X), (MINX)), (MAXX))
 
 void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst) {
     if (!dst)

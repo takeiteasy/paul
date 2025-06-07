@@ -21,19 +21,69 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 extern "C" {
 #endif
 
-#ifdef JEFF_NO_THREADS
-#define PAUL_NO_THREADS
-#endif
-#define PAUL_NO_CLIPBOARD
-#include "paul/paul.h"
-
 #ifndef __has_include
 #define __has_include(x) 1
+#endif
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif
+#ifndef __has_extension
+#define __has_extension __has_feature
+#endif
+
+#if defined(__cplusplus)
+#define JEFF_HAS_CONSTEXPR
+#else
+#if __STDC_VERSION__ >= 202000L
+#define JEFF_HAS_CONSTEXPR
+#endif
+#endif
+
+#if __STDC_VERSION__ >= 202311L
+#define JEFF_HAS_TYPEOF
+#elif defined(COMPILER_GCC)
+#if __GNUC__ > 10 || (__GNUC__ == 10 && __GNUC_MINOR__ >= 4)
+#define typeof(X) __typeof__((X))
+#define JEFF_HAS_TYPEOF
+#endif
+#elif defined(COMPILER_CLANG)
+#if __clang_major__ >= 15
+#define typeof(X) __typeof__((X))
+#define JEFF_HAS_TYPEOF
+#endif
+#endif
+
+#if __has_extension(c_generic_selections)
+#define JEFF_HAS_GENERICS
+#else
+#if defined(__STDC__) && __STDC_VERSION__ < 201112L
+#define JEFF_HAS_GENERICS
+#endif
+#endif
+
+#ifndef JEFF_HAS_GENERICS
+#error jeff requires _Generic support
+#endif
+
+#if defined(COMPILER_CLANG) || defined(COMPILER_GCC)
+#if __has_extension(blocks)
+#define JEFF_HAS_BLOCKS
+#endif
+#endif
+
+#if defined(JEFF_USE_BLOCKS) && !defined(JEFF_HAS_BLOCKS)
+#error This platform doesn't support blocks
 #endif
 
 #if __has_include("jeff_config.h")
 #include "jeff_config.h"
 #endif
+
+#ifdef JEFF_NO_THREADS
+#define PAUL_NO_THREADS
+#endif
+#define PAUL_NO_CLIPBOARD
+#include "paul/paul.h"
 
 #if !defined(JEFF_SCENES) && !defined(JEFF_FIRST_SCENE)
 #error "No scenes specified"
@@ -216,7 +266,7 @@ float sapp_framebuffer_heightf(void);
 // returns monitor scale factor (Mac) or 1.f (other platforms)
 float sapp_framebuffer_scalefactor(void);
 
-typedef struct input_state {
+typedef struct input_state_t {
     int keys[MAX_INPUT_STATE_KEYS];
     int modifiers;
 } input_state_t;
@@ -295,7 +345,7 @@ int RgBA(int c, uint8_t g);
 int RGbA(int c, uint8_t b);
 int RGBa(int c, uint8_t a);
 
-typedef struct {
+typedef struct image_t {
     unsigned int width, height;
     int *buffer;
 } image_t;
@@ -312,9 +362,16 @@ void image_pset(image_t *img, int x, int y, int col);
 int image_pget(image_t *img, int x, int y);
 void image_paste(image_t *dst, image_t *src, int x, int y);
 void image_clipped_paste(image_t *dst, image_t *src, int x, int y, int rx, int ry, int rw, int rh);
-void image_pass_thru(image_t *img, int(*fn)(int x, int y, int col));
 void image_resize(image_t *src, int nw, int nh);
 void image_rotate(image_t *src, float angle);
+
+#ifdef JEFF_USE_BLOCKS
+typedef int(^image_callback_t)(int x, int y, int col);
+#else
+typedef int(*image_callback_t)(int x, int y, int col);
+#endif
+
+void image_pass_thru(image_t *img, image_callback_t fn);
 
 image_t* image_dupe(image_t *src);
 image_t* image_resized(image_t *src, int nw, int nh);
@@ -334,7 +391,7 @@ sg_image sg_load_texture_from_memory(unsigned char *data, size_t data_size);
 sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int *height);
 sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, unsigned int *width, unsigned int *height);
 
-typedef struct Wave {
+typedef struct audio_t {
     unsigned int count;
     unsigned int rate;
     unsigned int size; // 8, 16, or 32
@@ -355,7 +412,13 @@ float audio_sample(audio_t *audio, int frame);
 void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst);
 float audio_length(audio_t *audio);
 
+#ifdef JEFF_USE_BLOCKS
+typedef void(^event_callback_t)(void*);
+typedef void(^timer_callback_t)(void*);
+#else
 typedef void(*event_callback_t)(void*);
+typedef void(*timer_callback_t)(void*);
+#endif
 
 void on_event(const char *name, event_callback_t cb, void *userdata);
 void on_event_once(const char *name, event_callback_t cb, void *userdata);
@@ -363,8 +426,6 @@ void remove_event_named(const char *name);
 int event_listener_count(const char *name);
 void emit_event(const char *name);
 void clear_all_events(void);
-
-typedef void(*timer_callback_t)(void*);
 
 void timer_every(const char *name, int64_t ms, timer_callback_t cb, void *userdata);
 void timer_emit_every(const char *name, int64_t ms, const char *event, void *userdata);
@@ -374,13 +435,13 @@ void remove_timer_named(const char *name);
 void clear_all_timers(void);
 
 #ifndef JEFF_NO_THREADS
-typedef struct thread_work {
+typedef struct thread_work_t {
     void(*func)(void*);
     void *arg;
     struct thread_work *next;
 } thread_work_t;
 
-typedef struct thread_pool {
+typedef struct thread_pool_t {
     thread_work_t *head, *tail;
     paul_mtx_t workMutex;
     paul_cnd_t workCond, workingCond;
@@ -395,12 +456,12 @@ int thread_pool_push_work(thread_pool_t *pool, void(*func)(void*), void *arg);
 int thread_pool_push_work_priority(thread_pool_t *pool, void(*func)(void*), void *arg);
 void thread_pool_join(thread_pool_t *pool);
 
-typedef struct thread_queue_entry {
+typedef struct thread_queue_entry_t {
     void *data;
-    struct thread_queue_entry *next;
+    struct thread_queue_entry_t *next;
 } thread_queue_entry_t;
 
-typedef struct thread_queue {
+typedef struct thread_queue_t {
     thread_queue_entry_t *head, *tail;
     paul_mtx_t readLock, writeLock;
     size_t count;
@@ -411,6 +472,29 @@ void thread_queue_push(thread_queue_t *queue, void *data);
 void* thread_queue_pop(thread_queue_t *queue);
 void thread_queue_destroy(thread_queue_t *queue);
 #endif
+
+enum jeff_easing_fn {
+    JEFF_EASING_LINEAR = 0,
+    JEFF_EASING_SINE,
+    JEFF_EASING_CIRCULAR,
+    JEFF_EASING_CUBIC,
+    JEFF_EASING_QUAD,
+    JEFF_EASING_EXPONENTIAL,
+    JEFF_EASING_BACK,
+    JEFF_EASING_BOUNCE,
+    JEFF_EASING_ELASTIC
+};
+
+enum jeff_easing_t {
+    EASE_IN = 1,
+    EASE_OUT,
+    EASE_INOUT
+};
+
+float easing(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
+bool float_cmp(float a, float b);
+bool double_cmp(double a, double b);
+float remap_range(float x, float in_min, float in_max, float out_min, float out_max);
 
 #ifdef __cplusplus
 }

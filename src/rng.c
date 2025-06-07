@@ -41,6 +41,9 @@
 
 #define PRNG_RAND_MAX UINT64_MAX
 
+#define __MAX(a, b)  ((a) > (b) ? (a) : (b))
+#define __CLAMP(v, low, high)  ((v) < (low) ? (low) : ((v) > (high) ? (high) : (v)))
+
 #ifdef JEFF_NO_THREADS
 static uint64_t _prng_s[_PRNG_RAND_SSIZE];
 static uint_fast16_t _prng_i;
@@ -125,20 +128,17 @@ int* rng_rand_sample(int length, int max) {
     return result;
 }
 
-#define MAX(a, b)  ((a) > (b) ? (a) : (b))
-#define CLAMP(v, low, high)  ((v) < (low) ? (low) : ((v) > (high) ? (high) : (v)))
-
 uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve) {
     size_t sz = width * height * sizeof(int);
     uint8_t *result = malloc(sz);
     memset(result, 0, sz);
     // Randomly fill the grid
-    fill_chance = CLAMP(fill_chance, 1, 99);
+    fill_chance = __CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
             result[y * width + x] = rng_rand_int_range(1, 100) < fill_chance;
     // Run cellular-automata on grid n times
-    for (int i = 0; i < MAX(smooth_iterations, 1); i++)
+    for (int i = 0; i < __MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++) {
                 // Count the cell's living neighbours
