@@ -1,6 +1,6 @@
 /* jeff/image.h -- https://github.com/takeiteasy/jeff
 
- Copyright (C) 2024  George Watson
+ Copyright (C) 2025  George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -564,4 +564,8 @@ sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, u
         *height = tmp->height;
     free(tmp);
     return texture;
+}
+
+sg_image sg_load_texture_from_image(image_t *img) {
+    return image_to_sg(img);
 }

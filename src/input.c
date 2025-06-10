@@ -1,6 +1,6 @@
 /* jeff/input.c -- https://github.com/takeiteasy/jeff
 
- Copyright (C) 2024  George Watson
+ Copyright (C) 2025  George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ typedef struct keymap {
 
 typedef struct sevent {
     const char *event;
-    input_event_callback_t cb;
+    sapp_event_callback_t cb;
 } sevent;
 
 // TODO: Thread safety
@@ -523,7 +523,7 @@ static bool sapp_create_input_str(input_state_t *dst, const char *str) {
     return true;
 }
 
-bool sapp_check_input_str(const char *str) {
+bool sapp_check_input_str_down(const char *str) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
@@ -544,7 +544,7 @@ bool sapp_check_input_str(const char *str) {
     return mod_check && key_check;
 }
 
-bool sapp_check_input(int modifiers, int n, ...) {
+bool sapp_check_input_down(int modifiers, int n, ...) {
     int *tmp = NULL;
     bool result = false;
     if (modifiers != 0)
@@ -559,6 +559,103 @@ bool sapp_check_input(int modifiers, int n, ...) {
     bool check = true;
     for (int i = 0; i < garry_count(args); i++)
         if (!sapp_is_key_down(tmp[i])) {
+            check = false;
+            break;
+        }
+    va_end(args);
+    if (check)
+        result = true;
+BAIL:
+    if (tmp)
+        garry_free(tmp);
+    return result;
+}
+
+bool sapp_check_input_str_released(const char *str) {
+    input_parser_t p;
+    memset(&p, 0, sizeof(input_parser_t));
+    p.original = p.offset = p.cursor = str;
+    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
+        return false;
+    bool mod_check = true;
+    bool key_check = true;
+    if (p.modifiers)
+        mod_check = sapp_modifier_equal(p.modifiers);
+    if (p.keys) {
+        for (int i = 0; i < garry_count(p.keys); i++)
+            if (!sapp_was_key_released(p.keys[i])) {
+                key_check = false;
+                break;
+            }
+        garry_free(p.keys);
+    }
+    return mod_check || key_check;
+}
+
+bool sapp_check_input_released(int modifiers, int n, ...) {
+    int *tmp = NULL;
+    bool result = false;
+    if (modifiers != 0)
+        if (!sapp_modifier_equal(modifiers))
+            goto BAIL;
+    if (!n)
+        goto BAIL;
+    va_list args;
+    va_start(args, n);
+    if (!(tmp = _vaargs(n, args)))
+        goto BAIL;
+    bool check = true;
+    for (int i = 0; i < garry_count(args); i++)
+        if (!sapp_was_key_released(tmp[i])) {
+            check = false;
+            break;
+        }
+    va_end(args);
+    if (check)
+        result = true;
+BAIL:
+    if (tmp)
+        garry_free(tmp);
+    return result;
+}
+
+bool sapp_check_input_str_up(const char *str) {
+    input_parser_t p;
+    memset(&p, 0, sizeof(input_parser_t));
+    p.original = p.offset = p.cursor = str;
+    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
+        return false;
+    bool mod_check = true;
+    bool key_check = true;
+    if (p.modifiers)
+        if ((mod_check = sapp_modifier_equal(p.modifiers)))
+            return false;
+    if (p.keys) {
+        for (int i = 0; i < garry_count(p.keys); i++)
+            if (sapp_is_key_down(p.keys[i])) {
+                key_check = false;
+                break;
+            }
+        garry_free(p.keys);
+    }
+    return mod_check && key_check;
+}
+
+bool sapp_check_input_up(int modifiers, int n, ...) {
+    int *tmp = NULL;
+    bool result = false;
+    if (modifiers != 0)
+        if (sapp_modifier_equal(modifiers))
+            goto BAIL;
+    if (!n)
+        goto BAIL;
+    va_list args;
+    va_start(args, n);
+    if (!(tmp = _vaargs(n, args)))
+        goto BAIL;
+    bool check = true;
+    for (int i = 0; i < garry_count(args); i++)
+        if (sapp_is_key_down(tmp[i])) {
             check = false;
             break;
         }
@@ -627,7 +724,7 @@ static bool sapp_check_state(input_state_t *istate) {
 static int _check(table_pair_t *pair, void *userdata) {
     keymap_t *keymap = (keymap_t*)pair->value;
     if (keymap && sapp_check_state(&keymap->input))
-        emit_event(pair->key.string);
+        event_emit(pair->key.string);
     return 1;
 }
 
@@ -648,7 +745,7 @@ void clear_keymap(void) {
     state.keymap = table_new();
 }
 
-void sapp_on_event_emit(sapp_event_type event_type, const char *event) {
+void sapp_emit_on_event(sapp_event_type event_type, const char *event) {
     sevent e = {
         .event = strdup(event),
         .cb = NULL
@@ -656,7 +753,7 @@ void sapp_on_event_emit(sapp_event_type event_type, const char *event) {
     garry_append(state.events[event_type], e);
 }
 
-void sapp_on_event(sapp_event_type event_type, input_event_callback_t callback) {
+void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback) {
     sevent e = {
         .event = NULL,
         .cb = callback
@@ -677,6 +774,11 @@ void check_event(sapp_event_type type) {
     for (int i = 0; i < garry_count(state.events[type]); i++) {
         sevent *event = &state.events[type][i];
         if (event->event != NULL)
-            emit_event(event->event);
+            event_emit(event->event);
     }
+}
+
+void sapp_remove_event(sapp_event_type type) {
+    if (state.events[type])
+        garry_free(state.events[type]);
 }

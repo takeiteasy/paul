@@ -23,10 +23,10 @@ There really is a sokol, and these people are using it, but it is just a part of
 - [X] PRNG + noise functions
 - [X] Optional input handling
     - [X] Key mapping
-    - [X] Integrate events + input
     - [ ] Gamepads
     - [ ] Input recording + playback
 - [X] Timers + events
+    - [ ] Async
 - [ ] Audio manager
 - [ ] Basic collision detection
 - [ ] Basic networking (TCP/UDP/HTTP)
@@ -41,6 +41,9 @@ There really is a sokol, and these people are using it, but it is just a part of
     - [ ] Video (.mpg)
     - [X] Virtual filesystem (.zip)
     - [ ] Cache
+        - [ ] Per scene
+        - [ ] Global
+        - [ ] Async
     
 ## LICENSE
 

@@ -156,11 +156,9 @@ void jeff_set_scene_named(const char *name) {
 }
 
 #ifndef JEFF_NO_CONFIG
-extern unsigned char* read_file(const char *path, size_t *length);
-
 // TODO: Add ini parser
 static int load_config(const char *path) {
-    unsigned char *data = read_file(path, NULL);
+    unsigned char *data = vfs_read(path, NULL);
     if (data)
         return 0;
 
@@ -258,6 +256,7 @@ extern void init_keymap(void);
 extern void init_events(void);
 extern void check_keymaps(void);
 extern void check_event(sapp_event_type type);
+extern void init_vfs(void);
 
 static void init(void) {
     sg_setup(&(sg_desc){
@@ -266,18 +265,15 @@ static void init(void) {
     });
 
     sapp_input_clear();
+#ifdef JEFF_WORKING_PATH
+    jeff_set_working_dir(JEFF_WORKING_PATH);
+#endif
+#ifndef JEFF_NO_VFS
+    init_vfs();
+#endif
     init_keymap();
     init_events();
     rng_srand(JEFF_RNG_SEED);
-#ifdef JEFF_DEFAULT_PATH
-    jeff_set_working_dir(JEFF_DEFAULT_PATH);
-#endif
-#ifdef JEFF_ASSET_PATH
-    vfs_mount(JEFF_ASSET_PATH);
-#endif
-
-#define _STRINGIFY(s) #s
-#define STRINGIFY(S) _STRINGIFY(S)
 
 #ifdef JEFF_FIRST_SCENE
     jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
@@ -313,8 +309,8 @@ static void frame(void) {
     if (state.next_scene) {
         if ((state.scene_prev = state.scene_current)) {
             state.scene_current->exit();
-            clear_all_events();
-            clear_all_timers();
+            events_clear();
+            timers_clear();
         }
         if ((state.scene_current = state.next_scene))
             state.scene_current->enter();

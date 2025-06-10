@@ -1,6 +1,6 @@
 /* jeff/events.c -- https://github.com/takeiteasy/jeff
 
- Copyright (C) 2024  George Watson
+ Copyright (C) 2025  George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 #include "jeff.h"
 #include "garry.h"
 #include "table.h"
-#include "match.c"
 
 typedef struct listener {
     const char *name;
@@ -65,36 +64,40 @@ static void add_event(const char *name, bool once, event_callback_t cb, void *us
     }
 }
 
-void on_event(const char *name, event_callback_t cb, void *userdata) {
+void event_listen(const char *name, event_callback_t cb, void *userdata) {
     add_event(name, false, cb, userdata);
 }
 
-void on_event_once(const char *name, event_callback_t cb, void *userdata) {
+void event_listen_once(const char *name, event_callback_t cb, void *userdata) {
     add_event(name, false, cb, userdata);
 }
 
-void remove_event_named(const char *name) {
-    if (table_has(&state.events, name)) {
-        listener_t *arr = NULL;
-        table_get(&state.events, name, (void**)&arr);
-        garry_free(arr);
-    }
+static int _remove_match(const char *name, void *value, void *userdata) {
+    table_t *_table = (table_t*)userdata;
+    table_del(_table, name);
+    garry_free(value);
+    return 1;
 }
 
-void emit_event(const char *name) {
-    if (!table_has(&state.events, name))
-        return;
-    listener_t *arr = NULL;
-    table_get(&state.events, name, (void**)&arr);
-    size_t name_len = strlen(name);
-    for (int i = garry_count(arr) - 1; i >= 0; i--) {
-        listener_t *l = &arr[i];
-        if (!strncmp(name, l->name, name_len)) {
-            l->cb(l->userdata);
-            if (l->once)
-                garry_remove_at(arr, i);
-        }
+void event_remove(const char *name) {
+    table_find(&state.events, name, _remove_match, NULL);
+}
+
+static int _fire_event(const char *name, void *value, void *userdata) {
+    table_t *_table = (table_t*)userdata;
+    listener_t *_listeners = (listener_t*)value;
+    for (int i = garry_count(_listeners) - 1; i >= 0; i--) {
+        _listeners[i].cb(_listeners[i].userdata);
+        if (_listeners[i].once)
+            garry_remove_at(_listeners, i);
     }
+    table_del(_table, name);
+    garry_free(value);
+    return 1;
+}
+
+void event_emit(const char *name) {
+    table_find(&state.events, name, _fire_event, NULL);
 }
 
 int _free_event(table_pair_t *pair, void *userdata) {
@@ -104,7 +107,7 @@ int _free_event(table_pair_t *pair, void *userdata) {
     return 1;
 }
 
-void clear_all_events(void) {
+void events_clear(void) {
     table_each(&state.events, _free_event, NULL);
     table_free(&state.events);
     state.events = table_new();
@@ -145,12 +148,8 @@ void timer_emit_after(const char *name, int64_t ms, const char *event, void *use
     add_timer(name, ms, false, NULL, event, userdata);
 }
 
-void remove_timer_named(const char *name) {
-    if (table_has(&state.timers, name)) {
-        timer_t *arr = NULL;
-        table_get(&state.timers, name, (void**)&arr);
-        garry_free(arr);
-    }
+void timer_remove(const char *name) {
+    table_find(&state.timers, name, _remove_match, NULL);
 }
 
 int _free_timer(table_pair_t *pair, void *userdata) {
@@ -160,7 +159,7 @@ int _free_timer(table_pair_t *pair, void *userdata) {
     return 1;
 }
 
-void clear_all_timers(void) {
+void timers_clear(void) {
     table_each(&state.timers, _free_timer, NULL);
     table_free(&state.timers);
     state.events = table_new();
@@ -175,7 +174,7 @@ static int _check(table_pair_t *pair, void *userdata) {
             if (timer->cb)
                 timer->cb(timer->userdata);
             else
-                emit_event(timer->event);
+                event_emit(timer->event);
             if (!timer->loop)
                 garry_remove_at(_timers, i);
             else

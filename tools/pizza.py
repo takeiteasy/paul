@@ -1,5 +1,4 @@
-#!/usr/bin/env
-# bootstrap.sh -- https://github.com/takeiteasy/jeff
+# pizza.py -- https://github.com/takeiteasy/jeff
 #
 # Copyright (C) 2025  George Watson
 #
@@ -15,13 +14,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-
-# TODO
-# Run pre-scripts
-# Delete/replace files
-# Delete self
-#
-# Python project creation script
-# Python new scene generation script
-# Add bootstrap to make

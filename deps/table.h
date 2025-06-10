@@ -81,6 +81,8 @@ table_t table_new(void);
 table_t table_make(table_hash hashfn, uint32_t capacity, uint64_t seed);
 void table_free(table_t *table);
 void table_each(table_t *table, int(*callback)(table_pair_t *pair, void*), void *userdata);
+void table_find(table_t *table, const char *wildcard, int(*callback)(const char*, void*, void*), void *userdata);
+bool table_search(table_t *table, const char *wildcard);
 
 // BEGIN HEADER
 
@@ -1473,6 +1475,76 @@ void table_each(table_t *table, int(*callback)(table_pair_t *pair, void*), void 
         else
             pair = imap_iterate(table->kmap.tree, &iter, 0);
     }
+}
+
+// Copyright 2020 Joshua J Baker. All rights reserved.
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file
+// https://github.com/tidwall/match.c/
+static bool match(const char *pat, long plen, const char *str, long slen)  {
+    if (plen < 0) plen = strlen(pat);
+    if (slen < 0) slen = strlen(str);
+    while (plen > 0) {
+        if (pat[0] == '\\') {
+            if (plen == 1) return false;
+            pat++; plen--;
+        } else if (pat[0] == '*') {
+            if (plen == 1) return true;
+            if (pat[1] == '*') {
+                pat++; plen--;
+                continue;
+            }
+            if (match(pat+1, plen-1, str, slen)) return true;
+            if (slen == 0) return false;
+            str++; slen--;
+            continue;
+        }
+        if (slen == 0) return false;
+        if (pat[0] != '?' && str[0] != pat[0]) return false;
+        pat++; plen--;
+        str++; slen--;
+    }
+    return slen == 0 && plen == 0;
+}
+
+void table_find(table_t *table, const char *wildcard, int(*callback)(const char*, void*, void*), void *userdata) {
+    imap_iter_t iter;
+    imap_pair_t pair = imap_iterate(table->kmap.tree, &iter, 1);
+    for (;;) {
+        if (!pair.slot)
+            break;
+        uint64_t tmp_key;
+        const char *str = NULL;
+        if (!unordered_map_get(&table->kmap, pair.x, &tmp_key))
+            continue;
+        str = (const char*)tmp_key;
+        if (!match(wildcard, 0, str, 0))
+            continue;
+        if (!unordered_map_get(&table->vmap, pair.x, &tmp_key))
+            continue;
+        void *tmp = (void*)tmp_key;
+        if (!callback(str, tmp, userdata))
+            break;
+        else
+            pair = imap_iterate(table->kmap.tree, &iter, 0);
+    }
+}
+
+bool table_search(table_t *table, const char *wildcard) {
+    imap_iter_t iter;
+    imap_pair_t pair = imap_iterate(table->kmap.tree, &iter, 1);
+    for (;;) {
+        if (!pair.slot)
+            goto NEXT;
+        uint64_t tmp_key;
+        if (!unordered_map_get(&table->kmap, pair.x, &tmp_key))
+            goto NEXT;
+        if (match(wildcard, 0, (const char*)tmp_key, 0))
+            return true;
+    NEXT:
+        pair = imap_iterate(table->kmap.tree, &iter, 0);
+    }
+    return false;
 }
 
 // BEGIN SOURCE

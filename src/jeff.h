@@ -101,12 +101,12 @@ extern "C" {
 #define DEFAULT_WINDOW_HEIGHT 480
 #endif
 
-#ifndef DEFAULT_WINDOW_TITLE
-#ifdef JEFF_NAME
-#define DEFAULT_WINDOW_TITLE JEFF_NAME
-#else
-#define DEFAULT_WINDOW_TITLE "jeff"
+#ifndef JEFF_NAME
+#define JEFF_NAME "jeff"
 #endif
+
+#ifndef DEFAULT_WINDOW_TITLE
+#define DEFAULT_WINDOW_TITLE JEFF_NAME
 #endif
 
 #ifndef MAX_TEXTURE_STACK
@@ -125,11 +125,14 @@ extern "C" {
 #define CLIPBOARD_SIZE 8192 // sapp default
 #endif
 
+#define _STRINGIFY(s) #s
+#define STRINGIFY(S) _STRINGIFY(S)
+
 #ifndef DEFAULT_CONFIG_NAME
 #ifdef PLATFORM_POSIX
-#define DEFAULT_CONFIG_NAME ".jeff.json"
+#define DEFAULT_CONFIG_NAME "." JEFF_NAME ".json"
 #else
-#define DEFAULT_CONFIG_NAME "jeff.json"
+#define DEFAULT_CONFIG_NAME JEFF_NAME ".json"
 #endif
 #endif
 #ifndef JEFF_CONFIG_PATH
@@ -306,16 +309,20 @@ float sapp_scroll_x(void);
 float sapp_scroll_y(void);
 
 #ifdef JEFF_USE_BLOCKS
-typedef int(^input_event_callback_t)(void*);
+typedef int(^sapp_event_callback_t)(void*);
 #else
-typedef int(*input_event_callback_t)(void*);
+typedef int(*sapp_event_callback_t)(void*);
 #endif
 
-bool sapp_check_input_str(const char *str);
-bool sapp_check_input(int modifiers, int n, ...);
-void sapp_on_event_emit(sapp_event_type event_type, const char *event);
-void sapp_on_event(sapp_event_type event_type, input_event_callback_t callback);
-// TODO: Import+export keymap JSON
+void sapp_emit_on_event(sapp_event_type event_type, const char *event);
+void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback);
+void sapp_remove_event(sapp_event_type event_type);
+bool sapp_check_input_str_down(const char *str);
+bool sapp_check_input_down(int modifiers, int n, ...);
+bool sapp_check_input_str_released(const char *str);
+bool sapp_check_input_released(int modifiers, int n, ...);
+bool sapp_check_input_str_up(const char *str);
+bool sapp_check_input_up(int modifiers, int n, ...);
 // TODO: Add action type (up/down)
 bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
 bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
@@ -400,6 +407,7 @@ sg_image sg_load_texture(const char *path);
 sg_image sg_load_texture_from_memory(unsigned char *data, size_t data_size);
 sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int *height);
 sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, unsigned int *width, unsigned int *height);
+sg_image sg_load_texture_from_image(image_t *img);
 
 typedef struct audio_t {
     unsigned int count;
@@ -430,19 +438,18 @@ typedef void(*event_callback_t)(void*);
 typedef void(*timer_callback_t)(void*);
 #endif
 
-void on_event(const char *name, event_callback_t cb, void *userdata);
-void on_event_once(const char *name, event_callback_t cb, void *userdata);
-void remove_event_named(const char *name);
-int event_listener_count(const char *name);
-void emit_event(const char *name);
-void clear_all_events(void);
+void event_listen(const char *name, event_callback_t cb, void *userdata);
+void event_listen_once(const char *name, event_callback_t cb, void *userdata);
+void event_remove(const char *name);
+void event_emit(const char *name);
+void events_clear(void);
 
 void timer_every(const char *name, int64_t ms, timer_callback_t cb, void *userdata);
 void timer_emit_every(const char *name, int64_t ms, const char *event, void *userdata);
 void timer_after(const char *name, int64_t ms, timer_callback_t cb, void *userdata);
 void timer_emit_after(const char *name, int64_t ms, const char *event, void *userdata);
-void remove_timer_named(const char *name);
-void clear_all_timers(void);
+void timer_remove(const char *name);
+void timers_clear(void);
 
 #ifndef JEFF_NO_THREADS
 typedef struct thread_work_t {
@@ -609,8 +616,8 @@ enum jeff_easing_t {
 };
 
 float easing(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
-bool float_cmp(float a, float b);
-bool double_cmp(double a, double b);
+bool flt_cmp(float a, float b);
+bool dbl_cmp(double a, double b);
 
 #ifdef __cplusplus
 }
