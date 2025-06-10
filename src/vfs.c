@@ -142,6 +142,6 @@ unsigned char *vfs_read(const char *filename, size_t *size) { // must free() aft
 }
 
 bool vfs_write(const char *filename, unsigned char *data, size_t size) {
-    // TODO: Write to all mounts, overwrite if existing
+    // TODO: Write to all mounts or first mount? overwrite existing?
     return false;
 }

@@ -36,27 +36,41 @@ typedef struct {
     } scroll;
 } sapp_input_t;
 
+typedef struct input_state_t {
+    int keys[MAX_INPUT_STATE_KEYS];
+    int modifiers;
+} input_state_t;
+
 typedef struct keymap {
     input_state_t input;
-    // TODO: Add action type
+    // TODO: Add action type (up/down)
     void *userdata;
 } keymap_t;
 
+typedef struct sevent {
+    const char *event;
+    input_event_callback_t cb;
+} sevent;
+
 // TODO: Thread safety
-static table_t _keymap = {0};
-
-void init_keymap(void) {
-    _keymap = table_new();
-    // TODO: Import/export keymap to JSON
-}
-
 static struct {
     sapp_input_t input_prev, input_current;
+    table_t keymap;
+    sevent* events[_SAPP_EVENTTYPE_NUM];
 } state;
 
 void sapp_input_clear(void) {
     memset(&state.input_prev,    0, sizeof(sapp_input_t));
     memset(&state.input_current, 0, sizeof(sapp_input_t));
+}
+
+void init_keymap(void) {
+    memset(&state.input_prev,    0, sizeof(sapp_input_t));
+    memset(&state.input_current, 0, sizeof(sapp_input_t));
+    memset(&state.keymap, 0, sizeof(table_t));
+    memset(&state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
+    state.keymap = table_new();
+    // TODO: Import/export keymap to JSON
 }
 
 void sapp_input_handler(const sapp_event* e) {
@@ -179,7 +193,7 @@ BAIL:
     return result;
 }
 
-bool sapp_modifiers_equal(int mods) {
+bool sapp_modifier_equal(int mods) {
     return state.input_current.modifier == mods;
 }
 
@@ -455,27 +469,6 @@ BAIL:
     return false;
 }
 
-bool sapp_check_input(const char *str) {
-    input_parser_t p;
-    memset(&p, 0, sizeof(input_parser_t));
-    p.original = p.offset = p.cursor = str;
-    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
-        return false;
-    bool mod_check = true;
-    bool key_check = true;
-    if (p.modifiers)
-        mod_check = sapp_modifiers_equal(p.modifiers);
-    if (p.keys) {
-        for (int i = 0; i < garry_count(p.keys); i++)
-            if (!sapp_is_key_down(p.keys[i])) {
-                key_check = false;
-                break;
-            }
-        garry_free(p.keys);
-    }
-    return mod_check && key_check;
-}
-
 static int* _vaargs(int n, va_list args) {
     int *result = NULL;
     for (int i = 0; i < n; i++) {
@@ -493,21 +486,24 @@ static int* _vaargs(int n, va_list args) {
     return result;
 }
 
-void sapp_create_input(input_state_t *dst, int modifiers, int n, ...) {
+static bool sapp_create_input(input_state_t *dst, int modifiers, int n, ...) {
     dst->modifiers = modifiers;
     va_list args;
     va_start(args, n);
     int *tmp = _vaargs(n, args);
-    if (tmp)
+    if (tmp) {
         garry_free(tmp);
+        return false;
+    }
     for (int i = 0; i < MAX_INPUT_STATE_KEYS; i++)
         dst->keys[i] = -1;
     int max = MIN(garry_count(tmp), MAX_INPUT_STATE_KEYS);
     memcpy(dst->keys, tmp, max * sizeof(int));
     garry_free(tmp);
+    return true;
 }
 
-bool sapp_create_input_str(input_state_t *dst, const char *str) {
+static bool sapp_create_input_str(input_state_t *dst, const char *str) {
     dst->modifiers = -1;
     for (int i = 0; i < MAX_INPUT_STATE_KEYS; i++)
         dst->keys[i] = -1;
@@ -527,11 +523,98 @@ bool sapp_create_input_str(input_state_t *dst, const char *str) {
     return true;
 }
 
-bool sapp_check_state(input_state_t *istate) {
+bool sapp_check_input_str(const char *str) {
+    input_parser_t p;
+    memset(&p, 0, sizeof(input_parser_t));
+    p.original = p.offset = p.cursor = str;
+    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
+        return false;
     bool mod_check = true;
     bool key_check = true;
-    if (istate->modifiers > 0)
-        mod_check = sapp_modifiers_equal(istate->modifiers);
+    if (p.modifiers)
+        mod_check = sapp_modifier_equal(p.modifiers);
+    if (p.keys) {
+        for (int i = 0; i < garry_count(p.keys); i++)
+            if (!sapp_is_key_down(p.keys[i])) {
+                key_check = false;
+                break;
+            }
+        garry_free(p.keys);
+    }
+    return mod_check && key_check;
+}
+
+bool sapp_check_input(int modifiers, int n, ...) {
+    int *tmp = NULL;
+    bool result = false;
+    if (modifiers != 0)
+        if (!sapp_modifier_equal(modifiers))
+            goto BAIL;
+    if (!n)
+        goto BAIL;
+    va_list args;
+    va_start(args, n);
+    if (!(tmp = _vaargs(n, args)))
+        goto BAIL;
+    bool check = true;
+    for (int i = 0; i < garry_count(args); i++)
+        if (!sapp_is_key_down(tmp[i])) {
+            check = false;
+            break;
+        }
+    va_end(args);
+    if (check)
+        result = true;
+BAIL:
+    if (tmp)
+        garry_free(tmp);
+    return result;
+}
+
+bool sapp_on_input_str(const char *input_str, const char *event, void *userdata) {
+    keymap_t *keymap = malloc(sizeof(keymap_t));
+    if (!sapp_create_input_str(&keymap->input, input_str)) {
+        free(keymap);
+        return false;
+    }
+    keymap->userdata = userdata;
+    table_set(&state.keymap, event, (void*)keymap);
+    return true;
+}
+
+bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...) {
+    keymap_t keymap;
+    va_list args;
+    va_start(args, n);
+    if (!sapp_create_input(&keymap.input, modifiers, n, args))
+        return false;
+    keymap.userdata = userdata;
+    keymap_t *arr = NULL;
+    if (table_has(&state.keymap, event)) {
+        table_get(&state.keymap, event, (void**)&arr);
+        garry_append(arr, keymap);
+    } else {
+        garry_append(arr, keymap);
+        table_set(&state.keymap, event, (void*)arr);
+    }
+    return true;
+}
+
+void sapp_remove_input_event(const char *event) {
+    if (table_has(&state.keymap, event)) {
+        keymap_t *old = NULL;
+        table_get(&state.keymap, event, (void**)&old);
+        if (old)
+            garry_free(old);
+        table_del(&state.keymap, event);
+    }
+}
+
+static bool sapp_check_state(input_state_t *istate) {
+    bool mod_check = true;
+    bool key_check = true;
+    if (istate->modifiers != 0)
+        mod_check = sapp_modifier_equal(istate->modifiers);
     if (istate->keys > 0)
         for (int i = 0; i < garry_count(istate->keys); i++)
             if (!sapp_is_key_down(istate->keys[i])) {
@@ -541,45 +624,59 @@ bool sapp_check_state(input_state_t *istate) {
     return mod_check && key_check;
 }
 
-bool keymap_set(const char *input_str, const char *event, void *userdata) {
-    keymap_t *keymap = malloc(sizeof(keymap_t));
-    if (!sapp_create_input_str(&keymap->input, input_str)) {
-        free(keymap);
-        return false;
-    }
-    keymap->userdata = userdata;
-    keymap_unset(event);
-    table_set(&_keymap, event, (void*)keymap);
-    return true;
-}
-
-void keymap_unset(const char *event) {
-    if (table_has(&_keymap, event)) {
-        keymap_t *old = NULL;
-        table_get(&_keymap, event, (void**)&old);
-        free(old);
-        table_del(&_keymap, event);
-    }
-}
-
 static int _check(table_pair_t *pair, void *userdata) {
     keymap_t *keymap = (keymap_t*)pair->value;
-    if (sapp_check_state(&keymap->input))
+    if (keymap && sapp_check_state(&keymap->input))
         emit_event(pair->key.string);
     return 1;
 }
 
 void check_keymaps(void) {
-    table_each(&_keymap, _check, NULL);
+    table_each(&state.keymap, _check, NULL);
 }
 
 int _free(table_pair_t *pair, void *userdata) {
-    free((keymap_t*)pair->value);
+    keymap_t *keymap = (keymap_t*)pair->value;
+    if (keymap)
+        garry_free(keymap);
     return 1;
 }
 
 void clear_keymap(void) {
-    table_each(&_keymap, _free, NULL);
-    table_free(&_keymap);
-    _keymap = table_new();
+    table_each(&state.keymap, _free, NULL);
+    table_free(&state.keymap);
+    state.keymap = table_new();
+}
+
+void sapp_on_event_emit(sapp_event_type event_type, const char *event) {
+    sevent e = {
+        .event = strdup(event),
+        .cb = NULL
+    };
+    garry_append(state.events[event_type], e);
+}
+
+void sapp_on_event(sapp_event_type event_type, input_event_callback_t callback) {
+    sevent e = {
+        .event = NULL,
+        .cb = callback
+    };
+    garry_append(state.events[event_type], e);
+}
+
+void clear_events(void) {
+    for (int i = 0; i < _SAPP_EVENTTYPE_NUM; i++)
+        if (state.events[i])
+            garry_free(state.events[i]);
+    memset(&state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
+}
+
+void check_event(sapp_event_type type) {
+    if (!state.events[type])
+        return;
+    for (int i = 0; i < garry_count(state.events[type]); i++) {
+        sevent *event = &state.events[type][i];
+        if (event->event != NULL)
+            emit_event(event->event);
+    }
 }

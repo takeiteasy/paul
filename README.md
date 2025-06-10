@@ -22,8 +22,8 @@ There really is a sokol, and these people are using it, but it is just a part of
 - [X] Optional config + cli arguments
 - [X] PRNG + noise functions
 - [X] Optional input handling
-    - [X] Key mapping (**WIP**)
-    - [ ] Integrate events + input
+    - [X] Key mapping
+    - [X] Integrate events + input
     - [ ] Gamepads
     - [ ] Input recording + playback
 - [X] Timers + events

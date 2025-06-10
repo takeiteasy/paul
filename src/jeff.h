@@ -276,11 +276,6 @@ float sapp_framebuffer_heightf(void);
 // returns monitor scale factor (Mac) or 1.f (other platforms)
 float sapp_framebuffer_scalefactor(void);
 
-typedef struct input_state_t {
-    int keys[MAX_INPUT_STATE_KEYS];
-    int modifiers;
-} input_state_t;
-
 bool sapp_is_key_down(int key);
 // This will be true if a key is held for more than 1 second
 // TODO: Make the duration configurable
@@ -300,12 +295,8 @@ bool sapp_was_button_released(int button);
 bool sapp_are_buttons_down(int n, ...);
 bool sapp_any_buttons_down(int n, ...);
 bool sapp_has_mouse_move(void);
-bool sapp_modified_equals(int mods);
+bool sapp_modifier_equals(int mods);
 bool sapp_modifier_down(int mod);
-bool sapp_check_input(const char *str); // WIP
-void sapp_create_input(input_state_t *dst, int modifiers, int n, ...);
-bool sapp_create_input_str(input_state_t *dst, const char *str);
-bool sapp_check_state(input_state_t *state);
 int sapp_cursor_x(void);
 int sapp_cursor_y(void);
 bool sapp_cursor_delta_x(void);
@@ -314,12 +305,21 @@ bool sapp_check_scrolled(void);
 float sapp_scroll_x(void);
 float sapp_scroll_y(void);
 
-// TODO: Import/export keymap to JSON
-// bool keymap_import(const char *path);
-// bool keymap_export(const char *path);
-// TODO: Add 'action' type to keymap_set (match sapp events)
-bool keymap_set(const char *input_str, const char *event, void *userdata);
-void keymap_unset(const char *event);
+#ifdef JEFF_USE_BLOCKS
+typedef int(^input_event_callback_t)(void*);
+#else
+typedef int(*input_event_callback_t)(void*);
+#endif
+
+bool sapp_check_input_str(const char *str);
+bool sapp_check_input(int modifiers, int n, ...);
+void sapp_on_event_emit(sapp_event_type event_type, const char *event);
+void sapp_on_event(sapp_event_type event_type, input_event_callback_t callback);
+// TODO: Import+export keymap JSON
+// TODO: Add action type (up/down)
+bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
+bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
+void sapp_remove_input_event(const char *event);
 
 void vfs_mount(const char *path);
 bool vfs_exists(const char *filename);
@@ -513,82 +513,77 @@ constexpr double SQRT2 = 1.41421356237309504880168872420969808;
 #define MEGABYTES(N) ((N) << 20)
 #define GIGABYTES(N) (((unsigned long long)(N)) << 30)
 #define TERABYTES(N) (((unsigned long long)(N)) << 40)
-#define THOUSAND(N) ((N) * 1000)
-#define MILLION(N) ((N) * 1000000)
-#define BILLION(N) (((unsigned long long)(N)) * 1000000000LL)
-#define DEGREES(N) (((double)(N)) * (180. / PI))
-#define RADIANS(N) (((double)(N)) * (PI / 180.))
-#define MIN(A, B) ((A) < (B) ? (A) : (B))
-#define MAX(A, B) ((A) > (B) ? (A) : (B))
-#define SWAP(A, B) ((A)^=(B)^=(A)^=(B))
+#define THOUSAND(N)  ((N) * 1000)
+#define MILLION(N)   ((N) * 1000000)
+#define BILLION(N)   (((unsigned long long)(N)) * 1000000000LL)
+#define DEGREES(N)   (((double)(N)) * (180. / PI))
+#define RADIANS(N)   (((double)(N)) * (PI / 180.))
+#define MIN(A, B)    ((A) < (B) ? (A) : (B))
+#define MAX(A, B)    ((A) > (B) ? (A) : (B))
+#define SWAP(A, B)   ((A)^=(B)^=(A)^=(B))
 #define REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
 #else // --- JEFF_HAS_TYPEOF ---
 #define BYTES(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        _n; })
 #define KILOBYTES(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        _n << 10; })
 #define MEGABYTES(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        _n << 20; })
 #define GIGABYTES(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        ((unsigned long long)_n) << 30; })
 #define TERABYTES(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        ((unsigned long long)_n) << 40; })
-
 #define THOUSAND(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        _n * 1000; })
 #define MILLION(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        _n * 1000000; })
 #define BILLION(n) \
-    ({ TYPEOF (n) _n = (n); \
+    ({ typeof (n) _n = (n); \
        static_assert(is_integral(_n)); \
        (unsigned long long)_n * 1000000000LL; })
-
 #define DEGREES(R) \
-    ({ TYPEOF (R) n = (R); \
+    ({ typeof (R) n = (R); \
        static_assert(is_floating_point(n)); \
         n * (180. / PI); })
 #define RADIANS(D) \
-    ({ TYPEOF (D) n = (D); \
+    ({ typeof (D) n = (D); \
        static_assert(is_integral(n)); \
        n * (PI / 180.); })
-
 #define MIN(a, b) \
     ({ \
-        TYPEOF (a) _min = (a); \
+        typeof (a) _min = (a); \
         _min = (b) < _min ? (b) : _min; \
         _min; \
     })
 #define MAX(a, b) \
     ({ \
-        TYPEOF (a) _max = (a); \
+        typeof (a) _max = (a); \
         _max = (b) > _max ? (b) : _max; \
         _max; \
     })
-
 #define SWAP(a, b) \
     do { \
-        TYPEOF (a) temp = (a); \
+        typeof (a) temp = (a); \
         (a) = (b); \
         (b) = temp; \
     } while (0)
-
 #define REMAP(x, in_min, in_max, out_min, out_max) \
     ({ \
-        TYPEOF (x) _x = ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min); \
+        typeof (x) _x = ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min); \
         _x; \
     })
 #endif // JEFF_HAS_TYPEOF
@@ -616,7 +611,6 @@ enum jeff_easing_t {
 float easing(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
 bool float_cmp(float a, float b);
 bool double_cmp(double a, double b);
-float remap_range(float x, float in_min, float in_max, float out_min, float out_max);
 
 #ifdef __cplusplus
 }

@@ -309,7 +309,3 @@ bool float_cmp(float a, float b) {
 bool double_cmp(double a, double b) {
     return fabs(a - b) <= EPSILON * fmax(1.f, fmax(fabs(a), fabs(b)));
 }
-
-float remap_range(float x, float in_min, float in_max, float out_min, float out_max) {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}

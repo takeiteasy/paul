@@ -255,7 +255,9 @@ extern void sapp_input_handler(const sapp_event* e);
 extern void sapp_input_update(void);
 extern void update_timers(void);
 extern void init_keymap(void);
+extern void init_events(void);
 extern void check_keymaps(void);
+extern void check_event(sapp_event_type type);
 
 static void init(void) {
     sg_setup(&(sg_desc){
@@ -265,6 +267,7 @@ static void init(void) {
 
     sapp_input_clear();
     init_keymap();
+    init_events();
     rng_srand(JEFF_RNG_SEED);
 #ifdef JEFF_DEFAULT_PATH
     jeff_set_working_dir(JEFF_DEFAULT_PATH);
@@ -275,7 +278,7 @@ static void init(void) {
 
 #define _STRINGIFY(s) #s
 #define STRINGIFY(S) _STRINGIFY(S)
-    
+
 #ifdef JEFF_FIRST_SCENE
     jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
 #else
@@ -320,6 +323,7 @@ static void frame(void) {
 }
 
 static void event(const sapp_event *event) {
+    check_event(event->type);
 #ifdef JEFF_NO_INPUT
     state.scene_current->event(event);
 #else

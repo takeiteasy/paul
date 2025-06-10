@@ -17,6 +17,7 @@
 
 #include "jeff.h"
 #include "garry.h"
+#include "table.h"
 #include "match.c"
 
 typedef struct listener {
@@ -37,8 +38,15 @@ typedef struct timer {
 } timer_t;
 
 // TODO: Thread safety
-static timer_t *_timers = NULL;
-static listener_t *_events = NULL;
+static struct {
+    table_t timers;
+    table_t events;
+} state;
+
+void init_events(void) {
+    memset(&state.timers, 0, sizeof(table_t));
+    memset(&state.events, 0, sizeof(table_t));
+}
 
 static void add_event(const char *name, bool once, event_callback_t cb, void *userdata) {
     listener_t listener = {
@@ -47,7 +55,14 @@ static void add_event(const char *name, bool once, event_callback_t cb, void *us
         .once = once,
         .userdata = userdata
     };
-    garry_append(_events, listener);
+    listener_t *arr = NULL;
+    if (table_has(&state.events, name)) {
+        table_get(&state.events, name, (void**)&arr);
+        garry_append(arr, listener);
+    } else {
+        garry_append(arr, listener);
+        table_set(&state.events, name, (void*)arr);
+    }
 }
 
 void on_event(const char *name, event_callback_t cb, void *userdata) {
@@ -59,34 +74,40 @@ void on_event_once(const char *name, event_callback_t cb, void *userdata) {
 }
 
 void remove_event_named(const char *name) {
-    size_t name_length = name ? strlen(name) : 0;
-    for (int i = garry_count(_events) - 1; i >= 0; i--)
-        if (name) {
-            if (match(name, name_length, _events[i].name, 0))
-                garry_remove_at(_events, i);
-        } else
-            if (!_events[i].name)
-                garry_remove_at(_events, i);
-    if (!garry_count(_events)) {
-        garry_free(_events);
-        _events = NULL;
+    if (table_has(&state.events, name)) {
+        listener_t *arr = NULL;
+        table_get(&state.events, name, (void**)&arr);
+        garry_free(arr);
     }
 }
 
 void emit_event(const char *name) {
-    for (int i = garry_count(_events) - 1; i >= 0; i--) {
-        listener_t *l = &_events[i];
-        l->cb(l->userdata);
-        if (l->once)
-            garry_remove_at(_events, i);
+    if (!table_has(&state.events, name))
+        return;
+    listener_t *arr = NULL;
+    table_get(&state.events, name, (void**)&arr);
+    size_t name_len = strlen(name);
+    for (int i = garry_count(arr) - 1; i >= 0; i--) {
+        listener_t *l = &arr[i];
+        if (!strncmp(name, l->name, name_len)) {
+            l->cb(l->userdata);
+            if (l->once)
+                garry_remove_at(arr, i);
+        }
     }
 }
 
+int _free_event(table_pair_t *pair, void *userdata) {
+    listener_t *arr = (listener_t*)pair->value;
+    if (arr)
+        garry_free(arr);
+    return 1;
+}
+
 void clear_all_events(void) {
-    if (_events) {
-        garry_free(_events);
-        _events = NULL;
-    }
+    table_each(&state.events, _free_event, NULL);
+    table_free(&state.events);
+    state.events = table_new();
 }
 
 static void add_timer(const char *name, int64_t duration, bool loop, timer_callback_t cb, const char *event, void *userdata) {
@@ -98,7 +119,14 @@ static void add_timer(const char *name, int64_t duration, bool loop, timer_callb
         .cb = cb,
         .event = event
     };
-    garry_append(_timers, timer);
+    timer_t *arr = NULL;
+    if (table_has(&state.timers, name)) {
+        table_get(&state.timers, name, (void**)&arr);
+        garry_append(arr, timer);
+    } else {
+        garry_append(arr, timer);
+        table_set(&state.timers, name, (void*)arr);
+    }
 }
 
 void timer_every(const char *name, int64_t ms, timer_callback_t cb, void *userdata) {
@@ -118,28 +146,28 @@ void timer_emit_after(const char *name, int64_t ms, const char *event, void *use
 }
 
 void remove_timer_named(const char *name) {
-    size_t name_length = name ? strlen(name) : 0;
-    for (int i = garry_count(_timers) - 1; i >= 0; i--)
-        if (name) {
-            if (match(name, name_length, _timers[i].name, 0))
-                garry_remove_at(_timers, i);
-        } else
-            if (!_timers[i].name)
-                garry_remove_at(_timers, i);
-    if (!garry_count(_timers)) {
-        garry_free(_timers);
-        _timers = NULL;
+    if (table_has(&state.timers, name)) {
+        timer_t *arr = NULL;
+        table_get(&state.timers, name, (void**)&arr);
+        garry_free(arr);
     }
+}
+
+int _free_timer(table_pair_t *pair, void *userdata) {
+    timer_t *arr = (timer_t*)pair->value;
+    if (arr)
+        garry_free(arr);
+    return 1;
 }
 
 void clear_all_timers(void) {
-    if (_timers) {
-        garry_free(_timers);
-        _timers = NULL;
-    }
+    table_each(&state.timers, _free_timer, NULL);
+    table_free(&state.timers);
+    state.events = table_new();
 }
 
-void update_timers(void) {
+static int _check(table_pair_t *pair, void *userdata) {
+    timer_t *_timers = (timer_t*)pair->value;
     for (int i = garry_count(_timers) - 1; i >= 0; i--) {
         timer_t *timer = &_timers[i];
         uint64_t diff = stm_ms(stm_diff(stm_now(), timer->start));
@@ -154,8 +182,9 @@ void update_timers(void) {
                 timer->start = stm_now();
         }
     }
-    if (!garry_count(_timers)) {
-        garry_free(_timers);
-        _timers = NULL;
-    }
+    return 1;
+}
+
+void update_timers(void) {
+    table_each(&state.timers, _check, NULL);
 }
