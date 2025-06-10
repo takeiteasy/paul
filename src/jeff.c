@@ -33,19 +33,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 #include <Cocoa/Cocoa.h>
 #endif
 
-#define _STRINGIFY(s) #s
-#define STRINGIFY(S) _STRINGIFY(S)
-
-#ifndef MAX_PATH
-#if defined(PLATFORM_MAC)
-#define MAX_PATH 255
-#elif defined(PLATFORM_WINDOWS)
-#define MAX_PATH 256
-#elif defined(PLATFORM_LINUX)
-#define MAX_PATH 4096
-#endif
-#endif
-
 #define SETTINGS                                                                                 \
     X("width", integer, width, DEFAULT_WINDOW_WIDTH, "Set window width")                         \
     X("height", integer, height, DEFAULT_WINDOW_HEIGHT, "Set window height")                     \
@@ -286,6 +273,9 @@ static void init(void) {
     vfs_mount(JEFF_ASSET_PATH);
 #endif
 
+#define _STRINGIFY(s) #s
+#define STRINGIFY(S) _STRINGIFY(S)
+    
 #ifdef JEFF_FIRST_SCENE
     jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
 #else

@@ -493,9 +493,6 @@ static int* _vaargs(int n, va_list args) {
     return result;
 }
 
-#define MIN(a, b)  ((a) < (b) ? (a) : (b))
-#define MAX(a, b)  ((a) > (b) ? (a) : (b))
-
 void sapp_create_input(input_state_t *dst, int modifiers, int n, ...) {
     dst->modifiers = modifiers;
     va_list args;

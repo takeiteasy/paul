@@ -21,6 +21,7 @@
 // - note: vfs_mount() order matters (the most recent the higher priority).
 
 #include "jeff.h"
+#undef SWAP
 #define ZIP_C
 #include "zip.h"
 #define DIR_C

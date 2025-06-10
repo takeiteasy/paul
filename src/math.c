@@ -302,8 +302,6 @@ float easing(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float b, 
     }
 }
 
-#define EPSILON .000001f
-
 bool float_cmp(float a, float b) {
     return fabsf(a - b) <= EPSILON * fmaxf(1.f, fmaxf(fabsf(a), fabsf(b)));
 }

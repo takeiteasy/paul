@@ -72,7 +72,7 @@ extern "C" {
 #endif
 
 #if defined(JEFF_USE_BLOCKS) && !defined(JEFF_HAS_BLOCKS)
-#error This platform doesn't support blocks
+#error This platform doesn't support blocks, undefine JEFF_USE_BLOCKS
 #endif
 
 #if __has_include("jeff_config.h")
@@ -85,12 +85,12 @@ extern "C" {
 #define PAUL_NO_CLIPBOARD
 #include "paul/paul.h"
 
-#if !defined(JEFF_SCENES) && !defined(JEFF_FIRST_SCENE)
-#error "No scenes specified"
-#endif
-
-#ifndef JEFF_SCENES
+#if !defined(JEFF_SCENES)
+#ifndef JEFF_FIRST_SCENE
+#error No scenes! Define JEFF_SCENES or JEFF_FIRST_SCENE first
+#else
 #define JEFF_SCENES X(JEFF_FIRST_SCENE)
+#endif
 #endif
 
 #ifndef DEFAULT_WINDOW_WIDTH
@@ -142,6 +142,16 @@ extern "C" {
 
 #ifndef JEFF_RNG_SEED
 #define JEFF_RNG_SEED 0
+#endif
+
+#ifndef MAX_PATH
+#if defined(PLATFORM_MAC)
+#define MAX_PATH 255
+#elif defined(PLATFORM_WINDOWS)
+#define MAX_PATH 256
+#elif defined(PLATFORM_LINUX)
+#define MAX_PATH 4096
+#endif
 #endif
 
 #include <stdint.h>
@@ -438,7 +448,7 @@ void clear_all_timers(void);
 typedef struct thread_work_t {
     void(*func)(void*);
     void *arg;
-    struct thread_work *next;
+    struct thread_work_t *next;
 } thread_work_t;
 
 typedef struct thread_pool_t {
@@ -472,6 +482,118 @@ void thread_queue_push(thread_queue_t *queue, void *data);
 void* thread_queue_pop(thread_queue_t *queue);
 void thread_queue_destroy(thread_queue_t *queue);
 #endif
+
+#ifdef JEFF_HAS_CONSTEXPR
+constexpr double PI = 3.14159265358979323846264338327950288;
+constexpr double TWO_PI = 6.28318530717958647692; // 2 * pi;
+constexpr double TAU = TWO_PI;
+constexpr double HALF_PI = 1.57079632679489661923132169163975144;     // pi / 2
+constexpr double QUARTER_PI = 0.785398163397448309615660845819875721; // pi / 4
+constexpr double PHI = 1.61803398874989484820;
+constexpr double INV_PHI = 0.61803398874989484820;
+constexpr double EULER = 2.71828182845904523536;
+constexpr double EPSILON = 0.000001;
+constexpr double SQRT2 = 1.41421356237309504880168872420969808;
+#else // -- JEFF_HAS_CONSTEXPR --
+#define PI 3.14159265358979323846264338327950288
+#define TWO_PI 6.28318530717958647692 // 2 * pi
+#define TAU TWO_PI
+#define HALF_PI 1.57079632679489661923132169163975144     // pi / 2
+#define QUARTER_PI 0.785398163397448309615660845819875721 // pi / 4
+#define PHI 1.61803398874989484820
+#define INV_PHI 0.61803398874989484820
+#define EULER 2.71828182845904523536
+#define EPSILON 0.000001f
+#define SQRT2 1.41421356237309504880168872420969808
+#endif // JEFF_HAS_CONSTEXPR
+
+#ifndef JEFF_HAS_TYPEOF
+#define BYTES(N) (N)
+#define KILOBYTES(N) ((N) << 10)
+#define MEGABYTES(N) ((N) << 20)
+#define GIGABYTES(N) (((unsigned long long)(N)) << 30)
+#define TERABYTES(N) (((unsigned long long)(N)) << 40)
+#define THOUSAND(N) ((N) * 1000)
+#define MILLION(N) ((N) * 1000000)
+#define BILLION(N) (((unsigned long long)(N)) * 1000000000LL)
+#define DEGREES(N) (((double)(N)) * (180. / PI))
+#define RADIANS(N) (((double)(N)) * (PI / 180.))
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+#define MAX(A, B) ((A) > (B) ? (A) : (B))
+#define SWAP(A, B) ((A)^=(B)^=(A)^=(B))
+#define REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
+#else // --- JEFF_HAS_TYPEOF ---
+#define BYTES(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       _n; })
+#define KILOBYTES(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       _n << 10; })
+#define MEGABYTES(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       _n << 20; })
+#define GIGABYTES(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       ((unsigned long long)_n) << 30; })
+#define TERABYTES(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       ((unsigned long long)_n) << 40; })
+
+#define THOUSAND(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       _n * 1000; })
+#define MILLION(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       _n * 1000000; })
+#define BILLION(n) \
+    ({ TYPEOF (n) _n = (n); \
+       static_assert(is_integral(_n)); \
+       (unsigned long long)_n * 1000000000LL; })
+
+#define DEGREES(R) \
+    ({ TYPEOF (R) n = (R); \
+       static_assert(is_floating_point(n)); \
+        n * (180. / PI); })
+#define RADIANS(D) \
+    ({ TYPEOF (D) n = (D); \
+       static_assert(is_integral(n)); \
+       n * (PI / 180.); })
+
+#define MIN(a, b) \
+    ({ \
+        TYPEOF (a) _min = (a); \
+        _min = (b) < _min ? (b) : _min; \
+        _min; \
+    })
+#define MAX(a, b) \
+    ({ \
+        TYPEOF (a) _max = (a); \
+        _max = (b) > _max ? (b) : _max; \
+        _max; \
+    })
+
+#define SWAP(a, b) \
+    do { \
+        TYPEOF (a) temp = (a); \
+        (a) = (b); \
+        (b) = temp; \
+    } while (0)
+
+#define REMAP(x, in_min, in_max, out_min, out_max) \
+    ({ \
+        TYPEOF (x) _x = ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min); \
+        _x; \
+    })
+#endif // JEFF_HAS_TYPEOF
+
+#define CLAMP(x, low, high) MIN(MAX(x, low), high)
 
 enum jeff_easing_fn {
     JEFF_EASING_LINEAR = 0,

@@ -21,18 +21,6 @@
 #define QOI_IMPLEMENTATION
 #include "qoi.h"
 
-#define __SWAP(a, b)  \
-    do                \
-    {                 \
-        int temp = a; \
-        a = b;        \
-        b = temp;     \
-    } while (0)
-#define __MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define __MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define __CLAMP(v, low, high)  ((v) < (low) ? (low) : ((v) > (high) ? (high) : (v)))
-#define __D2R(a) ((a) * M_PI / 180.0)
-
 int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     return ((uint8_t)r << 24) | ((uint8_t)g << 16) | ((uint8_t)b << 8) | a;
 }
@@ -303,7 +291,7 @@ void image_resize(image_t *src, int nw, int nh) {
 }
 
 image_t* image_rotated(image_t *src, float angle) {
-    float theta = __D2R(angle);
+    float theta = RADIANS(angle);
     float c = cosf(theta), s = sinf(theta);
     float r[3][2] = {
         { -src->height * s, src->height * c },
@@ -312,11 +300,11 @@ image_t* image_rotated(image_t *src, float angle) {
     };
 
     float mm[2][2] = {{
-        __MIN(0, __MIN(r[0][0], __MIN(r[1][0], r[2][0]))),
-        __MIN(0, __MIN(r[0][1], __MIN(r[1][1], r[2][1])))
+        MIN(0, MIN(r[0][0], MIN(r[1][0], r[2][0]))),
+        MIN(0, MIN(r[0][1], MIN(r[1][1], r[2][1])))
     }, {
-        (theta > 1.5708  && theta < 3.14159 ? 0.f : __MAX(r[0][0], __MAX(r[1][0], r[2][0]))),
-        (theta > 3.14159 && theta < 4.71239 ? 0.f : __MAX(r[0][1], __MAX(r[1][1], r[2][1])))
+        (theta > 1.5708  && theta < 3.14159 ? 0.f : MAX(r[0][0], MAX(r[1][0], r[2][0]))),
+        (theta > 3.14159 && theta < 4.71239 ? 0.f : MAX(r[0][1], MAX(r[1][1], r[2][1])))
     }};
 
     int dw = (int)ceil(fabsf(mm[1][0]) - mm[0][0]);
@@ -342,12 +330,12 @@ void image_rotate(image_t *src, float angle) {
 }
 
 image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh) {
-    int ox = __CLAMP(rx, 0, src->width);
-    int oy = __CLAMP(ry, 0, src->height);
+    int ox = CLAMP(rx, 0, src->width);
+    int oy = CLAMP(ry, 0, src->height);
     if (ox >= src->width || oy >= src->height)
         return NULL;
-    int mx = __MIN(ox + rw, src->width);
-    int my = __MIN(oy + rh, src->height);
+    int mx = MIN(ox + rw, src->width);
+    int my = MIN(oy + rh, src->height);
     int iw = mx - ox;
     int ih = my - oy;
     if (iw <= 0 || ih <= 0)
@@ -475,16 +463,16 @@ void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, i
         return;
     if (fill) {
         if (y0 > y1) {
-            __SWAP(x0, x1);
-            __SWAP(y0, y1);
+            SWAP(x0, x1);
+            SWAP(y0, y1);
         }
         if (y0 > y2) {
-            __SWAP(x0, x2);
-            __SWAP(y0, y2);
+            SWAP(x0, x2);
+            SWAP(y0, y2);
         }
         if (y1 > y2) {
-            __SWAP(x1, x2);
-            __SWAP(y1, y2);
+            SWAP(x1, x2);
+            SWAP(y1, y2);
         }
 
         int total_height = y2 - y0, i, j;
@@ -498,8 +486,8 @@ void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, i
             int bx = second_half ? x1 + (x2 - x1) : x0 + (x1 - x0) * beta;
             int by = second_half ? y1 + (y2 - y1) : y0 + (y1 - y0) * beta;
             if (ax > bx) {
-                __SWAP(ax, bx);
-                __SWAP(ay, by);
+                SWAP(ax, bx);
+                SWAP(ay, by);
             }
             for (j = ax; j <= bx; ++j)
                 image_pset(img, j, y0 + i, col);
