@@ -47,15 +47,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
     X("maxDroppedFiles", integer, max_dropped_files, 1, "Max number of dropped files")           \
     X("maxDroppedFilesPathLength", integer, max_dropped_file_path_length, MAX_PATH, "Max path length for dropped files")
 
-struct {
+static struct {
     sg_color clear_color;
     sapp_desc desc;
     sg_pass_action pass_action;
-
     const char *dropped[MAX_DROPPED_FILES];
     int dropped_count;
     char clipboard[CLIPBOARD_SIZE];
     scene_t *scene_prev, *scene_current, *next_scene;
+    jeff_exit_callback_t _exit_callback;
+    void *_exit_userdata;
 } state = {
     .desc = (sapp_desc) {
 #define X(NAME, TYPE, VAL, DEFAULT, DOCS) .VAL = DEFAULT,
@@ -155,10 +156,15 @@ void jeff_set_scene_named(const char *name) {
     jeff_set_scene(find_scene(name));
 }
 
+void jeff_atexit(jeff_exit_callback_t callback, void *userdata) {
+    state._exit_callback = callback;
+    state._exit_userdata = userdata;
+}
+
 #ifndef JEFF_NO_CONFIG
 // TODO: Add ini parser
 static int load_config(const char *path) {
-    unsigned char *data = vfs_read(path, NULL);
+    const char *data = paul_read_file(path, NULL);
     if (data)
         return 0;
 
@@ -169,7 +175,7 @@ static int load_config(const char *path) {
 #undef X
         {NULL}
     };
-    int status = json_read_object((const char*)data, config_attr, NULL);
+    int status = json_read_object(data, config_attr, NULL);
     if (!status)
         return 0;
     free((void*)data);
@@ -252,9 +258,11 @@ extern void sapp_input_clear(void);
 extern void sapp_input_handler(const sapp_event* e);
 extern void sapp_input_update(void);
 extern void update_timers(void);
+#ifndef JEFF_NO_INPUT
 extern void init_keymap(void);
-extern void init_events(void);
 extern void check_keymaps(void);
+#endif
+extern void init_events(void);
 extern void check_event(sapp_event_type type);
 extern void init_vfs(void);
 
@@ -271,7 +279,9 @@ static void init(void) {
 #ifndef JEFF_NO_VFS
     init_vfs();
 #endif
+#ifndef JEFF_NO_INPUT
     init_keymap();
+#endif
     init_events();
     rng_srand(JEFF_RNG_SEED);
 
@@ -296,7 +306,9 @@ static void frame(void) {
         return;
     }
     update_timers();
+#ifndef JEFF_NO_INPUT
     check_keymaps();
+#endif
     sg_begin_pass(&(sg_pass) {
         .action = state.pass_action,
         .swapchain = sglue_swapchain()
@@ -319,17 +331,19 @@ static void frame(void) {
 }
 
 static void event(const sapp_event *event) {
-    check_event(event->type);
 #ifdef JEFF_NO_INPUT
     state.scene_current->event(event);
 #else
     sapp_input_handler(event);
+    check_event(event->type);
 #endif
 }
 
 static void cleanup(void) {
     if (state.scene_current)
         state.scene_current->exit();
+    if (state._exit_callback)
+        state._exit_callback(state._exit_userdata);
     sg_shutdown();
 }
 

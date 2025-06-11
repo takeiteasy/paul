@@ -27,25 +27,89 @@
 #endif
 
 #ifndef JEFF_NO_VFS
+typedef struct vfs_dir {
+    const char *path;
+    zip *archive;
+} vfs_dir;
+
 // TODO: Thread safety
-static table_t _vfs = {0};
+static struct {
+    table_t vfs;
+} state;
 
 void init_vfs(void) {
-    _vfs = table_new();
+    state.vfs = table_new();
 }
 #endif
 
-void vfs_mount(const char *path) {
+bool vfs_mount(const char *src, const char *dst) {
 #ifndef JEFF_NO_VFS
-#endif
-}
-
-bool vfs_exists(const char *filename) {
-#ifndef JEFF_NO_VFS
-    return false;
+    // TODO: test + sanitize dst
+    if (table_has(&state.vfs, dst)) {
+        fprintf(stderr, "[MOUNT ERROR] Entry already mounted at \"%s\"\n", dst);
+        return false;
+    }
+    const char *ext = paul_file_extension(src);
+    vfs_dir *d = NULL;
+    if (ext && !strncmp(".zip", ext, 4)) {
+        if (paul_file_exists(src)) {
+            d = malloc(sizeof(vfs_dir));
+            d->path = NULL;
+            if (!(d->archive = zip_open(src, "rb"))) {
+                free(d);
+                fprintf(stderr, "[MOUNT ERROR] Failed to read .zip archive at \"%s\"\n", src);
+                return false;
+            }
+            table_set(&state.vfs, dst, (void*)d);
+        } else {
+            fprintf(stderr, "[MOUNT ERROR] No .zip archive at \"%s\"\n", src);
+            return false;
+        }
+    } else {
+        if (paul_dir_exists(src)) {
+            d = malloc(sizeof(vfs_dir));
+            d->path = strdup(src);
+            d->archive = NULL;
+            table_set(&state.vfs, dst, (void*)d);
+        } else {
+            fprintf(stderr, "[MOUNT ERROR] No directory at \"%s\"\n", src);
+            return false;
+        }
+    }
+    return true;
 #else
-    return paul_path_exists(filename);
+    return false;
 #endif
+}
+
+bool vfs_unmount(const char *name) {
+    if (table_has(&state.vfs, name))
+        return false;
+    vfs_dir *dir = NULL;
+    table_get(&state.vfs, name, (void**)&dir);
+    if (dir->archive)
+        zip_close(dir->archive);
+    else
+        free((void*)dir->path);
+    free(dir);
+    table_del(&state.vfs, name);
+    return true;
+}
+
+int _delete(table_pair_t *pair, void *userdata) {
+    vfs_dir *dir = (vfs_dir*)pair->value;
+    if (dir->archive)
+        zip_close(dir->archive);
+    else
+        free((void*)dir->path);
+    free(dir);
+    return 1;
+}
+
+void vfs_unmount_all(void) {
+    table_each(&state.vfs, _delete, NULL);
+    table_free(&state.vfs);
+    state.vfs = table_new();
 }
 
 unsigned char *vfs_read(const char *filename, size_t *size) { // must free() after use
@@ -56,10 +120,6 @@ unsigned char *vfs_read(const char *filename, size_t *size) { // must free() aft
 #endif
 }
 
-bool vfs_write(const char *filename, unsigned char *data, size_t size, bool overwrite) {
-#ifndef JEFF_NO_VFS
-    return false;
-#else
-    return paul_write_file(filename, data, size, overwrite);
-#endif
+void vfs_glob(const char *glob, glob_callback_t callback) {
+    
 }
