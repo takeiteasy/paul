@@ -266,7 +266,7 @@ static void init(void) {
 
     sapp_input_clear();
 #ifdef JEFF_WORKING_PATH
-    jeff_set_working_dir(JEFF_WORKING_PATH);
+    paul_set_working_dir(JEFF_WORKING_PATH);
 #endif
 #ifndef JEFF_NO_VFS
     init_vfs();

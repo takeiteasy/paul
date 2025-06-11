@@ -197,7 +197,6 @@ JEFF_SCENES
 
 void jeff_set_scene(scene_t *scene);
 void jeff_set_scene_named(const char *name);
-bool jeff_set_working_dir(const char *path);
 
 #define sg_make(OBJ)                                                           \
   _Generic((OBJ),                                                              \
@@ -332,7 +331,7 @@ void vfs_mount(const char *path);
 bool vfs_exists(const char *filename);
 unsigned char *vfs_read(const char *filename, size_t *size);
 // TODO: vfs_write
-// bool vfs_write(const char *filename, unsigned char *data, size_t size);
+// bool vfs_write(const char *filename, unsigned char *data, size_t size, bool overwrite);
 
 void rng_srand(uint64_t seed);
 uint64_t rng_rand_int(void);

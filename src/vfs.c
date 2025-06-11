@@ -26,20 +26,6 @@
 #include "table.h"
 #endif
 
-#ifdef PLATFORM_WINDOWS
-#include <io.h>
-#include <dirent.h>
-#define F_OK 0
-#define access _access
-#define chdir _chdir
-#else
-#include <unistd.h>
-#endif
-
-bool jeff_set_working_dir(const char *path) {
-    return chdir(path) == 0;
-}
-
 #ifndef JEFF_NO_VFS
 typedef struct vfs_dir {
     const char *path;
@@ -63,7 +49,7 @@ bool vfs_exists(const char *filename) {
 #ifndef JEFF_NO_VFS
     return false;
 #else
-    return !access(path, F_OK);
+    return paul_path_exists(filename);
 #endif
 }
 
@@ -71,44 +57,14 @@ unsigned char *vfs_read(const char *filename, size_t *size) { // must free() aft
 #ifndef JEFF_NO_VFS
     return NULL;
 #else
-    unsigned char *result = NULL;
-    size_t sz = -1;
-    FILE *fh = fopen(filename, "rb");
-    if (!fh)
-        goto BAIL;
-    fseek(fh, 0, SEEK_END);
-    if (!(sz = ftell(fh)))
-        goto BAIL;
-    fseek(fh, 0, SEEK_SET);
-    if (!(result = malloc(sz * sizeof(unsigned char))))
-        goto BAIL;
-    if ((fread(result, sz, 1, fh) != sz)) {
-        free(result);
-        goto BAIL;
-    }
-BAIL:
-    if (fh)
-        fclose(fh);
-    if (size)
-        *size = sz;
-    return result;
+    return paul_read_file(filename, size);
 #endif
 }
 
-bool vfs_write(const char *filename, unsigned char *data, size_t size) {
+bool vfs_write(const char *filename, unsigned char *data, size_t size, bool overwrite) {
 #ifndef JEFF_NO_VFS
     return false;
 #else
-    bool result = false;
-    FILE *fh = fopen(filename, "wb");
-    if (!fh)
-        return false;
-    if ((fwrite(data, size, 1, fh) != size))
-        goto BAIL;
-    result = true;
-BAIL:
-    if (fh)
-        fclose(fh);
-    return result;
+    return paul_write_file(filename, data, size, overwrite);
 #endif
 }
