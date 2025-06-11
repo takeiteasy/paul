@@ -41,28 +41,25 @@
 
 #define PRNG_RAND_MAX UINT64_MAX
 
-#ifdef JEFF_NO_THREADS
-static uint64_t _prng_s[_PRNG_RAND_SSIZE];
-static uint_fast16_t _prng_i;
-static uint_fast16_t _prng_c;
-#else
-static _Atomic uint64_t _prng_s[_PRNG_RAND_SSIZE];
-static _Atomic uint_fast16_t _prng_i;
-static _Atomic uint_fast16_t _prng_c;
-#endif
+// TODO: Thread saftey
+static struct {
+    uint64_t s[_PRNG_RAND_SSIZE];
+    uint_fast16_t i;
+    uint_fast16_t c;
+} state;
 
 void rng_srand(uint64_t seed) {
     if (!seed)
         seed = (uint64_t)time(NULL);
     uint_fast16_t i;
     // Naive seed
-    _prng_c = _PRNG_RAND_EXHAUST_LIMIT;
-    _prng_i = 0;
-    _prng_s[0] = seed;
+    state.c = _PRNG_RAND_EXHAUST_LIMIT;
+    state.i = 0;
+    state.s[0] = seed;
     // Arbitrary magic, mostly to eliminate the effect of low-value seeds.
     // Probably could be better, but the run-up obviates any real need to.
     for(i=1; i<_PRNG_RAND_SSIZE; i++)
-        _prng_s[i] = i*(UINT64_C(2147483647)) + seed;
+        state.s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
         (void)rng_rand_int();
@@ -72,28 +69,35 @@ uint64_t rng_rand_int(void) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
-    if( !_prng_c ) { // Randomness exhausted, run forward to refill
+    if( !state.c ) { // Randomness exhausted, run forward to refill
         new_rands += _PRNG_RAND_REFILL_COUNT+1;
-        _prng_c = _PRNG_RAND_EXHAUST_LIMIT-1;
+        state.c = _PRNG_RAND_EXHAUST_LIMIT-1;
     } else {
         new_rands = 1;
-        _prng_c--;
+        state.c--;
     }
 
     for( r=0; r<new_rands; r++ ) {
-        i = _prng_i;
-        _prng_s[i&_PRNG_RAND_SMASK] =
-        _prng_s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG1)&_PRNG_RAND_SMASK] +
-        _prng_s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG2)&_PRNG_RAND_SMASK];
-        _prng_i++;
+        i = state.i;
+        state.s[i&_PRNG_RAND_SMASK] =
+        state.s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG1)&_PRNG_RAND_SMASK] +
+        state.s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG2)&_PRNG_RAND_SMASK];
+        state.i++;
     }
-    return _prng_s[i&_PRNG_RAND_SMASK];
+    return state.s[i&_PRNG_RAND_SMASK];
 }
 
 float rng_rand_float(void) {
     return (float)rng_rand_int() / (float)PRNG_RAND_MAX;
 }
 
+int rng_rand_int_range(int min, int max) {
+    if (min > max)
+        SWAP(min, max);
+    return (int)(rng_rand_float() * (max - min + 1) + min);
+}
+
+#undef SWAP
 #define SWAP(a, b)    \
     do                \
     {                 \
@@ -101,12 +105,6 @@ float rng_rand_float(void) {
         a = b;        \
         b = temp;     \
     } while (0)
-
-int rng_rand_int_range(int min, int max) {
-    if (min > max)
-        SWAP(min, max);
-    return (int)(rng_rand_float() * (max - min + 1) + min);
-}
 
 float rng_rand_float_range(float min, float max) {
     if (min > max)
@@ -155,8 +153,6 @@ uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned
             }
     return result;
 }
-
-#define REMAP(v, from1, to1, from2, to2) (((v) - (from1)) / ((to1) - (from1)) * ((to2) - (from2)) + (from2))
 
 uint8_t* perlin_noise_map(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
     float min = FLT_MAX, max = FLT_MIN;

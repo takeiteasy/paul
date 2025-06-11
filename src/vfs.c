@@ -27,11 +27,6 @@
 #endif
 
 #ifndef JEFF_NO_VFS
-typedef struct vfs_dir {
-    const char *path;
-    zip *archive;
-} vfs_dir;
-
 // TODO: Thread safety
 static table_t _vfs = {0};
 

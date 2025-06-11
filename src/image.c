@@ -77,6 +77,15 @@ image_t* image_empty(unsigned int w, unsigned int h) {
     return result;
 }
 
+image_t* image_filled(unsigned int w, unsigned int h, int color) {
+    image_t *result = malloc(sizeof(image_t));
+    result->width = w;
+    result->height = h;
+    result->buffer = malloc(w * h * sizeof(int));
+    image_fill(result, color);
+    return result;
+}
+
 #define VALID_EXTS_SZ 11
 static const char *valid_extensions[VALID_EXTS_SZ] = {
     "jpg", "jpeg", "png", "bmp", "psd", "tga", "hdr", "pic", "ppm", "pgm", "qoi"

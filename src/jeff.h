@@ -367,6 +367,7 @@ typedef struct image_t {
 } image_t;
 
 image_t* image_empty(unsigned int w, unsigned int h);
+image_t* image_filled(unsigned int w, unsigned int h, int color);
 image_t* image_load(const char *path);
 image_t* image_load_from_memory(const void *data, size_t length);
 bool image_save(image_t *img, const char *path);
@@ -386,7 +387,6 @@ typedef int(^image_callback_t)(int x, int y, int col);
 #else
 typedef int(*image_callback_t)(int x, int y, int col);
 #endif
-
 void image_pass_thru(image_t *img, image_callback_t fn);
 
 image_t* image_dupe(image_t *src);
