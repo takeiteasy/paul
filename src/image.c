@@ -69,7 +69,7 @@ int RGBa(int c, uint8_t a) {
     return (c & ~0x00FF0000) | a;
 }
 
-jeff_image_t* jeff_image_empty(unsigned int w, unsigned int h) {
+jeff_image_t* jeff_empty_image(unsigned int w, unsigned int h) {
     jeff_image_t *result = malloc(sizeof(jeff_image_t));
     result->width = w;
     result->height = h;
@@ -112,7 +112,7 @@ jeff_image_t* jeff_image_load_from_memory(const void *data, size_t length) {
         in = stbi_load_from_memory(data, (int)length, &_w, &_h, &c, 4);
     assert(in && _w && _h);
 
-    jeff_image_t *result = jeff_image_empty(_w, _h);
+    jeff_image_t *result = jeff_empty_image(_w, _h);
     for (int x = 0; x < _w; x++)
         for (int y = 0; y < _h; y++) {
             unsigned char *p = in + (x + _w * y) * 4;
@@ -232,7 +232,7 @@ void jeff_image_clipped_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y
 }
 
 jeff_image_t* jeff_image_dupe(jeff_image_t *src) {
-    jeff_image_t *result = jeff_image_empty(src->width, src->height);
+    jeff_image_t *result = jeff_empty_image(src->width, src->height);
     memcpy(result->buffer, src->buffer, src->width * src->height * sizeof(int));
     return result;
 }
@@ -245,7 +245,7 @@ void jeff_image_pass_thru(jeff_image_t *img, jeff_image_callback_t fn) {
 }
 
 jeff_image_t* jeff_image_resized(jeff_image_t *src, int nw, int nh) {
-    jeff_image_t *result = jeff_image_empty(nw, nh);
+    jeff_image_t *result = jeff_empty_image(nw, nh);
     int x_ratio = (int)((src->width << 16) / result->width) + 1;
     int y_ratio = (int)((src->height << 16) / result->height) + 1;
     int x2, y2, i, j;
@@ -288,7 +288,7 @@ jeff_image_t* jeff_image_rotated(jeff_image_t *src, float angle) {
 
     int dw = (int)ceil(fabsf(mm[1][0]) - mm[0][0]);
     int dh = (int)ceil(fabsf(mm[1][1]) - mm[0][1]);
-    jeff_image_t *result = jeff_image_empty(dw, dh);
+    jeff_image_t *result = jeff_empty_image(dw, dh);
 
     int x, y, sx, sy;
     for (x = 0; x < dw; ++x)
@@ -319,7 +319,7 @@ jeff_image_t* jeff_image_clipped(jeff_image_t *src, int rx, int ry, int rw, int 
     int ih = my - oy;
     if (iw <= 0 || ih <= 0)
         return NULL;
-    jeff_image_t *result = jeff_image_empty(iw, ih);
+    jeff_image_t *result = jeff_empty_image(iw, ih);
     for (int px = 0; px < iw; px++)
         for (int py = 0; py < ih; py++) {
             int cx = ox + px;
@@ -479,7 +479,7 @@ void jeff_image_draw_triangle(jeff_image_t *img, int x0, int y0, int x1, int y1,
 }
 
 jeff_image_t* jeff_image_perlin_noise(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves) {
-    jeff_image_t *result = jeff_image_empty(width, height);
+    jeff_image_t *result = jeff_empty_image(width, height);
     uint8_t *map = jeff_perlin_fbm(width, height, z, offset_x, offset_y, scale, lacunarity, gain, octaves);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)

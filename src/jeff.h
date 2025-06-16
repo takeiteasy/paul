@@ -175,9 +175,9 @@ extern "C" {
 #endif
 #include "sokol_generic.h"
 
-typedef struct scene_t scene_t;
+typedef struct jeff_scene_t jeff_scene_t;
 
-struct scene_t {
+struct jeff_scene_t {
     const char *name;
     void(*enter)(void);
     void(*exit)(void);
@@ -187,11 +187,11 @@ struct scene_t {
     void(*step)(void);
 };
 
-#define X(NAME) extern scene_t NAME##_scene;
+#define X(NAME) extern jeff_scene_t NAME##_scene;
 JEFF_SCENES
 #undef X
 
-void jeff_set_scene(scene_t *scene);
+void jeff_set_scene(jeff_scene_t *scene);
 void jeff_set_scene_named(const char *name);
 
 #ifdef JEFF_USE_BLOCKS
@@ -260,23 +260,6 @@ float sapp_framebuffer_heightf(void);
 // returns monitor scale factor (Mac) or 1.f (other platforms)
 float sapp_framebuffer_scalefactor(void);
 
-#ifndef JEFF_NO_INPUT
-#ifdef JEFF_USE_BLOCKS
-typedef int(^sapp_event_callback_t)(void*);
-#else
-typedef int(*sapp_event_callback_t)(void*);
-#endif
-
-void sapp_emit_on_event(sapp_event_type event_type, const char *event);
-void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback);
-void sapp_remove_event(sapp_event_type event_type);
-// TODO: Add action type (up/down)
-bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
-bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
-void sapp_remove_input_event(const char *event);
-void sapp_clear_events(void);
-#endif
-
 bool jeff_vfs_mount(const char *src, const char *dst);
 bool jeff_vfs_unmount(const char *name);
 void jeff_vfs_unmount_all(void);
@@ -298,7 +281,8 @@ int* jeff_rand_sample(int length, int max);
 
 uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve);
 uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
-float perlin_noise(float x, float y, float z);
+float noise3(float x, float y, float z);
+#define noise2(X, Y) noise3((X), (Y), 0)
 // TODO: Poisson disc sampling
 
 int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
@@ -321,7 +305,7 @@ typedef struct image_t {
     int *buffer;
 } jeff_image_t;
 
-jeff_image_t* jeff_image_empty(unsigned int w, unsigned int h);
+jeff_image_t* jeff_empty_image(unsigned int w, unsigned int h);
 jeff_image_t* jeff_image_filled(unsigned int w, unsigned int h, int color);
 jeff_image_t* jeff_image_load(const char *path);
 jeff_image_t* jeff_image_load_from_memory(const void *data, size_t length);
@@ -404,6 +388,23 @@ void jeff_timer_after(const char *name, int64_t ms, jeff_timer_callback_t cb, vo
 void jeff_timer_emit_after(const char *name, int64_t ms, const char *event, void *userdata);
 void jeff_timer_remove(const char *name);
 void jeff_timers_clear(void);
+
+#ifndef JEFF_NO_INPUT
+#ifdef JEFF_USE_BLOCKS
+typedef int(^sapp_event_callback_t)(void*);
+#else
+typedef int(*sapp_event_callback_t)(void*);
+#endif
+
+void sapp_emit_on_event(sapp_event_type event_type, const char *event);
+void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback);
+void sapp_remove_event(sapp_event_type event_type);
+// TODO: Add action type (up/down)
+bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
+bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
+void sapp_remove_input_event(const char *event);
+void sapp_clear_events(void);
+#endif
 
 #ifndef JEFF_NO_THREADS
 typedef struct thread_work_t {

@@ -164,7 +164,7 @@ uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float
             tot  = 0.f,
             sum  = 0.f;
             for (int i = 0; i < octaves; ++i) {
-                sum  += perlin_noise(((offsetX + x) / scale) * freq, ((offsetY + y) / scale) * freq, z) * amp;
+                sum  += noise3(((offsetX + x) / scale) * freq, ((offsetY + y) / scale) * freq, z) * amp;
                 tot  += amp;
                 freq *= lacunarity;
                 amp  *= gain;
@@ -244,7 +244,7 @@ static float fade(float t) {
 
 #define FASTFLOOR(x) (((x) >= 0) ? (int)(x) : (int)(x)-1)
 
-float perlin_noise(float x, float y, float z) {
+float noise3(float x, float y, float z) {
     /* Find grid points */
     int gx = FASTFLOOR(x);
     int gy = FASTFLOOR(y);

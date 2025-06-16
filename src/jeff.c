@@ -54,7 +54,7 @@ static struct {
     const char *dropped[MAX_DROPPED_FILES];
     int dropped_count;
     char clipboard[CLIPBOARD_SIZE];
-    scene_t *scene_prev, *scene_current, *next_scene;
+    jeff_scene_t *scene_prev, *scene_current, *next_scene;
     jeff_exit_callback_t _exit_callback;
     void *_exit_userdata;
 } state = {
@@ -103,7 +103,7 @@ void NAME##_enter(void);                \
 void NAME##_exit(void);                 \
 void NAME##_event(const sapp_event*);   \
 void NAME##_step(void);                 \
-scene_t NAME##_scene = {                \
+jeff_scene_t NAME##_scene = {           \
     .name = #NAME,                      \
     .enter = NAME##_enter,              \
     .exit = NAME##_exit,                \
@@ -117,7 +117,7 @@ void NAME##_enter(void);                \
 void NAME##_exit(void);                 \
 void NAME##_event(const sapp_event*);   \
 void NAME##_step(void);                 \
-scene_t NAME##_scene = {                \
+jeff_scene_t NAME##_scene = {           \
     .name = #NAME,                      \
     .enter = NAME##_enter,              \
     .exit = NAME##_exit,                \
@@ -127,7 +127,7 @@ scene_t NAME##_scene = {                \
 JEFF_SCENES
 #undef X
 
-static scene_t* find_scene(const char *name) {
+static jeff_scene_t* find_scene(const char *name) {
     size_t name_len = strlen(name);
 #define X(NAME) \
     if (!strncmp(name, #NAME, name_len)) \
@@ -138,7 +138,7 @@ static scene_t* find_scene(const char *name) {
     abort();
 }
 
-void jeff_set_scene(scene_t *scene) {
+void jeff_set_scene(jeff_scene_t *scene) {
     if (!scene) {
         sapp_quit();
         return;
@@ -259,7 +259,6 @@ extern void update_timers(void);
 extern void sapp_input_init(void);
 extern void sapp_input_flush(void);
 extern void sapp_input_event(const sapp_event*);
-extern void init_keymap(void);
 extern void check_keymaps(void);
 #endif
 extern void init_events(void);
@@ -280,12 +279,8 @@ static void init(void) {
 #ifndef JEFF_NO_VFS
     init_vfs();
 #endif
-#ifndef JEFF_NO_INPUT
-    init_keymap();
-#endif
     init_events();
     jeff_srand(JEFF_RNG_SEED);
-
 #ifdef JEFF_FIRST_SCENE
     jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
 #else
