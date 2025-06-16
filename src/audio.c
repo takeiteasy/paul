@@ -248,12 +248,12 @@ void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *d
     if (!dst)
         return;
     int sz = audio->count * audio->channels;
-    int _a = CLAMP(start_frame, 0, sz);
-    int _b = CLAMP(end_frame, 0, sz);
+    int _a = _CLAMP(start_frame, 0, sz);
+    int _b = _CLAMP(end_frame, 0, sz);
     if (_a == _b)
         return;
     else if (_b > _a)
-        SWAP(_a, _b);
+        _SWAP(_a, _b);
     int diff = _b - _a;
     for (int i = 0; i < diff; i++)
         dst[i] = _sample(audio->buffer, audio->size, _a + i, sz);

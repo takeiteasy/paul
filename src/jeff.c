@@ -254,11 +254,11 @@ static int parse_arguments(int argc, char *argv[]) {
 }
 #endif
 
-extern void sapp_input_clear(void);
-extern void sapp_input_handler(const sapp_event* e);
-extern void sapp_input_update(void);
 extern void update_timers(void);
 #ifndef JEFF_NO_INPUT
+extern void sapp_input_init(void);
+extern void sapp_input_flush(void);
+extern void sapp_input_event(const sapp_event*);
 extern void init_keymap(void);
 extern void check_keymaps(void);
 #endif
@@ -272,7 +272,8 @@ static void init(void) {
         .logger.func = slog_func,
     });
 
-    sapp_input_clear();
+
+    sapp_input_init();
 #ifdef JEFF_WORKING_PATH
     paul_set_working_dir(JEFF_WORKING_PATH);
 #endif
@@ -316,7 +317,7 @@ static void frame(void) {
     state.scene_current->step();
     sg_end_pass();
     sg_commit();
-    sapp_input_update();
+    sapp_input_flush();
 
     if (state.next_scene) {
         if ((state.scene_prev = state.scene_current)) {
@@ -334,7 +335,7 @@ static void event(const sapp_event *event) {
 #ifdef JEFF_NO_INPUT
     state.scene_current->event(event);
 #else
-    sapp_input_handler(event);
+    sapp_input_event(event);
     check_event(event->type);
 #endif
 }

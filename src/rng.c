@@ -93,12 +93,11 @@ float rng_rand_float(void) {
 
 int rng_rand_int_range(int min, int max) {
     if (min > max)
-        SWAP(min, max);
+        _SWAP(min, max);
     return (int)(rng_rand_float() * (max - min + 1) + min);
 }
 
-#undef SWAP
-#define SWAP(a, b)    \
+#define __SWAP(a, b)    \
     do                \
     {                 \
         int temp = a; \
@@ -108,7 +107,7 @@ int rng_rand_int_range(int min, int max) {
 
 float rng_rand_float_range(float min, float max) {
     if (min > max)
-        SWAP(min, max);
+        __SWAP(min, max);
     return rng_rand_float() * (max - min) + min;
 }
 
@@ -128,12 +127,12 @@ uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned
     uint8_t *result = malloc(sz);
     memset(result, 0, sz);
     // Randomly fill the grid
-    fill_chance = CLAMP(fill_chance, 1, 99);
+    fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
             result[y * width + x] = rng_rand_int_range(1, 100) < fill_chance;
     // Run cellular-automata on grid n times
-    for (int i = 0; i < MAX(smooth_iterations, 1); i++)
+    for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++) {
                 // Count the cell's living neighbours
@@ -181,7 +180,7 @@ uint8_t* perlin_noise_map(unsigned int width, unsigned int height, float z, floa
     uint8_t *result = malloc(width * height * sizeof(uint8_t));
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++) {
-            float height = 255.f - (255.f * REMAP(grid[y * width + x], min, max, 0, 1.f));
+            float height = 255.f - (255.f * _REMAP(grid[y * width + x], min, max, 0, 1.f));
             result[y * width + x] = (uint8_t)height;
         }
     // Free float grid, return uint8 grid

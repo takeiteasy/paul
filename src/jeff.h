@@ -31,14 +31,6 @@ extern "C" {
 #define __has_extension __has_feature
 #endif
 
-#if defined(__cplusplus)
-#define JEFF_HAS_CONSTEXPR
-#else
-#if __STDC_VERSION__ >= 202000L
-#define JEFF_HAS_CONSTEXPR
-#endif
-#endif
-
 #if __STDC_VERSION__ >= 202311L
 #define JEFF_HAS_TYPEOF
 #elif defined(COMPILER_GCC)
@@ -178,6 +170,10 @@ extern "C" {
 //#include "sokol/sokol_fetch.h"
 #include "sokol/util/sokol_color.h"
 #include "sokol/util/sokol_shape.h"
+#ifndef JEFF_NO_INPUT
+#include "sokol_input.h"
+#endif
+#include "sokol_generic.h"
 
 typedef struct scene_t scene_t;
 
@@ -205,181 +201,31 @@ typedef void(*jeff_exit_callback_t)(void*);
 #endif
 void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
 
-#define sg_make(OBJ)                                                           \
-  _Generic((OBJ),                                                              \
-      const sg_buffer_desc *: sg_make_buffer,                                  \
-      const sg_image_desc *: sg_make_image,                                    \
-      const sg_sampler_desc *: sg_make_sampler,                                \
-      const sg_shader_desc *: sg_make_shader,                                  \
-      const sg_pipeline_desc *: sg_make_pipeline,                              \
-      const sg_attachments_desc *: sg_make_attachments)(OBJ)
-
-#define sg_destroy(OBJ)                                                        \
-  _Generic((OBJ),                                                              \
-      sg_buffer: sg_destroy_buffer,                                            \
-      sg_image: sg_destroy_image,                                              \
-      sg_sampler: sg_destroy_sampler,                                          \
-      sg_shader: sg_destroy_shader,                                            \
-      sg_pipeline: sg_destroy_pipeline,                                        \
-      sg_attachments: sg_destroy_attachments)(OBJ)
-
-#define sg_destroy_if_valid(OBJ)                                               \
-  do {                                                                         \
-    if (sg_query_state((OBJ)))                                                 \
-      sg_destroy((OBJ));                                                       \
-  } while (0)
-
-#define sg_query_state(OBJ)                                                    \
-  _Generic((OBJ),                                                              \
-      sg_buffer: sg_query_buffer_state,                                        \
-      sg_image: sg_query_image_state,                                          \
-      sg_sampler: sg_query_sampler_state,                                      \
-      sg_shader: sg_query_shader_state,                                        \
-      sg_pipeline: sg_query_pipeline_state,                                    \
-      sg_attachments: sg_query_attachments_state)(OBJ)
-
-#define sg_query_info(OBJ)                                                     \
-  _Generic((OBJ),                                                              \
-      sg_buffer: sg_query_buffer_info,                                         \
-      sg_image: sg_query_image_info,                                           \
-      sg_sampler: sg_query_sampler_info,                                       \
-      sg_shader: sg_query_shader_info,                                         \
-      sg_pipeline: sg_query_pipeline_info,                                     \
-      sg_attachments: sg_query_attachments_info)(OBJ)
-
-#define sg_query_setup_desc(OBJ)                                               \
-  _Generic((OBJ),                                                              \
-      sg_buffer: sg_query_buffer_desc,                                         \
-      sg_image: sg_query_image_desc,                                           \
-      sg_sampler: sg_query_sampler_desc,                                       \
-      sg_shader: sg_query_shader_desc,                                         \
-      sg_pipeline: sg_query_pipeline_desc,                                     \
-      sg_attachments: sg_query_attachments_desc)(OBJ)
-
-#define sg_query_defaults(OBJ)                                                 \
-  _Generic((OBJ),                                                              \
-      const sg_buffer *: sg_query_buffer_defaults,                             \
-      const sg_image *: sg_query_image_defaults,                               \
-      const sg_sampler *: sg_query_sampler_defaults,                           \
-      const sg_shader *: sg_query_shader_defaults,                             \
-      const sg_pipeline *: sg_query_pipeline_defaults,                         \
-      const sg_attachments *: sg_query_attachments_defaults)(OBJ)
-
-#define sg_query_defaults(OBJ)                                                 \
-  _Generic((OBJ),                                                              \
-      const sg_buffer *: sg_query_buffer_defaults,                             \
-      const sg_image *: sg_query_image_defaults,                               \
-      const sg_sampler *: sg_query_sampler_defaults,                           \
-      const sg_shader *: sg_query_shader_defaults,                             \
-      const sg_pipeline *: sg_query_pipeline_defaults,                         \
-      const sg_attachments *: sg_query_attachments_defaults)(OBJ)
-
-#ifdef JEFF_HAS_CONSTEXPR
-constexpr double PI = 3.14159265358979323846264338327950288;
-constexpr double TWO_PI = 6.28318530717958647692; // 2 * pi;
-constexpr double TAU = TWO_PI;
-constexpr double HALF_PI = 1.57079632679489661923132169163975144;     // pi / 2
-constexpr double QUARTER_PI = 0.785398163397448309615660845819875721; // pi / 4
-constexpr double PHI = 1.61803398874989484820;
-constexpr double INV_PHI = 0.61803398874989484820;
-constexpr double EULER = 2.71828182845904523536;
-constexpr double EPSILON = 0.000001;
-constexpr double SQRT2 = 1.41421356237309504880168872420969808;
-#else // -- JEFF_HAS_CONSTEXPR --
-#define PI 3.14159265358979323846264338327950288
-#define TWO_PI 6.28318530717958647692 // 2 * pi
-#define TAU TWO_PI
-#define HALF_PI 1.57079632679489661923132169163975144     // pi / 2
-#define QUARTER_PI 0.785398163397448309615660845819875721 // pi / 4
-#define PHI 1.61803398874989484820
-#define INV_PHI 0.61803398874989484820
-#define EULER 2.71828182845904523536
-#define EPSILON 0.000001f
-#define SQRT2 1.41421356237309504880168872420969808
-#endif // JEFF_HAS_CONSTEXPR
-
-#ifndef JEFF_HAS_TYPEOF
-#define BYTES(N) (N)
-#define KILOBYTES(N) ((N) << 10)
-#define MEGABYTES(N) ((N) << 20)
-#define GIGABYTES(N) (((unsigned long long)(N)) << 30)
-#define TERABYTES(N) (((unsigned long long)(N)) << 40)
-#define THOUSAND(N)  ((N) * 1000)
-#define MILLION(N)   ((N) * 1000000)
-#define BILLION(N)   (((unsigned long long)(N)) * 1000000000LL)
-#define DEGREES(N)   (((double)(N)) * (180. / PI))
-#define RADIANS(N)   (((double)(N)) * (PI / 180.))
-#define MIN(A, B)    ((A) < (B) ? (A) : (B))
-#define MAX(A, B)    ((A) > (B) ? (A) : (B))
-#define SWAP(A, B)   ((A)^=(B)^=(A)^=(B))
-#define REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
-#else // --- JEFF_HAS_TYPEOF ---
-#define BYTES(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       _n; })
-#define KILOBYTES(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       _n << 10; })
-#define MEGABYTES(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       _n << 20; })
-#define GIGABYTES(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       ((unsigned long long)_n) << 30; })
-#define TERABYTES(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       ((unsigned long long)_n) << 40; })
-#define THOUSAND(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       _n * 1000; })
-#define MILLION(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       _n * 1000000; })
-#define BILLION(n) \
-    ({ typeof (n) _n = (n); \
-       static_assert(is_integral(_n)); \
-       (unsigned long long)_n * 1000000000LL; })
-#define DEGREES(R) \
-    ({ typeof (R) n = (R); \
-       static_assert(is_floating_point(n)); \
-        n * (180. / PI); })
-#define RADIANS(D) \
-    ({ typeof (D) n = (D); \
-       static_assert(is_integral(n)); \
-       n * (PI / 180.); })
-#define MIN(a, b) \
-    ({ \
-        typeof (a) _min = (a); \
-        _min = (b) < _min ? (b) : _min; \
-        _min; \
-    })
-#define MAX(a, b) \
-    ({ \
-        typeof (a) _max = (a); \
-        _max = (b) > _max ? (b) : _max; \
-        _max; \
-    })
-#define SWAP(a, b) \
-    do { \
-        typeof (a) temp = (a); \
-        (a) = (b); \
-        (b) = temp; \
-    } while (0)
-#define REMAP(x, in_min, in_max, out_min, out_max) \
-    ({ \
-        typeof (x) _x = ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min); \
-        _x; \
-    })
-#endif // JEFF_HAS_TYPEOF
-
-#define CLAMP(x, low, high) MIN(MAX(x, low), high)
+#define _PI 3.14159265358979323846264338327950288
+#define _TWO_PI 6.28318530717958647692 // 2 * pi
+#define _TAU TWO_PI
+#define _HALF_PI 1.57079632679489661923132169163975144     // pi / 2
+#define _QUARTER_PI 0.785398163397448309615660845819875721 // pi / 4
+#define _PHI 1.61803398874989484820
+#define _INV_PHI 0.61803398874989484820
+#define _EULER 2.71828182845904523536
+#define _EPSILON 0.000001f
+#define _SQRT2 1.41421356237309504880168872420969808
+#define _BYTES(N) (N)
+#define _KILOBYTES(N) ((N) << 10)
+#define _MEGABYTES(N) ((N) << 20)
+#define _GIGABYTES(N) (((unsigned long long)(N)) << 30)
+#define _TERABYTES(N) (((unsigned long long)(N)) << 40)
+#define _THOUSAND(N)  ((N) * 1000)
+#define _MILLION(N)   ((N) * 1000000)
+#define _BILLION(N)   (((unsigned long long)(N)) * 1000000000LL)
+#define _DEGREES(N)   (((double)(N)) * (180. / PI))
+#define _RADIANS(N)   (((double)(N)) * (_PI / 180.))
+#define _MIN(A, B)    ((A) < (B) ? (A) : (B))
+#define _MAX(A, B)    ((A) > (B) ? (A) : (B))
+#define _SWAP(A, B)   ((A)^=(B)^=(A)^=(B))
+#define _REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
+#define _CLAMP(x, low, high) _MIN(_MAX(x, low), high)
 
 enum jeff_easing_fn {
     JEFF_EASING_LINEAR = 0,
@@ -399,7 +245,7 @@ enum jeff_easing_t {
     EASE_INOUT
 };
 
-float easing(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
+float ease(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
 bool flt_cmp(float a, float b);
 bool dbl_cmp(double a, double b);
 
@@ -415,35 +261,6 @@ float sapp_framebuffer_heightf(void);
 float sapp_framebuffer_scalefactor(void);
 
 #ifndef JEFF_NO_INPUT
-bool sapp_is_key_down(int key);
-// This will be true if a key is held for more than 1 second
-// TODO: Make the duration configurable
-bool sapp_is_key_held(int key);
-// Returns true if key is down this frame and was up last frame
-bool sapp_was_key_pressed(int key);
-// Returns true if key is up and key was down last frame
-bool sapp_was_key_released(int key);
-// If any of the keys passed are not down returns false
-bool sapp_are_keys_down(int n, ...);
-// If none of the keys passed are down returns false
-bool sapp_any_keys_down(int n, ...);
-bool sapp_is_button_down(int button);
-bool sapp_is_button_held(int button);
-bool sapp_was_button_pressed(int button);
-bool sapp_was_button_released(int button);
-bool sapp_are_buttons_down(int n, ...);
-bool sapp_any_buttons_down(int n, ...);
-bool sapp_has_mouse_move(void);
-bool sapp_modifier_equals(int mods);
-bool sapp_modifier_down(int mod);
-int sapp_cursor_x(void);
-int sapp_cursor_y(void);
-bool sapp_cursor_delta_x(void);
-bool sapp_cursor_delta_y(void);
-bool sapp_check_scrolled(void);
-float sapp_scroll_x(void);
-float sapp_scroll_y(void);
-
 #ifdef JEFF_USE_BLOCKS
 typedef int(^sapp_event_callback_t)(void*);
 #else
@@ -453,12 +270,6 @@ typedef int(*sapp_event_callback_t)(void*);
 void sapp_emit_on_event(sapp_event_type event_type, const char *event);
 void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback);
 void sapp_remove_event(sapp_event_type event_type);
-bool sapp_check_input_str_down(const char *str);
-bool sapp_check_input_down(int modifiers, int n, ...);
-bool sapp_check_input_str_released(const char *str);
-bool sapp_check_input_released(int modifiers, int n, ...);
-bool sapp_check_input_str_up(const char *str);
-bool sapp_check_input_up(int modifiers, int n, ...);
 // TODO: Add action type (up/down)
 bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
 bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);

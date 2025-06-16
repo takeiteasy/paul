@@ -300,7 +300,7 @@ void image_resize(image_t *src, int nw, int nh) {
 }
 
 image_t* image_rotated(image_t *src, float angle) {
-    float theta = RADIANS(angle);
+    float theta = _RADIANS(angle);
     float c = cosf(theta), s = sinf(theta);
     float r[3][2] = {
         { -src->height * s, src->height * c },
@@ -309,11 +309,11 @@ image_t* image_rotated(image_t *src, float angle) {
     };
 
     float mm[2][2] = {{
-        MIN(0, MIN(r[0][0], MIN(r[1][0], r[2][0]))),
-        MIN(0, MIN(r[0][1], MIN(r[1][1], r[2][1])))
+        _MIN(0, _MIN(r[0][0], _MIN(r[1][0], r[2][0]))),
+        _MIN(0, _MIN(r[0][1], _MIN(r[1][1], r[2][1])))
     }, {
-        (theta > 1.5708  && theta < 3.14159 ? 0.f : MAX(r[0][0], MAX(r[1][0], r[2][0]))),
-        (theta > 3.14159 && theta < 4.71239 ? 0.f : MAX(r[0][1], MAX(r[1][1], r[2][1])))
+        (theta > 1.5708  && theta < 3.14159 ? 0.f : _MAX(r[0][0], _MAX(r[1][0], r[2][0]))),
+        (theta > 3.14159 && theta < 4.71239 ? 0.f : _MAX(r[0][1], _MAX(r[1][1], r[2][1])))
     }};
 
     int dw = (int)ceil(fabsf(mm[1][0]) - mm[0][0]);
@@ -339,12 +339,12 @@ void image_rotate(image_t *src, float angle) {
 }
 
 image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh) {
-    int ox = CLAMP(rx, 0, src->width);
-    int oy = CLAMP(ry, 0, src->height);
+    int ox = _CLAMP(rx, 0, src->width);
+    int oy = _CLAMP(ry, 0, src->height);
     if (ox >= src->width || oy >= src->height)
         return NULL;
-    int mx = MIN(ox + rw, src->width);
-    int my = MIN(oy + rh, src->height);
+    int mx = _MIN(ox + rw, src->width);
+    int my = _MIN(oy + rh, src->height);
     int iw = mx - ox;
     int ih = my - oy;
     if (iw <= 0 || ih <= 0)
@@ -472,16 +472,16 @@ void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, i
         return;
     if (fill) {
         if (y0 > y1) {
-            SWAP(x0, x1);
-            SWAP(y0, y1);
+            _SWAP(x0, x1);
+            _SWAP(y0, y1);
         }
         if (y0 > y2) {
-            SWAP(x0, x2);
-            SWAP(y0, y2);
+            _SWAP(x0, x2);
+            _SWAP(y0, y2);
         }
         if (y1 > y2) {
-            SWAP(x1, x2);
-            SWAP(y1, y2);
+            _SWAP(x1, x2);
+            _SWAP(y1, y2);
         }
 
         int total_height = y2 - y0, i, j;
@@ -495,8 +495,8 @@ void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, i
             int bx = second_half ? x1 + (x2 - x1) : x0 + (x1 - x0) * beta;
             int by = second_half ? y1 + (y2 - y1) : y0 + (y1 - y0) * beta;
             if (ax > bx) {
-                SWAP(ax, bx);
-                SWAP(ay, by);
+                _SWAP(ax, bx);
+                _SWAP(ay, by);
             }
             for (j = ax; j <= bx; ++j)
                 image_pset(img, j, y0 + i, col);
