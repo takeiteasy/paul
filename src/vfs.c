@@ -42,7 +42,7 @@ void init_vfs(void) {
 }
 #endif
 
-bool vfs_mount(const char *src, const char *dst) {
+bool jeff_vfs_mount(const char *src, const char *dst) {
 #ifndef JEFF_NO_VFS
     // TODO: test + sanitize dst
     if (table_has(&state.vfs, dst)) {
@@ -82,7 +82,7 @@ bool vfs_mount(const char *src, const char *dst) {
 #endif
 }
 
-bool vfs_unmount(const char *name) {
+bool jeff_vfs_unmount(const char *name) {
     if (table_has(&state.vfs, name))
         return false;
     vfs_dir *dir = NULL;
@@ -106,7 +106,7 @@ int _delete(table_pair_t *pair, void *userdata) {
     return 1;
 }
 
-void vfs_unmount_all(void) {
+void jeff_vfs_unmount_all(void) {
     table_each(&state.vfs, _delete, NULL);
     table_free(&state.vfs);
     state.vfs = table_new();
@@ -120,6 +120,6 @@ unsigned char *vfs_read(const char *filename, size_t *size) { // must free() aft
 #endif
 }
 
-void vfs_glob(const char *glob, glob_callback_t callback) {
+void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback) {
     
 }

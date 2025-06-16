@@ -69,59 +69,29 @@ int RGBa(int c, uint8_t a) {
     return (c & ~0x00FF0000) | a;
 }
 
-image_t* image_empty(unsigned int w, unsigned int h) {
-    image_t *result = malloc(sizeof(image_t));
+jeff_image_t* jeff_image_empty(unsigned int w, unsigned int h) {
+    jeff_image_t *result = malloc(sizeof(jeff_image_t));
     result->width = w;
     result->height = h;
     result->buffer = malloc(w * h * sizeof(int));
     return result;
 }
 
-image_t* image_filled(unsigned int w, unsigned int h, int color) {
-    image_t *result = malloc(sizeof(image_t));
+jeff_image_t* jeff_image_filled(unsigned int w, unsigned int h, int color) {
+    jeff_image_t *result = malloc(sizeof(jeff_image_t));
     result->width = w;
     result->height = h;
     result->buffer = malloc(w * h * sizeof(int));
-    image_fill(result, color);
+    jeff_image_fill(result, color);
     return result;
 }
 
-#define VALID_EXTS_SZ 11
-static const char *valid_extensions[VALID_EXTS_SZ] = {
-    "jpg", "jpeg", "png", "bmp", "psd", "tga", "hdr", "pic", "ppm", "pgm", "qoi"
-};
-
-static const char* file_extension(const char *path) {
-    const char *dot = strrchr(path, '.');
-    return !dot || dot == path ? NULL : dot + 1;
-}
-
-static bool check_extension(const char *path) {
-    const char *ext = file_extension(path);
-    unsigned long ext_length = strlen(ext);
-    char *dup = strdup(ext);
-    for (int i = 0; i < ext_length; i++)
-        if (dup[i] >= 'A' && dup[i] <= 'Z')
-            dup[i] += 32;
-    int found = 0;
-    for (int i = 0; i < VALID_EXTS_SZ; i++) {
-        if (!strncmp(dup, valid_extensions[i], ext_length)) {
-            found = 1;
-            break;
-        }
-    }
-    free(dup);
-    return found;
-}
-
-image_t* image_load(const char *path) {
+jeff_image_t* jeff_image_load(const char *path) {
     size_t size = 0;
-    if (!check_extension(path))
-        return NULL;
     unsigned char *data = vfs_read(path, &size);
     if (!data)
         return NULL;
-    image_t* result = image_load_from_memory(data, (int)size);
+    jeff_image_t* result = jeff_image_load_from_memory(data, (int)size);
     free(data);
     return result;
 }
@@ -130,7 +100,7 @@ static int check_if_qoi(unsigned char *data) {
     return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) == QOI_MAGIC;
 }
 
-image_t* image_load_from_memory(const void *data, size_t length) {
+jeff_image_t* jeff_image_load_from_memory(const void *data, size_t length) {
     int _w, _h, c;
     unsigned char *in = NULL;
     if (check_if_qoi((unsigned char*)data)) {
@@ -142,7 +112,7 @@ image_t* image_load_from_memory(const void *data, size_t length) {
         in = stbi_load_from_memory(data, (int)length, &_w, &_h, &c, 4);
     assert(in && _w && _h);
 
-    image_t *result = image_empty(_w, _h);
+    jeff_image_t *result = jeff_image_empty(_w, _h);
     for (int x = 0; x < _w; x++)
         for (int y = 0; y < _h; y++) {
             unsigned char *p = in + (x + _w * y) * 4;
@@ -152,12 +122,12 @@ image_t* image_load_from_memory(const void *data, size_t length) {
     return result;
 }
 
-bool image_save(image_t *img, const char *path) {
+bool jeff_image_save(jeff_image_t *img, const char *path) {
     // TODO: Integrate stb_image_write.h
     return false;
 }
 
-void image_destroy(image_t *img) {
+void jeff_image_destroy(jeff_image_t *img) {
     if (img) {
         if (img->buffer)
             free(img->buffer);
@@ -165,60 +135,60 @@ void image_destroy(image_t *img) {
     }
 }
 
-void image_fill(image_t *img, int col) {
+void jeff_image_fill(jeff_image_t *img, int col) {
     for (int i = 0; i < img->width * img->height; ++i)
         img->buffer[i] = col;
 }
 
-static inline void flood_fn(image_t *img, int x, int y, int _new, int _old) {
-    if (_new == _old || image_pget(img, x, y) != _old)
+static inline void flood_fn(jeff_image_t *img, int x, int y, int _new, int _old) {
+    if (_new == _old || jeff_image_pget(img, x, y) != _old)
         return;
 
     int x1 = x;
-    while (x1 < img->width && image_pget(img, x1, y) == _old) {
-        image_pset(img, x1, y, _new);
+    while (x1 < img->width && jeff_image_pget(img, x1, y) == _old) {
+        jeff_image_pset(img, x1, y, _new);
         x1++;
     }
 
     x1 = x - 1;
-    while (x1 >= 0 && image_pget(img, x1, y) == _old) {
-        image_pset(img, x1, y, _new);
+    while (x1 >= 0 && jeff_image_pget(img, x1, y) == _old) {
+        jeff_image_pset(img, x1, y, _new);
         x1--;
     }
 
     x1 = x;
-    while (x1 < img->width && image_pget(img, x1, y) == _old) {
-        if(y > 0 && image_pget(img, x1, y - 1) == _old)
+    while (x1 < img->width && jeff_image_pget(img, x1, y) == _old) {
+        if(y > 0 && jeff_image_pget(img, x1, y - 1) == _old)
             flood_fn(img, x1, y - 1, _new, _old);
         x1++;
     }
 
     x1 = x - 1;
-    while(x1 >= 0 && image_pget(img, x1, y) == _old) {
-        if(y > 0 && image_pget(img, x1, y - 1) == _old)
+    while(x1 >= 0 && jeff_image_pget(img, x1, y) == _old) {
+        if(y > 0 && jeff_image_pget(img, x1, y - 1) == _old)
             flood_fn(img, x1, y - 1, _new, _old);
         x1--;
     }
 
     x1 = x;
-    while(x1 < img->width && image_pget(img, x1, y) == _old) {
-        if(y < img->height - 1 && image_pget(img, x1, y + 1) == _old)
+    while(x1 < img->width && jeff_image_pget(img, x1, y) == _old) {
+        if(y < img->height - 1 && jeff_image_pget(img, x1, y + 1) == _old)
             flood_fn(img, x1, y + 1, _new, _old);
         x1++;
     }
 
     x1 = x - 1;
-    while(x1 >= 0 && image_pget(img, x1, y) == _old) {
-        if(y < img->height - 1 && image_pget(img, x1, y + 1) == _old)
+    while(x1 >= 0 && jeff_image_pget(img, x1, y) == _old) {
+        if(y < img->height - 1 && jeff_image_pget(img, x1, y + 1) == _old)
             flood_fn(img, x1, y + 1, _new, _old);
         x1--;
     }
 }
 
-void image_flood(image_t *img, int x, int y, int col) {
+void jeff_image_flood(jeff_image_t *img, int x, int y, int col) {
     if (x < 0 || y < 0 || x >= img->width || y >= img->height)
         return;
-    flood_fn(img, x, y, col, image_pget(img, x, y));
+    flood_fn(img, x, y, col, jeff_image_pget(img, x, y));
 }
 
 #define BLEND(c0, c1, a0, a1) (c0 * a0 / 255) + (c1 * a1 * (255 - a0) / 65025)
@@ -232,50 +202,50 @@ static int Blend(int _a, int _b) {
                                                             a + (b * (255 - a) >> 8));
 }
 
-void image_pset(image_t *img, int x, int y, int col) {
+void jeff_image_pset(jeff_image_t *img, int x, int y, int col) {
     if (x >= 0 && y >= 0 && x < img->width && y < img->height) {
         int a = rgbA(col);
-        img->buffer[y * img->width + x] = a == 255 ? col : a == 0 ? 0 : Blend(image_pget(img, x, y), col);
+        img->buffer[y * img->width + x] = a == 255 ? col : a == 0 ? 0 : Blend(jeff_image_pget(img, x, y), col);
     }
 }
 
-int image_pget(image_t *img, int x, int y) {
+int jeff_image_pget(jeff_image_t *img, int x, int y) {
     return (x >= 0 && y >= 0 && x < img->width && y < img->height) ? img->buffer[y * img->width + x] : 0;
 }
 
-void image_paste(image_t *dst, image_t *src, int x, int y) {
+void jeff_image_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y) {
     for (int ox = 0; ox < src->width; ++ox) {
         for (int oy = 0; oy < src->height; ++oy) {
             if (oy > dst->height)
                 break;
-            image_pset(dst, x + ox, y + oy, image_pget(src, ox, oy));
+            jeff_image_pset(dst, x + ox, y + oy, jeff_image_pget(src, ox, oy));
         }
         if (ox > dst->width)
             break;
     }
 }
 
-void image_clipped_paste(image_t *dst, image_t *src, int x, int y, int rx, int ry, int rw, int rh) {
+void jeff_image_clipped_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y, int rx, int ry, int rw, int rh) {
     for (int ox = 0; ox < rw; ++ox)
         for (int oy = 0; oy < rh; ++oy)
-            image_pset(dst, ox + x, oy + y, image_pget(src, ox + rx, oy + ry));
+            jeff_image_pset(dst, ox + x, oy + y, jeff_image_pget(src, ox + rx, oy + ry));
 }
 
-image_t* image_dupe(image_t *src) {
-    image_t *result = image_empty(src->width, src->height);
+jeff_image_t* jeff_image_dupe(jeff_image_t *src) {
+    jeff_image_t *result = jeff_image_empty(src->width, src->height);
     memcpy(result->buffer, src->buffer, src->width * src->height * sizeof(int));
     return result;
 }
 
-void image_pass_thru(image_t *img, image_callback_t fn) {
+void jeff_image_pass_thru(jeff_image_t *img, jeff_image_callback_t fn) {
     int x, y;
     for (x = 0; x < img->width; ++x)
         for (y = 0; y < img->height; ++y)
-            img->buffer[y * img->width + x] = fn(x, y, image_pget(img, x, y));
+            img->buffer[y * img->width + x] = fn(x, y, jeff_image_pget(img, x, y));
 }
 
-image_t* image_resized(image_t *src, int nw, int nh) {
-    image_t *result = image_empty(nw, nh);
+jeff_image_t* jeff_image_resized(jeff_image_t *src, int nw, int nh) {
+    jeff_image_t *result = jeff_image_empty(nw, nh);
     int x_ratio = (int)((src->width << 16) / result->width) + 1;
     int y_ratio = (int)((src->height << 16) / result->height) + 1;
     int x2, y2, i, j;
@@ -293,13 +263,13 @@ image_t* image_resized(image_t *src, int nw, int nh) {
     return result;
 }
 
-void image_resize(image_t *src, int nw, int nh) {
-    image_t *result = image_resized(src, nw, nh);
+void jeff_image_resize(jeff_image_t *src, int nw, int nh) {
+    jeff_image_t *result = jeff_image_resized(src, nw, nh);
     free(src->buffer);
-    memcpy(src, result, sizeof(image_t));
+    memcpy(src, result, sizeof(jeff_image_t));
 }
 
-image_t* image_rotated(image_t *src, float angle) {
+jeff_image_t* jeff_image_rotated(jeff_image_t *src, float angle) {
     float theta = _RADIANS(angle);
     float c = cosf(theta), s = sinf(theta);
     float r[3][2] = {
@@ -318,7 +288,7 @@ image_t* image_rotated(image_t *src, float angle) {
 
     int dw = (int)ceil(fabsf(mm[1][0]) - mm[0][0]);
     int dh = (int)ceil(fabsf(mm[1][1]) - mm[0][1]);
-    image_t *result = image_empty(dw, dh);
+    jeff_image_t *result = jeff_image_empty(dw, dh);
 
     int x, y, sx, sy;
     for (x = 0; x < dw; ++x)
@@ -327,18 +297,18 @@ image_t* image_rotated(image_t *src, float angle) {
             sy = ((y + mm[0][1]) * c - (x + mm[0][0]) * s);
             if (sx < 0 || sx >= src->width || sy < 0 || sy >= src->height)
                 continue;
-            image_pset(result, x, y, image_pget(src, sx, sy));
+            jeff_image_pset(result, x, y, jeff_image_pget(src, sx, sy));
         }
     return result;
 }
 
-void image_rotate(image_t *src, float angle) {
-    image_t *result = image_rotated(src, angle);
-    image_destroy(src);
+void jeff_image_rotate(jeff_image_t *src, float angle) {
+    jeff_image_t *result = jeff_image_rotated(src, angle);
+    jeff_image_destroy(src);
     src = result;
 }
 
-image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh) {
+jeff_image_t* jeff_image_clipped(jeff_image_t *src, int rx, int ry, int rw, int rh) {
     int ox = _CLAMP(rx, 0, src->width);
     int oy = _CLAMP(ry, 0, src->height);
     if (ox >= src->width || oy >= src->height)
@@ -349,17 +319,17 @@ image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh) {
     int ih = my - oy;
     if (iw <= 0 || ih <= 0)
         return NULL;
-    image_t *result = image_empty(iw, ih);
+    jeff_image_t *result = jeff_image_empty(iw, ih);
     for (int px = 0; px < iw; px++)
         for (int py = 0; py < ih; py++) {
             int cx = ox + px;
             int cy = oy + py;
-            image_pset(result, px, py, image_pget(src, cx, cy));
+            jeff_image_pset(result, px, py, jeff_image_pget(src, cx, cy));
         }
     return result;
 }
 
-static inline void vline(image_t *img, int x, int y0, int y1, int col) {
+static inline void vline(jeff_image_t *img, int x, int y0, int y1, int col) {
     if (y1 < y0) {
         y0 += y1;
         y1  = y0 - y1;
@@ -375,10 +345,10 @@ static inline void vline(image_t *img, int x, int y0, int y1, int col) {
         y1 = img->height - 1;
 
     for(int y = y0; y <= y1; y++)
-        image_pset(img, x, y, col);
+        jeff_image_pset(img, x, y, col);
 }
 
-static inline void hline(image_t *img, int y, int x0, int x1, int col) {
+static inline void hline(jeff_image_t *img, int y, int x0, int x1, int col) {
     if (x1 < x0) {
         x0 += x1;
         x1  = x0 - x1;
@@ -394,10 +364,10 @@ static inline void hline(image_t *img, int y, int x0, int x1, int col) {
         x1 = img->width - 1;
 
     for(int x = x0; x <= x1; x++)
-        image_pset(img, x, y, col);
+        jeff_image_pset(img, x, y, col);
 }
 
-void image_draw_line(image_t *img, int x0, int y0, int x1, int y1, int col) {
+void jeff_image_draw_line(jeff_image_t *img, int x0, int y0, int x1, int y1, int col) {
     if (x0 == x1)
         vline(img, x0, y0, y1, col);
     else if (y0 == y1)
@@ -407,7 +377,7 @@ void image_draw_line(image_t *img, int x0, int y0, int x1, int y1, int col) {
         int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
         int err = (dx > dy ? dx : -dy) / 2;
 
-        while (image_pset(img, x0, y0, col), x0 != x1 || y0 != y1) {
+        while (jeff_image_pset(img, x0, y0, col), x0 != x1 || y0 != y1) {
             int e2 = err;
             if (e2 > -dx) { err -= dy; x0 += sx; }
             if (e2 <  dy) { err += dx; y0 += sy; }
@@ -415,13 +385,13 @@ void image_draw_line(image_t *img, int x0, int y0, int x1, int y1, int col) {
     }
 }
 
-void image_draw_circle(image_t *img, int xc, int yc, int r, int col, int fill) {
+void jeff_image_draw_circle(jeff_image_t *img, int xc, int yc, int r, int col, int fill) {
     int x = -r, y = 0, err = 2 - 2 * r; /* II. Quadrant */
     do {
-        image_pset(img, xc - x, yc + y, col);    /*   I. Quadrant */
-        image_pset(img, xc - y, yc - x, col);    /*  II. Quadrant */
-        image_pset(img, xc + x, yc - y, col);    /* III. Quadrant */
-        image_pset(img, xc + y, yc + x, col);    /*  IV. Quadrant */
+        jeff_image_pset(img, xc - x, yc + y, col);    /*   I. Quadrant */
+        jeff_image_pset(img, xc - y, yc - x, col);    /*  II. Quadrant */
+        jeff_image_pset(img, xc + x, yc - y, col);    /* III. Quadrant */
+        jeff_image_pset(img, xc + y, yc + x, col);    /*  IV. Quadrant */
 
         if (fill) {
             hline(img, yc - y, xc - x, xc + x, col);
@@ -436,7 +406,7 @@ void image_draw_circle(image_t *img, int xc, int yc, int r, int col, int fill) {
     } while (x < 0);
 }
 
-void image_draw_rectangle(image_t *img, int x, int y, int w, int h, int col, int fill) {
+void jeff_image_draw_rectangle(jeff_image_t *img, int x, int y, int w, int h, int col, int fill) {
     if (x < 0) {
         w += x;
         x  = 0;
@@ -467,7 +437,7 @@ void image_draw_rectangle(image_t *img, int x, int y, int w, int h, int col, int
     }
 }
 
-void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill) {
+void jeff_image_draw_triangle(jeff_image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill) {
     if (y0 ==  y1 && y0 ==  y2)
         return;
     if (fill) {
@@ -499,21 +469,21 @@ void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, i
                 _SWAP(ay, by);
             }
             for (j = ax; j <= bx; ++j)
-                image_pset(img, j, y0 + i, col);
+                jeff_image_pset(img, j, y0 + i, col);
         }
     } else {
-        image_draw_line(img, x0, y0, x1, y1, col);
-        image_draw_line(img, x1, y1, x2, y2, col);
-        image_draw_line(img, x2, y2, x0, y0, col);
+        jeff_image_draw_line(img, x0, y0, x1, y1, col);
+        jeff_image_draw_line(img, x1, y1, x2, y2, col);
+        jeff_image_draw_line(img, x2, y2, x0, y0, col);
     }
 }
 
-image_t* image_perlin_noise(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves) {
-    image_t *result = image_empty(width, height);
-    uint8_t *map = perlin_noise_map(width, height, z, offset_x, offset_y, scale, lacunarity, gain, octaves);
+jeff_image_t* jeff_image_perlin_noise(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves) {
+    jeff_image_t *result = jeff_image_empty(width, height);
+    uint8_t *map = jeff_perlin_fbm(width, height, z, offset_x, offset_y, scale, lacunarity, gain, octaves);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            image_pset(result, x, y, RGBA1(map[y * width + x], 255));
+            jeff_image_pset(result, x, y, RGBA1(map[y * width + x], 255));
     free(map);
     return result;
 }
@@ -537,7 +507,7 @@ sg_image sg_load_texture_from_memory(unsigned char *data, size_t data_size) {
     return sg_load_texture_from_memory_ex(data, data_size, NULL, NULL);
 }
 
-static sg_image image_to_sg(image_t *img) {
+static sg_image image_to_sg(jeff_image_t *img) {
     sg_image texture = sg_empty_texture(img->width, img->height);
     sg_image_data desc = {
         .subimage[0][0] = (sg_range) {
@@ -550,7 +520,7 @@ static sg_image image_to_sg(image_t *img) {
 }
 
 sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int *height) {
-    image_t *tmp = image_load(path);
+    jeff_image_t *tmp = jeff_image_load(path);
     if (!tmp)
         return (sg_image){SG_INVALID_ID};
     sg_image texture = image_to_sg(tmp);
@@ -563,7 +533,7 @@ sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int 
 }
 
 sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, unsigned int *width, unsigned int *height) {
-    image_t *tmp = image_load_from_memory(data, data_size);
+    jeff_image_t *tmp = jeff_image_load_from_memory(data, data_size);
     if (!tmp)
         return (sg_image){SG_INVALID_ID};
     sg_image texture = image_to_sg(tmp);
@@ -575,6 +545,6 @@ sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, u
     return texture;
 }
 
-sg_image sg_load_texture_from_image(image_t *img) {
+sg_image sg_load_texture_from_image(jeff_image_t *img) {
     return image_to_sg(img);
 }

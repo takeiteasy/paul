@@ -284,7 +284,7 @@ static void init(void) {
     init_keymap();
 #endif
     init_events();
-    rng_srand(JEFF_RNG_SEED);
+    jeff_srand(JEFF_RNG_SEED);
 
 #ifdef JEFF_FIRST_SCENE
     jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
@@ -322,8 +322,8 @@ static void frame(void) {
     if (state.next_scene) {
         if ((state.scene_prev = state.scene_current)) {
             state.scene_current->exit();
-            events_clear();
-            timers_clear();
+            jeff_events_clear();
+            jeff_timers_clear();
         }
         if ((state.scene_current = state.next_scene))
             state.scene_current->enter();

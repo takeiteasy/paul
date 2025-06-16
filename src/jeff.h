@@ -245,9 +245,9 @@ enum jeff_easing_t {
     EASE_INOUT
 };
 
-float ease(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
-bool flt_cmp(float a, float b);
-bool dbl_cmp(double a, double b);
+float jeff_ease(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
+bool jeff_flt_cmp(float a, float b);
+bool jeff_dbl_cmp(double a, double b);
 
 // returns sapp_width + scale
 int sapp_framebuffer_width(void);
@@ -274,29 +274,30 @@ void sapp_remove_event(sapp_event_type event_type);
 bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
 bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
 void sapp_remove_input_event(const char *event);
+void sapp_clear_events(void);
 #endif
 
-bool vfs_mount(const char *src, const char *dst);
-bool vfs_unmount(const char *name);
-void vfs_unmount_all(void);
+bool jeff_vfs_mount(const char *src, const char *dst);
+bool jeff_vfs_unmount(const char *name);
+void jeff_vfs_unmount_all(void);
 unsigned char *vfs_read(const char *filename, size_t *size);
 #ifdef JEFF_USE_BLOCKS
-typedef int(^glob_callback_t)(const char*);
+typedef int(^jeff_glob_callback_t)(const char*);
 #else
-typedef int(*glob_callback_t)(const char*);
+typedef int(*jeff_glob_callback_t)(const char*);
 #endif
-void vfs_glob(const char *glob, glob_callback_t callback);
+void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback);
 
-void rng_srand(uint64_t seed);
-uint64_t rng_rand_int(void);
-float rng_rand_float(void);
-int rng_rand_int_range(int min, int max);
-float rng_rand_float_range(float min, float max);
-int rng_rand_choice(int length);
-int* rng_rand_sample(int length, int max);
+void jeff_srand(uint64_t seed);
+uint64_t jeff_rand_int(void);
+float jeff_rand_float(void);
+int jeff_rand_int_range(int min, int max);
+float jeff_rand_float_range(float min, float max);
+int jeff_rand_choice(int length);
+int* jeff_rand_sample(int length, int max);
 
-uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve);
-uint8_t* perlin_noise_map(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
+uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve);
+uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
 float perlin_noise(float x, float y, float z);
 // TODO: Poisson disc sampling
 
@@ -318,49 +319,49 @@ int RGBa(int c, uint8_t a);
 typedef struct image_t {
     unsigned int width, height;
     int *buffer;
-} image_t;
+} jeff_image_t;
 
-image_t* image_empty(unsigned int w, unsigned int h);
-image_t* image_filled(unsigned int w, unsigned int h, int color);
-image_t* image_load(const char *path);
-image_t* image_load_from_memory(const void *data, size_t length);
-bool image_save(image_t *img, const char *path);
-void image_destroy(image_t *img);
+jeff_image_t* jeff_image_empty(unsigned int w, unsigned int h);
+jeff_image_t* jeff_image_filled(unsigned int w, unsigned int h, int color);
+jeff_image_t* jeff_image_load(const char *path);
+jeff_image_t* jeff_image_load_from_memory(const void *data, size_t length);
+bool jeff_image_save(jeff_image_t *img, const char *path);
+void jeff_image_destroy(jeff_image_t *img);
 
-void image_fill(image_t *img, int col);
-void image_flood(image_t *img, int x, int y, int col);
-void image_pset(image_t *img, int x, int y, int col);
-int image_pget(image_t *img, int x, int y);
-void image_paste(image_t *dst, image_t *src, int x, int y);
-void image_clipped_paste(image_t *dst, image_t *src, int x, int y, int rx, int ry, int rw, int rh);
-void image_resize(image_t *src, int nw, int nh);
-void image_rotate(image_t *src, float angle);
+void jeff_image_fill(jeff_image_t *img, int col);
+void jeff_image_flood(jeff_image_t *img, int x, int y, int col);
+void jeff_image_pset(jeff_image_t *img, int x, int y, int col);
+int jeff_image_pget(jeff_image_t *img, int x, int y);
+void jeff_image_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y);
+void jeff_image_clipped_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y, int rx, int ry, int rw, int rh);
+void jeff_image_resize(jeff_image_t *src, int nw, int nh);
+void jeff_image_rotate(jeff_image_t *src, float angle);
 
 #ifdef JEFF_USE_BLOCKS
-typedef int(^image_callback_t)(int x, int y, int col);
+typedef int(^jeff_image_callback_t)(int x, int y, int col);
 #else
-typedef int(*image_callback_t)(int x, int y, int col);
+typedef int(*jeff_image_callback_t)(int x, int y, int col);
 #endif
-void image_pass_thru(image_t *img, image_callback_t fn);
+void jeff_image_pass_thru(jeff_image_t *img, jeff_image_callback_t fn);
 
-image_t* image_dupe(image_t *src);
-image_t* image_resized(image_t *src, int nw, int nh);
-image_t* image_rotated(image_t *src, float angle);
-image_t* image_clipped(image_t *src, int rx, int ry, int rw, int rh);
+jeff_image_t* jeff_image_dupe(jeff_image_t *src);
+jeff_image_t* jeff_image_resized(jeff_image_t *src, int nw, int nh);
+jeff_image_t* jeff_image_rotated(jeff_image_t *src, float angle);
+jeff_image_t* jeff_image_clipped(jeff_image_t *src, int rx, int ry, int rw, int rh);
 
-void image_draw_line(image_t *img, int x0, int y0, int x1, int y1, int col);
-void image_draw_circle(image_t *img, int xc, int yc, int r, int col, int fill);
-void image_draw_rectangle(image_t *img, int x, int y, int w, int h, int col, int fill);
-void image_draw_triangle(image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill);
+void jeff_image_draw_line(jeff_image_t *img, int x0, int y0, int x1, int y1, int col);
+void jeff_image_draw_circle(jeff_image_t *img, int xc, int yc, int r, int col, int fill);
+void jeff_image_draw_rectangle(jeff_image_t *img, int x, int y, int w, int h, int col, int fill);
+void jeff_image_draw_triangle(jeff_image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill);
 
-image_t* image_perlin_noise(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
+jeff_image_t* jeff_image_from_perlin(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
 
 sg_image sg_empty_texture(unsigned int width, unsigned int height);
 sg_image sg_load_texture(const char *path);
 sg_image sg_load_texture_from_memory(unsigned char *data, size_t data_size);
 sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int *height);
 sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, unsigned int *width, unsigned int *height);
-sg_image sg_load_texture_from_image(image_t *img);
+sg_image sg_load_texture_from_image(jeff_image_t *img);
 
 typedef struct audio_t {
     unsigned int count;
@@ -368,79 +369,79 @@ typedef struct audio_t {
     unsigned int size; // 8, 16, or 32
     unsigned int channels;
     void *buffer;
-} audio_t;
+} jeff_audio_t;
 
-audio_t* audio_load(const char *path);
-audio_t* audio_load_from_memory(const unsigned char *data, int size);
-bool audio_save(audio_t *audio, const char *path);
-void audio_destroy(audio_t *audio);
+jeff_audio_t* jeff_audio_load(const char *path);
+jeff_audio_t* jeff_audio_load_from_memory(const unsigned char *data, int size);
+bool jeff_audio_save(jeff_audio_t *audio, const char *path);
+void jeff_audio_destroy(jeff_audio_t *audio);
 
-audio_t* audio_dupe(audio_t *audio);
-void audio_crop(audio_t *audio, int init_sample, int final_sample);
-audio_t* audio_cropped(audio_t *audio, int init_sample, int final_sample);
-float* audio_read_all_samples(audio_t *audio);
-float audio_sample(audio_t *audio, int frame);
-void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst);
-float audio_length(audio_t *audio);
+jeff_audio_t* jeff_audio_dupe(jeff_audio_t *audio);
+void jeff_audio_crop(jeff_audio_t *audio, int init_sample, int final_sample);
+jeff_audio_t* jeff_audio_cropped(jeff_audio_t *audio, int init_sample, int final_sample);
+float* jeff_audio_read_all_samples(jeff_audio_t *audio);
+float jeff_audio_sample(jeff_audio_t *audio, int frame);
+void jeff_audio_read_samples(jeff_audio_t *audio, int start_frame, int end_frame, float *dst);
+float jeff_audio_length(jeff_audio_t *audio);
 
 #ifdef JEFF_USE_BLOCKS
-typedef void(^event_callback_t)(void*);
-typedef void(^timer_callback_t)(void*);
+typedef void(^jeff_event_callback_t)(void*);
+typedef void(^jeff_timer_callback_t)(void*);
 #else
-typedef void(*event_callback_t)(void*);
-typedef void(*timer_callback_t)(void*);
+typedef void(*jeff_event_callback_t)(void*);
+typedef void(*jeff_timer_callback_t)(void*);
 #endif
 
-void event_listen(const char *name, event_callback_t cb, void *userdata);
-void event_listen_once(const char *name, event_callback_t cb, void *userdata);
-void event_remove(const char *name);
-void event_emit(const char *name);
-void events_clear(void);
+void jeff_event_listen(const char *name, jeff_event_callback_t cb, void *userdata);
+void jeff_event_listen_once(const char *name, jeff_event_callback_t cb, void *userdata);
+void jeff_event_remove(const char *name);
+void jeff_event_emit(const char *name);
+void jeff_events_clear(void);
 
-void timer_every(const char *name, int64_t ms, timer_callback_t cb, void *userdata);
-void timer_emit_every(const char *name, int64_t ms, const char *event, void *userdata);
-void timer_after(const char *name, int64_t ms, timer_callback_t cb, void *userdata);
-void timer_emit_after(const char *name, int64_t ms, const char *event, void *userdata);
-void timer_remove(const char *name);
-void timers_clear(void);
+void jeff_timer_every(const char *name, int64_t ms, jeff_timer_callback_t cb, void *userdata);
+void jeff_timer_emit_every(const char *name, int64_t ms, const char *event, void *userdata);
+void jeff_timer_after(const char *name, int64_t ms, jeff_timer_callback_t cb, void *userdata);
+void jeff_timer_emit_after(const char *name, int64_t ms, const char *event, void *userdata);
+void jeff_timer_remove(const char *name);
+void jeff_timers_clear(void);
 
 #ifndef JEFF_NO_THREADS
 typedef struct thread_work_t {
     void(*func)(void*);
     void *arg;
     struct thread_work_t *next;
-} thread_work_t;
+} jeff_thrd_work_t;
 
 typedef struct thread_pool_t {
-    thread_work_t *head, *tail;
+    jeff_thrd_work_t *head, *tail;
     paul_mtx_t workMutex;
     paul_cnd_t workCond, workingCond;
     size_t workingCount, threadCount;
     int kill;
-} thread_pool_t;
+} jeff_thrd_pool_t;
 
-thread_pool_t* thread_pool(size_t maxThreads);
-void thread_pool_destroy(thread_pool_t *pool);
-int thread_pool_push_work(thread_pool_t *pool, void(*func)(void*), void *arg);
+jeff_thrd_pool_t* jeff_thrd_pool(size_t maxThreads);
+void jeff_thrd_pool_destroy(jeff_thrd_pool_t *pool);
+int jeff_thrd_pool_push_work(jeff_thrd_pool_t *pool, void(*func)(void*), void *arg);
 // Adds work to the front of the queue
-int thread_pool_push_work_priority(thread_pool_t *pool, void(*func)(void*), void *arg);
-void thread_pool_join(thread_pool_t *pool);
+int jeff_thrd_pool_push_work_priority(jeff_thrd_pool_t *pool, void(*func)(void*), void *arg);
+void jeff_thrd_pool_join(jeff_thrd_pool_t *pool);
 
 typedef struct thread_queue_entry_t {
     void *data;
     struct thread_queue_entry_t *next;
-} thread_queue_entry_t;
+} jeff_thrd_queue_entry_t;
 
 typedef struct thread_queue_t {
-    thread_queue_entry_t *head, *tail;
+    jeff_thrd_queue_entry_t *head, *tail;
     paul_mtx_t readLock, writeLock;
     size_t count;
-} thread_queue_t;
+} jeff_thrd_queue_t;
 
-thread_queue_t* thread_queue(void);
-void thread_queue_push(thread_queue_t *queue, void *data);
-void* thread_queue_pop(thread_queue_t *queue);
-void thread_queue_destroy(thread_queue_t *queue);
+jeff_thrd_queue_t* jeff_thrd_queue(void);
+void jeff_thrd_queue_push(jeff_thrd_queue_t *queue, void *data);
+void* jeff_thrd_queue_pop(jeff_thrd_queue_t *queue);
+void jeff_thrd_queue_destroy(jeff_thrd_queue_t *queue);
 #endif
 
 #ifdef __cplusplus

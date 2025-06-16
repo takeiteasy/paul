@@ -101,25 +101,12 @@ static bool sapp_check_state(input_state_t *istate) {
 static int _check(table_pair_t *pair, void *userdata) {
     keymap_t *keymap = (keymap_t*)pair->value;
     if (keymap && sapp_check_state(&keymap->input))
-        event_emit(pair->key.string);
+        jeff_event_emit(pair->key.string);
     return 1;
 }
 
 void check_keymaps(void) {
     table_each(&_state.keymap, _check, NULL);
-}
-
-int _free(table_pair_t *pair, void *userdata) {
-    keymap_t *keymap = (keymap_t*)pair->value;
-    if (keymap)
-        garry_free(keymap);
-    return 1;
-}
-
-void clear_keymap(void) {
-    table_each(&_state.keymap, _free, NULL);
-    table_free(&_state.keymap);
-    _state.keymap = table_new();
 }
 
 void sapp_emit_on_event(sapp_event_type event_type, const char *event) {
@@ -138,11 +125,21 @@ void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback) {
     garry_append(_state.events[event_type], e);
 }
 
-void clear_events(void) {
+int _free(table_pair_t *pair, void *userdata) {
+    keymap_t *keymap = (keymap_t*)pair->value;
+    if (keymap)
+        garry_free(keymap);
+    return 1;
+}
+
+void sapp_clear_events(void) {
     for (int i = 0; i < _SAPP_EVENTTYPE_NUM; i++)
         if (_state.events[i])
             garry_free(_state.events[i]);
     memset(&_state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
+    table_each(&_state.keymap, _free, NULL);
+    table_free(&_state.keymap);
+    _state.keymap = table_new();
 }
 
 void check_event(sapp_event_type type) {
@@ -151,7 +148,7 @@ void check_event(sapp_event_type type) {
     for (int i = 0; i < garry_count(_state.events[type]); i++) {
         sevent *event = &_state.events[type][i];
         if (event->event != NULL)
-            event_emit(event->event);
+            jeff_event_emit(event->event);
     }
 }
 

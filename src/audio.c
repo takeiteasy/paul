@@ -27,24 +27,24 @@
 #define DR_FLAC_NO_WIN32_IO
 #include "dr_flac.h"
 
-audio_t* audio_load(const char *path) {
+jeff_audio_t* jeff_audio_load(const char *path) {
     size_t size = 0;
     unsigned char *data = vfs_read(path, &size);
     if (!data)
         return NULL;
-    audio_t* result = audio_load_from_memory(data, (int)size);
+    jeff_audio_t* result = jeff_audio_load_from_memory(data, (int)size);
     free(data);
     return result;
 }
 
-static audio_t* load_wav(const unsigned char *data, int size) {
+static jeff_audio_t* load_wav(const unsigned char *data, int size) {
     drwav wav;
     memset(&wav, 0, sizeof(drwav));
     bool success = drwav_init_memory(&wav, data, size, NULL);
     if (!success)
         return NULL;
 
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     result->count = (unsigned int)wav.totalPCMFrameCount;
     result->rate = wav.sampleRate;
     result->size = 16;
@@ -53,12 +53,12 @@ static audio_t* load_wav(const unsigned char *data, int size) {
     return result;
 }
 
-static audio_t* load_ogg(const unsigned char *data, int size) {
+static jeff_audio_t* load_ogg(const unsigned char *data, int size) {
     stb_vorbis *ogg = stb_vorbis_open_memory((unsigned char *)data, size, NULL, NULL);
     if (!ogg)
         return NULL;
 
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     stb_vorbis_info info = stb_vorbis_get_info(ogg);
     result->rate = info.sample_rate;
     result->size = 16;
@@ -70,11 +70,11 @@ static audio_t* load_ogg(const unsigned char *data, int size) {
     return result;
 }
 
-static audio_t* load_mp3(const unsigned char *data, int size) {
+static jeff_audio_t* load_mp3(const unsigned char *data, int size) {
     drmp3_config config;
     memset(&config, 0, sizeof(drmp3_config));
 
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     unsigned long long int total_count = 0;
     if (!(result->buffer = drmp3_open_memory_and_read_pcm_frames_f32(data, size, &config, &total_count, NULL))) {
         free(result);
@@ -87,11 +87,11 @@ static audio_t* load_mp3(const unsigned char *data, int size) {
     return result;
 }
 
-static audio_t* load_qoa(const unsigned char *data, int size) {
+static jeff_audio_t* load_qoa(const unsigned char *data, int size) {
     qoa_desc qoa;
     memset(&qoa, 0, sizeof(qoa_desc));
 
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     if (!(result->buffer = qoa_decode(data, size, &qoa))) {
         free(result);
         return NULL;
@@ -103,9 +103,9 @@ static audio_t* load_qoa(const unsigned char *data, int size) {
     return result;
 }
 
-static audio_t* load_flac(const unsigned char *data, int size) {
+static jeff_audio_t* load_flac(const unsigned char *data, int size) {
     unsigned long long int total_count = 0;
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     if (!(result->buffer = drflac_open_memory_and_read_pcm_frames_s16(data, size, &result->channels, &result->rate, &total_count, NULL))) {
         free(result);
         return NULL;
@@ -158,7 +158,7 @@ static bool check_if_flac(const unsigned char *data, int size) {
     return size > 4 && memcmp(data, flac, 4);
 }
 
-audio_t* audio_load_from_memory(const unsigned char *data, int size) {
+jeff_audio_t* jeff_audio_load_from_memory(const unsigned char *data, int size) {
     if (check_if_mp3(data, size))
         return load_wav(data, size);
     else if (check_if_ogg(data, size))
@@ -173,12 +173,12 @@ audio_t* audio_load_from_memory(const unsigned char *data, int size) {
         return NULL;
 }
 
-bool audio_save(audio_t *audio, const char *path) {
+bool jeff_audio_save(jeff_audio_t *audio, const char *path) {
     // TODO: Write wave file
     return false;
 }
 
-void audio_destroy(audio_t *audio) {
+void jeff_audio_destroy(jeff_audio_t *audio) {
     if (audio) {
         if (audio->buffer)
             free(audio->buffer);
@@ -186,10 +186,10 @@ void audio_destroy(audio_t *audio) {
     }
 }
 
-audio_t* audio_dupe(audio_t *audio) {
+jeff_audio_t* jeff_audio_dupe(jeff_audio_t *audio) {
     if (!audio)
         return NULL;
-    audio_t *result = malloc(sizeof(audio_t));
+    jeff_audio_t *result = malloc(sizeof(jeff_audio_t));
     size_t size = audio->count * audio->channels * audio->size / 8;
     result->buffer = malloc(size);
     memcpy(result->buffer, audio->buffer, size);
@@ -200,7 +200,7 @@ audio_t* audio_dupe(audio_t *audio) {
     return result;
 }
 
-void audio_crop(audio_t *audio, int init_sample, int final_sample) {
+void jeff_audio_crop(jeff_audio_t *audio, int init_sample, int final_sample) {
     assert(init_sample > 0 && init_sample < final_sample && (unsigned int)final_sample < audio->count * audio->channels);
     int diff = final_sample - init_sample;
     void *buffer = malloc(diff * audio->size / 8);
@@ -209,10 +209,10 @@ void audio_crop(audio_t *audio, int init_sample, int final_sample) {
     audio->buffer = buffer;
 }
 
-audio_t* audio_cropped(audio_t *audio, int init_sample, int final_sample) {
+jeff_audio_t* jeff_audio_cropped(jeff_audio_t *audio, int init_sample, int final_sample) {
     assert(init_sample > 0 && init_sample < final_sample && (unsigned int)final_sample < audio->count * audio->channels);
-    audio_t *result = audio_dupe(audio);
-    audio_crop(result, init_sample, final_sample);
+    jeff_audio_t *result = jeff_audio_dupe(audio);
+    jeff_audio_crop(result, init_sample, final_sample);
     return result;
 }
 
@@ -232,11 +232,11 @@ static float _sample(void *buffer, int size, int index, size_t max_index) {
     }
 }
 
-float audio_sample(audio_t *audio, int frame) {
+float jeff_audio_sample(jeff_audio_t *audio, int frame) {
     return _sample(audio->buffer, audio->size, frame, audio->count * audio->channels);
 }
 
-float* audio_read_all_samples(audio_t *audio) {
+float* jeff_audio_read_all_samples(jeff_audio_t *audio) {
     int sz = audio->count * audio->channels;
     float *samples = malloc(sz * sizeof(float));
     for (unsigned int i = 0; i < sz; i++)
@@ -244,7 +244,7 @@ float* audio_read_all_samples(audio_t *audio) {
     return samples;
 }
 
-void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst) {
+void jeff_audio_read_samples(jeff_audio_t *audio, int start_frame, int end_frame, float *dst) {
     if (!dst)
         return;
     int sz = audio->count * audio->channels;
@@ -259,6 +259,6 @@ void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *d
         dst[i] = _sample(audio->buffer, audio->size, _a + i, sz);
 }
 
-float audio_length(audio_t *audio) {
+float jeff_audio_length(jeff_audio_t *audio) {
     return (float)(audio->count / audio->channels) / (float)audio->rate;
 }

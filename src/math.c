@@ -293,7 +293,7 @@ static float ease_elastic_inout(float t, float b, float c, float d) {
     return (postFix * sinf((t * d - s) * (2.0f * M_PI) / p) * 0.5f + c + b);
 }
 
-float ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float b, float c, float d) {
+float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float b, float c, float d) {
     switch (fn) {
         default:
         case JEFF_EASING_LINEAR:
@@ -383,10 +383,10 @@ float ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float b, fl
     }
 }
 
-bool flt_cmp(float a, float b) {
+bool jeff_flt_cmp(float a, float b) {
     return fabsf(a - b) <= _EPSILON * fmaxf(1.f, fmaxf(fabsf(a), fabsf(b)));
 }
 
-bool dbl_cmp(double a, double b) {
+bool jeff_dbl_cmp(double a, double b) {
     return fabs(a - b) <= _EPSILON * fmax(1.f, fmax(fabs(a), fabs(b)));
 }

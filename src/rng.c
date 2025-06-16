@@ -48,7 +48,7 @@ static struct {
     uint_fast16_t c;
 } state;
 
-void rng_srand(uint64_t seed) {
+void jeff_srand(uint64_t seed) {
     if (!seed)
         seed = (uint64_t)time(NULL);
     uint_fast16_t i;
@@ -62,10 +62,10 @@ void rng_srand(uint64_t seed) {
         state.s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
-        (void)rng_rand_int();
+        (void)jeff_rand_int();
 }
 
-uint64_t rng_rand_int(void) {
+uint64_t jeff_rand_int(void) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
@@ -87,14 +87,14 @@ uint64_t rng_rand_int(void) {
     return state.s[i&_PRNG_RAND_SMASK];
 }
 
-float rng_rand_float(void) {
-    return (float)rng_rand_int() / (float)PRNG_RAND_MAX;
+float jeff_rand_float(void) {
+    return (float)jeff_rand_int() / (float)PRNG_RAND_MAX;
 }
 
-int rng_rand_int_range(int min, int max) {
+int jeff_rand_int_range(int min, int max) {
     if (min > max)
         _SWAP(min, max);
-    return (int)(rng_rand_float() * (max - min + 1) + min);
+    return (int)(jeff_rand_float() * (max - min + 1) + min);
 }
 
 #define __SWAP(a, b)    \
@@ -105,24 +105,24 @@ int rng_rand_int_range(int min, int max) {
         b = temp;     \
     } while (0)
 
-float rng_rand_float_range(float min, float max) {
+float jeff_rand_float_range(float min, float max) {
     if (min > max)
         __SWAP(min, max);
-    return rng_rand_float() * (max - min) + min;
+    return jeff_rand_float() * (max - min) + min;
 }
 
-int rng_rand_choice(int length) {
-    return rng_rand_int_range(0, length);
+int jeff_rand_choice(int length) {
+    return jeff_rand_int_range(0, length);
 }
 
-int* rng_rand_sample(int length, int max) {
+int* jeff_rand_sample(int length, int max) {
     int *result = malloc(length * sizeof(int));
     for (int i = 0; i < length; i++)
-        result[i] = rng_rand_choice(max);
+        result[i] = jeff_rand_choice(max);
     return result;
 }
 
-uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve) {
+uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve) {
     size_t sz = width * height * sizeof(int);
     uint8_t *result = malloc(sz);
     memset(result, 0, sz);
@@ -130,7 +130,7 @@ uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            result[y * width + x] = rng_rand_int_range(1, 100) < fill_chance;
+            result[y * width + x] = jeff_rand_int_range(1, 100) < fill_chance;
     // Run cellular-automata on grid n times
     for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
@@ -153,7 +153,7 @@ uint8_t* cellular_automata_map(unsigned int width, unsigned int height, unsigned
     return result;
 }
 
-uint8_t* perlin_noise_map(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
+uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
     float min = FLT_MAX, max = FLT_MIN;
     float *grid = malloc(width * height * sizeof(float));
     // Loop through grid and apply noise transformation to each cell
