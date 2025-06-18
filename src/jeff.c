@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
 #define SOKOL_IMPL
+#define SOKOL_INPUT_IMPL
+#define SOKOL_MIXER_IMPL
+#define SOKOL_IMAGE_IMPL
 #include "jeff.h"
 #ifndef JEFF_NO_ARGUMENTS
 #include "sokol/sokol_args.h"
@@ -28,10 +31,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 #include "garry.h"
 #define TABLE_IMPLEMENTATION
 #include "table.h"
-
-#ifdef PLATFORM_MAC
-#include <Cocoa/Cocoa.h>
-#endif
 
 #define SETTINGS                                                                                 \
     X("width", integer, width, DEFAULT_WINDOW_WIDTH, "Set window width")                         \
@@ -71,30 +70,6 @@ static struct {
         }
     }
 };
-
-int sapp_framebuffer_width(void) {
-    return sapp_width() * (int)sapp_framebuffer_scalefactor();
-}
-
-int sapp_framebuffer_height(void) {
-    return sapp_height() * (int)sapp_framebuffer_scalefactor();
-}
-
-float sapp_framebuffer_widthf(void) {
-    return sapp_widthf() * sapp_framebuffer_scalefactor();
-}
-
-float sapp_framebuffer_heightf(void) {
-    return sapp_heightf() * sapp_framebuffer_scalefactor();
-}
-
-float sapp_framebuffer_scalefactor(void) {
-#ifdef PLATFORM_MAC
-    return [[NSScreen mainScreen] backingScaleFactor];
-#else
-    return 1.f; // I don't know if this is a thing for Windows/Linux so return 1
-#endif
-}
 
 #ifdef JEFF_NO_INPUT
 #define X(NAME)                         \

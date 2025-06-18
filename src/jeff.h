@@ -63,8 +63,17 @@ extern "C" {
 #endif
 #endif
 
-#if defined(JEFF_USE_BLOCKS) && !defined(JEFF_HAS_BLOCKS)
+#ifdef JEFF_USE_BLOCKS
+#ifndef JEFF_HAS_BLOCKS
 #error This platform doesn't support blocks, undefine JEFF_USE_BLOCKS
+#endif
+#define GENERIC_USE_BLOCKS
+#endif
+
+#ifdef JEFF_USE_BLOCKS
+#define _CALLBACK_TYPEDEF(RET, NAME, ...) typedef RET(^NAME)(__VA_ARGS__)
+#else
+#define _CALLBACK_TYPEDEF(RET, NAME, ...) typedef RET(*NAME)(__VA_ARGS__)
 #endif
 
 #if __has_include("jeff_config.h")
@@ -149,58 +158,6 @@ extern "C" {
 #endif
 #endif
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdarg.h>
-#include <math.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <float.h>
-#include <time.h>
-#include <limits.h>
-
-#include "sokol/sokol_gfx.h"
-#include "sokol/sokol_app.h"
-#include "sokol/sokol_glue.h"
-#include "sokol/sokol_audio.h"
-#include "sokol/sokol_log.h"
-#include "sokol/sokol_time.h"
-//#include "sokol/sokol_fetch.h"
-#include "sokol/util/sokol_color.h"
-#include "sokol/util/sokol_shape.h"
-#ifndef JEFF_NO_INPUT
-#include "sokol_input.h"
-#endif
-#include "sokol_generic.h"
-
-typedef struct jeff_scene_t jeff_scene_t;
-
-struct jeff_scene_t {
-    const char *name;
-    void(*enter)(void);
-    void(*exit)(void);
-#ifdef JEFF_NO_INPUT
-    void(*event)(const sapp_event*);
-#endif
-    void(*step)(void);
-};
-
-#define X(NAME) extern jeff_scene_t NAME##_scene;
-JEFF_SCENES
-#undef X
-
-void jeff_set_scene(jeff_scene_t *scene);
-void jeff_set_scene_named(const char *name);
-
-#ifdef JEFF_USE_BLOCKS
-typedef void(^jeff_exit_callback_t)(void*);
-#else
-typedef void(*jeff_exit_callback_t)(void*);
-#endif
-void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
-
 #define _PI 3.14159265358979323846264338327950288
 #define _TWO_PI 6.28318530717958647692 // 2 * pi
 #define _TAU TWO_PI
@@ -227,6 +184,53 @@ void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
 #define _REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
 #define _CLAMP(x, low, high) _MIN(_MAX(x, low), high)
 
+#include <stdint.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <math.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <float.h>
+#include <time.h>
+#include <limits.h>
+#include "sokol/sokol_gfx.h"
+#include "sokol/sokol_app.h"
+#include "sokol/sokol_glue.h"
+#include "sokol/sokol_audio.h"
+#include "sokol/sokol_log.h"
+#include "sokol/sokol_time.h"
+//#include "sokol/sokol_fetch.h"
+#include "sokol/util/sokol_color.h"
+#include "sokol/util/sokol_shape.h"
+#include "sokol_image.h"
+#include "sokol_mixer.h"
+#ifndef JEFF_NO_INPUT
+#include "sokol_input.h"
+#endif
+
+typedef struct jeff_scene_t jeff_scene_t;
+
+struct jeff_scene_t {
+    const char *name;
+    void(*enter)(void);
+    void(*exit)(void);
+#ifdef JEFF_NO_INPUT
+    void(*event)(const sapp_event*);
+#endif
+    void(*step)(void);
+};
+
+#define X(NAME) extern jeff_scene_t NAME##_scene;
+JEFF_SCENES
+#undef X
+
+void jeff_set_scene(jeff_scene_t *scene);
+void jeff_set_scene_named(const char *name);
+_CALLBACK_TYPEDEF(void, jeff_exit_callback_t, void*);
+void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
+
 enum jeff_easing_fn {
     JEFF_EASING_LINEAR = 0,
     JEFF_EASING_SINE,
@@ -249,26 +253,11 @@ float jeff_ease(enum jeff_easing_fn func, enum jeff_easing_t type, float t, floa
 bool jeff_flt_cmp(float a, float b);
 bool jeff_dbl_cmp(double a, double b);
 
-// returns sapp_width + scale
-int sapp_framebuffer_width(void);
-// returns sapp_height + scale
-int sapp_framebuffer_height(void);
-// returns sapp_widthf + scale
-float sapp_framebuffer_widthf(void);
-// returns sapp_heightf + scale
-float sapp_framebuffer_heightf(void);
-// returns monitor scale factor (Mac) or 1.f (other platforms)
-float sapp_framebuffer_scalefactor(void);
-
 bool jeff_vfs_mount(const char *src, const char *dst);
 bool jeff_vfs_unmount(const char *name);
 void jeff_vfs_unmount_all(void);
 unsigned char *vfs_read(const char *filename, size_t *size);
-#ifdef JEFF_USE_BLOCKS
-typedef int(^jeff_glob_callback_t)(const char*);
-#else
-typedef int(*jeff_glob_callback_t)(const char*);
-#endif
+_CALLBACK_TYPEDEF(int, jeff_glob_callback_t, const char*);
 void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback);
 
 void jeff_srand(uint64_t seed);
@@ -276,105 +265,13 @@ uint64_t jeff_rand_int(void);
 float jeff_rand_float(void);
 int jeff_rand_int_range(int min, int max);
 float jeff_rand_float_range(float min, float max);
-int jeff_rand_choice(int length);
-int* jeff_rand_sample(int length, int max);
 
 uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve);
-uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
-float noise3(float x, float y, float z);
-#define noise2(X, Y) noise3((X), (Y), 0)
+uint8_t* jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
 // TODO: Poisson disc sampling
 
-int RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-int RGB(uint8_t r, uint8_t g, uint8_t b);
-int RGBA1(uint8_t c, uint8_t a);
-int RGB1(uint8_t c);
-
-uint8_t Rgba(int c);
-uint8_t rGba(int c);
-uint8_t rgBa(int c);
-uint8_t rgbA(int c);
-
-int rGBA(int c, uint8_t r);
-int RgBA(int c, uint8_t g);
-int RGbA(int c, uint8_t b);
-int RGBa(int c, uint8_t a);
-
-typedef struct image_t {
-    unsigned int width, height;
-    int *buffer;
-} jeff_image_t;
-
-jeff_image_t* jeff_empty_image(unsigned int w, unsigned int h);
-jeff_image_t* jeff_image_filled(unsigned int w, unsigned int h, int color);
-jeff_image_t* jeff_image_load(const char *path);
-jeff_image_t* jeff_image_load_from_memory(const void *data, size_t length);
-bool jeff_image_save(jeff_image_t *img, const char *path);
-void jeff_image_destroy(jeff_image_t *img);
-
-void jeff_image_fill(jeff_image_t *img, int col);
-void jeff_image_flood(jeff_image_t *img, int x, int y, int col);
-void jeff_image_pset(jeff_image_t *img, int x, int y, int col);
-int jeff_image_pget(jeff_image_t *img, int x, int y);
-void jeff_image_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y);
-void jeff_image_clipped_paste(jeff_image_t *dst, jeff_image_t *src, int x, int y, int rx, int ry, int rw, int rh);
-void jeff_image_resize(jeff_image_t *src, int nw, int nh);
-void jeff_image_rotate(jeff_image_t *src, float angle);
-
-#ifdef JEFF_USE_BLOCKS
-typedef int(^jeff_image_callback_t)(int x, int y, int col);
-#else
-typedef int(*jeff_image_callback_t)(int x, int y, int col);
-#endif
-void jeff_image_pass_thru(jeff_image_t *img, jeff_image_callback_t fn);
-
-jeff_image_t* jeff_image_dupe(jeff_image_t *src);
-jeff_image_t* jeff_image_resized(jeff_image_t *src, int nw, int nh);
-jeff_image_t* jeff_image_rotated(jeff_image_t *src, float angle);
-jeff_image_t* jeff_image_clipped(jeff_image_t *src, int rx, int ry, int rw, int rh);
-
-void jeff_image_draw_line(jeff_image_t *img, int x0, int y0, int x1, int y1, int col);
-void jeff_image_draw_circle(jeff_image_t *img, int xc, int yc, int r, int col, int fill);
-void jeff_image_draw_rectangle(jeff_image_t *img, int x, int y, int w, int h, int col, int fill);
-void jeff_image_draw_triangle(jeff_image_t *img, int x0, int y0, int x1, int y1, int x2, int y2, int col, int fill);
-
-jeff_image_t* jeff_image_from_perlin(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
-
-sg_image sg_empty_texture(unsigned int width, unsigned int height);
-sg_image sg_load_texture(const char *path);
-sg_image sg_load_texture_from_memory(unsigned char *data, size_t data_size);
-sg_image sg_load_texture_ex(const char *path, unsigned int *width, unsigned int *height);
-sg_image sg_load_texture_from_memory_ex(unsigned char *data, size_t data_size, unsigned int *width, unsigned int *height);
-sg_image sg_load_texture_from_image(jeff_image_t *img);
-
-typedef struct audio_t {
-    unsigned int count;
-    unsigned int rate;
-    unsigned int size; // 8, 16, or 32
-    unsigned int channels;
-    void *buffer;
-} jeff_audio_t;
-
-jeff_audio_t* jeff_audio_load(const char *path);
-jeff_audio_t* jeff_audio_load_from_memory(const unsigned char *data, int size);
-bool jeff_audio_save(jeff_audio_t *audio, const char *path);
-void jeff_audio_destroy(jeff_audio_t *audio);
-
-jeff_audio_t* jeff_audio_dupe(jeff_audio_t *audio);
-void jeff_audio_crop(jeff_audio_t *audio, int init_sample, int final_sample);
-jeff_audio_t* jeff_audio_cropped(jeff_audio_t *audio, int init_sample, int final_sample);
-float* jeff_audio_read_all_samples(jeff_audio_t *audio);
-float jeff_audio_sample(jeff_audio_t *audio, int frame);
-void jeff_audio_read_samples(jeff_audio_t *audio, int start_frame, int end_frame, float *dst);
-float jeff_audio_length(jeff_audio_t *audio);
-
-#ifdef JEFF_USE_BLOCKS
-typedef void(^jeff_event_callback_t)(void*);
-typedef void(^jeff_timer_callback_t)(void*);
-#else
-typedef void(*jeff_event_callback_t)(void*);
-typedef void(*jeff_timer_callback_t)(void*);
-#endif
+_CALLBACK_TYPEDEF(void, jeff_event_callback_t, void*);
+_CALLBACK_TYPEDEF(void, jeff_timer_callback_t, void*);
 
 void jeff_event_listen(const char *name, jeff_event_callback_t cb, void *userdata);
 void jeff_event_listen_once(const char *name, jeff_event_callback_t cb, void *userdata);
@@ -390,20 +287,16 @@ void jeff_timer_remove(const char *name);
 void jeff_timers_clear(void);
 
 #ifndef JEFF_NO_INPUT
-#ifdef JEFF_USE_BLOCKS
-typedef int(^sapp_event_callback_t)(void*);
-#else
-typedef int(*sapp_event_callback_t)(void*);
-#endif
+_CALLBACK_TYPEDEF(int, jeff_input_event_callback_t, void*);
 
-void sapp_emit_on_event(sapp_event_type event_type, const char *event);
-void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback);
-void sapp_remove_event(sapp_event_type event_type);
+void jeff_emit_on_event(sapp_event_type event_type, const char *event);
+void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callback);
+void jeff_remove_event(sapp_event_type event_type);
 // TODO: Add action type (up/down)
-bool sapp_on_input_str(const char *input_str, const char *event, void *userdata);
-bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...);
-void sapp_remove_input_event(const char *event);
-void sapp_clear_events(void);
+bool jeff_on_input_str(const char *input_str, const char *event, void *userdata);
+bool jeff_on_input(const char *event, void *userdata, int modifiers, int n, ...);
+void jeff_remove_input_event(const char *event);
+void jeff_clear_events(void);
 #endif
 
 #ifndef JEFF_NO_THREADS

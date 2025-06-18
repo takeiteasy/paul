@@ -111,17 +111,6 @@ float jeff_rand_float_range(float min, float max) {
     return jeff_rand_float() * (max - min) + min;
 }
 
-int jeff_rand_choice(int length) {
-    return jeff_rand_int_range(0, length);
-}
-
-int* jeff_rand_sample(int length, int max) {
-    int *result = malloc(length * sizeof(int));
-    for (int i = 0; i < length; i++)
-        result[i] = jeff_rand_choice(max);
-    return result;
-}
-
 uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve) {
     size_t sz = width * height * sizeof(int);
     uint8_t *result = malloc(sz);
@@ -150,41 +139,6 @@ uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigne
                 else if (neighbours < starve)
                     result[y * width + x] = 0;
             }
-    return result;
-}
-
-uint8_t* jeff_perlin_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
-    float min = FLT_MAX, max = FLT_MIN;
-    float *grid = malloc(width * height * sizeof(float));
-    // Loop through grid and apply noise transformation to each cell
-    for (int x = 0; x < width; ++x)
-        for (int y = 0; y < height; ++y) {
-            float freq = 2.f,
-            amp  = 1.f,
-            tot  = 0.f,
-            sum  = 0.f;
-            for (int i = 0; i < octaves; ++i) {
-                sum  += noise3(((offsetX + x) / scale) * freq, ((offsetY + y) / scale) * freq, z) * amp;
-                tot  += amp;
-                freq *= lacunarity;
-                amp  *= gain;
-            }
-            // Keep track of min + max values for remapping the range later
-            grid[y * width + x] = sum = (sum / tot);
-            if (sum < min)
-                min = sum;
-            if (sum > max)
-                max = sum;
-        }
-    // Convert float values to 0-255 range
-    uint8_t *result = malloc(width * height * sizeof(uint8_t));
-    for (int x = 0; x < width; x++)
-        for (int y = 0; y < height; y++) {
-            float height = 255.f - (255.f * _REMAP(grid[y * width + x], min, max, 0, 1.f));
-            result[y * width + x] = (uint8_t)height;
-        }
-    // Free float grid, return uint8 grid
-    free(grid);
     return result;
 }
 
@@ -244,7 +198,7 @@ static float fade(float t) {
 
 #define FASTFLOOR(x) (((x) >= 0) ? (int)(x) : (int)(x)-1)
 
-float noise3(float x, float y, float z) {
+static float perlin(float x, float y, float z) {
     /* Find grid points */
     int gx = FASTFLOOR(x);
     int gy = FASTFLOOR(y);
@@ -277,4 +231,40 @@ float noise3(float x, float y, float z) {
     for (int i = 0; i < 2; i++)
         nxy[i] = lerp(nx[i], nx[2+i], v);
     return lerp(nxy[0], nxy[1], w);
+}
+
+
+uint8_t* jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
+    float min = FLT_MAX, max = FLT_MIN;
+    float *grid = malloc(width * height * sizeof(float));
+    // Loop through grid and apply noise transformation to each cell
+    for (int x = 0; x < width; ++x)
+        for (int y = 0; y < height; ++y) {
+            float freq = 2.f,
+            amp  = 1.f,
+            tot  = 0.f,
+            sum  = 0.f;
+            for (int i = 0; i < octaves; ++i) {
+                sum  += perlin(((offsetX + x) / scale) * freq, ((offsetY + y) / scale) * freq, z) * amp;
+                tot  += amp;
+                freq *= lacunarity;
+                amp  *= gain;
+            }
+            // Keep track of min + max values for remapping the range later
+            grid[y * width + x] = sum = (sum / tot);
+            if (sum < min)
+                min = sum;
+            if (sum > max)
+                max = sum;
+        }
+    // Convert float values to 0-255 range
+    uint8_t *result = malloc(width * height * sizeof(uint8_t));
+    for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++) {
+            float height = 255.f - (255.f * _REMAP(grid[y * width + x], min, max, 0, 1.f));
+            result[y * width + x] = (uint8_t)height;
+        }
+    // Free float grid, return uint8 grid
+    free(grid);
+    return result;
 }

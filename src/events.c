@@ -16,23 +16,19 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
 #include "jeff.h"
-#ifndef JEFF_NO_INPUT
-#define SUK_IMPL
-#include "sokol_input.h"
-#endif
 #include "garry.h"
 #include "table.h"
 
 #ifndef JEFF_NO_INPUT
 typedef struct keymap {
-    input_state_t input;
+    sapp_input_state input;
     // TODO: Add action type (up/down)
     void *userdata;
 } keymap_t;
 
 typedef struct sevent {
     const char *event;
-    sapp_event_callback_t cb;
+    jeff_input_event_callback_t cb;
 } sevent;
 #endif
 
@@ -215,7 +211,10 @@ void update_timers(void) {
 }
 
 #ifndef JEFF_NO_INPUT
-bool sapp_on_input_str(const char *input_str, const char *event, void *userdata) {
+extern bool sapp_create_input(sapp_input_state *dst, int modifiers, int n, ...);
+extern bool sapp_create_input_str(sapp_input_state *dst, const char *str);
+
+bool jeff_on_input_str(const char *input_str, const char *event, void *userdata) {
     keymap_t *keymap = malloc(sizeof(keymap_t));
     if (!sapp_create_input_str(&keymap->input, input_str)) {
         free(keymap);
@@ -226,7 +225,7 @@ bool sapp_on_input_str(const char *input_str, const char *event, void *userdata)
     return true;
 }
 
-bool sapp_on_input(const char *event, void *userdata, int modifiers, int n, ...) {
+bool jeff_on_input(const char *event, void *userdata, int modifiers, int n, ...) {
     keymap_t keymap;
     va_list args;
     va_start(args, n);
@@ -254,11 +253,11 @@ void sapp_remove_input_event(const char *event) {
     }
 }
 
-static bool sapp_check_state(input_state_t *istate) {
+static bool sapp_check_state(sapp_input_state *istate) {
     bool mod_check = true;
     bool key_check = true;
     if (istate->modifiers != 0)
-        mod_check = sapp_modifier_equal(istate->modifiers);
+        mod_check = sapp_modifier_equals(istate->modifiers);
     if (istate->keys > 0)
         for (int i = 0; i < garry_count(istate->keys); i++)
             if (!sapp_is_key_down(istate->keys[i])) {
@@ -279,7 +278,7 @@ void check_keymaps(void) {
     table_each(&_state.keymap, __check, NULL);
 }
 
-void sapp_emit_on_event(sapp_event_type event_type, const char *event) {
+void jeff_emit_on_event(sapp_event_type event_type, const char *event) {
     sevent e = {
         .event = strdup(event),
         .cb = NULL
@@ -287,7 +286,7 @@ void sapp_emit_on_event(sapp_event_type event_type, const char *event) {
     garry_append(_state.sevents[event_type], e);
 }
 
-void sapp_on_event(sapp_event_type event_type, sapp_event_callback_t callback) {
+void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callback) {
     sevent e = {
         .event = NULL,
         .cb = callback
@@ -302,7 +301,7 @@ int _free(table_pair_t *pair, void *userdata) {
     return 1;
 }
 
-void sapp_clear_events(void) {
+void jeff_clear_events(void) {
     for (int i = 0; i < _SAPP_EVENTTYPE_NUM; i++)
         if (_state.sevents[i])
             garry_free(_state.sevents[i]);
@@ -322,7 +321,7 @@ void check_event(sapp_event_type type) {
     }
 }
 
-void sapp_remove_event(sapp_event_type type) {
+void jeff_remove_event(sapp_event_type type) {
     if (_state.sevents[type])
         garry_free(_state.sevents[type]);
 }
