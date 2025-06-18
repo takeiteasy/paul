@@ -121,5 +121,5 @@ unsigned char *vfs_read(const char *filename, size_t *size) { // must free() aft
 }
 
 void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback) {
-    
+    // TODO
 }

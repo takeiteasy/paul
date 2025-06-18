@@ -51,25 +51,25 @@ static int jeff_thrd_pool_worker(void *arg) {
     return 0;
 }
 
-jeff_thrd_pool_t* jeff_thrd_pool(size_t maxThreads) {
-    if (!maxThreads)
-        return NULL;
-    jeff_thrd_pool_t *pool = malloc(sizeof(jeff_thrd_pool_t));
+bool jeff_thrd_pool(size_t maxThreads, jeff_thrd_pool_t *pool) {
+    if (!maxThreads || !pool)
+        return false;
     paul_mtx_init(&pool->workMutex, PAUL_MTX_PLAIN);
     paul_cnd_init(&pool->workCond);
     paul_cnd_init(&pool->workingCond);
     pool->head = pool->tail = NULL;
     pool->threadCount = maxThreads;
-
     paul_thrd_t _thrd;
     for (int i = 0; i < maxThreads; i++) {
         paul_thrd_create(&_thrd, jeff_thrd_pool_worker, (void*)pool);
         paul_thrd_detach(_thrd);
     }
-    return pool;
+    return true;
 }
 
 void jeff_thrd_pool_destroy(jeff_thrd_pool_t *pool) {
+    if (!pool)
+        return;
     paul_mtx_lock(&pool->workMutex);
     jeff_thrd_work_t *work = pool->head;
     while (work) {
@@ -82,7 +82,7 @@ void jeff_thrd_pool_destroy(jeff_thrd_pool_t *pool) {
     paul_mtx_destroy(&pool->workMutex);
     paul_cnd_destroy(&pool->workCond);
     paul_cnd_destroy(&pool->workingCond);
-    free(pool);
+    memset(pool, 0, sizeof(jeff_thrd_pool_t));
 }
 
 int jeff_thrd_pool_push_work(jeff_thrd_pool_t *pool, void(*func)(void*), void *arg) {
@@ -133,15 +133,16 @@ void jeff_thrd_pool_join(jeff_thrd_pool_t *pool) {
     paul_mtx_unlock(&pool->workMutex);
 }
 
-jeff_thrd_queue_t* jeff_thrd_queue(void) {
-    jeff_thrd_queue_t *queue = malloc(sizeof(jeff_thrd_queue_t));
+bool jeff_thrd_queue(jeff_thrd_queue_t *queue) {
+    if (!queue)
+        return false;
     queue->head = NULL;
     queue->tail = NULL;
     queue->count = 0;
     paul_mtx_init(&queue->readLock, PAUL_MTX_PLAIN);
     paul_mtx_init(&queue->writeLock, PAUL_MTX_PLAIN);
     paul_mtx_lock(&queue->readLock);
-    return queue;
+    return true;
 }
 
 void jeff_thrd_queue_push(jeff_thrd_queue_t *queue, void *data) {
@@ -183,9 +184,11 @@ void* jeff_thrd_queue_pop(jeff_thrd_queue_t *queue) {
 }
 
 void jeff_thrd_queue_destroy(jeff_thrd_queue_t *queue) {
+    if (!queue)
+        return;
     // TODO: Handle mutexes + clear queue first
     paul_mtx_destroy(&queue->readLock);
     paul_mtx_destroy(&queue->writeLock);
-    free(queue);
+    memset(queue, 0, sizeof(jeff_thrd_queue_t));
 }
 #endif

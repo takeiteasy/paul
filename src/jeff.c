@@ -1,4 +1,4 @@
-/* jeff.c -- https://github.com/takeiteasy/jeff 
+/* jeff.c -- https://github.com/takeiteasy/jeff
 
 jeff Copyright (C) 2025 George Watson
 
@@ -15,24 +15,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
+#ifdef JEFF_NO_SCENES
+#define SOKOL_NO_ENTRY
 #define SOKOL_IMPL
 #define SOKOL_INPUT_IMPL
 #define SOKOL_MIXER_IMPL
 #define SOKOL_IMAGE_IMPL
-#include "jeff.h"
-#ifndef JEFF_NO_ARGUMENTS
-#include "sokol/sokol_args.h"
+#define JIM_IMPLEMENTATION
+#define MJSON_IMPLEMENTATION
+#define GARRY_IMPLEMENTATION
+#define TABLE_IMPLEMENTATION
 #endif
+#include "jeff.h"
+#ifndef JEFF_NO_CONFIG
 #define JIM_IMPLEMENTATION
 #include "jim.h"
 #define MJSON_IMPLEMENTATION
 #include "mjson.h"
-#define GARRY_IMPLEMENTATION
-#include "garry.h"
-#define TABLE_IMPLEMENTATION
-#include "table.h"
+#endif
+#ifdef _WIN32
+#include <io.h>
+#include <dirent.h>
+#define F_OK 0
+#define access _access
+#else
+#include <unistd.h>
+#endif
 
-#define SETTINGS                                                                                 \
+#define _JEFF_SETTINGS                                                                           \
     X("width", integer, width, DEFAULT_WINDOW_WIDTH, "Set window width")                         \
     X("height", integer, height, DEFAULT_WINDOW_HEIGHT, "Set window height")                     \
     X("sampleCount", integer, sample_count, 4, "Set the MSAA sample count of the   framebuffer") \
@@ -45,6 +55,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
     X("drapAndDrop", boolean, enable_dragndrop, false, "Enable drag-and-drop files")             \
     X("maxDroppedFiles", integer, max_dropped_files, 1, "Max number of dropped files")           \
     X("maxDroppedFilesPathLength", integer, max_dropped_file_path_length, MAX_PATH, "Max path length for dropped files")
+
+extern void update_timers(void);
+#ifndef JEFF_NO_INPUT
+extern void sapp_input_init(void);
+extern void sapp_input_flush(void);
+extern void sapp_input_event(const sapp_event*);
+extern void check_keymaps(void);
+#endif
+extern void init_events(void);
+extern void check_event(sapp_event_type type);
+extern void init_vfs(void);
 
 static struct {
     sg_color clear_color;
@@ -59,7 +80,7 @@ static struct {
 } state = {
     .desc = (sapp_desc) {
 #define X(NAME, TYPE, VAL, DEFAULT, DOCS) .VAL = DEFAULT,
-        SETTINGS
+        _JEFF_SETTINGS
 #undef X
         .window_title = DEFAULT_WINDOW_TITLE
     },
@@ -71,72 +92,9 @@ static struct {
     }
 };
 
-#ifdef JEFF_NO_INPUT
-#define X(NAME)                         \
-void NAME##_init(void);                 \
-void NAME##_enter(void);                \
-void NAME##_exit(void);                 \
-void NAME##_event(const sapp_event*);   \
-void NAME##_step(void);                 \
-jeff_scene_t NAME##_scene = {           \
-    .name = #NAME,                      \
-    .enter = NAME##_enter,              \
-    .exit = NAME##_exit,                \
-    .event = NAME##_event,              \
-    .step = NAME##_step                 \
-};
-#else
-#define X(NAME)                         \
-void NAME##_init(void);                 \
-void NAME##_enter(void);                \
-void NAME##_exit(void);                 \
-void NAME##_event(const sapp_event*);   \
-void NAME##_step(void);                 \
-jeff_scene_t NAME##_scene = {           \
-    .name = #NAME,                      \
-    .enter = NAME##_enter,              \
-    .exit = NAME##_exit,                \
-    .step = NAME##_step                 \
-};
-#endif
-JEFF_SCENES
-#undef X
-
-static jeff_scene_t* find_scene(const char *name) {
-    size_t name_len = strlen(name);
-#define X(NAME) \
-    if (!strncmp(name, #NAME, name_len)) \
-        return &NAME##_scene;
-    JEFF_SCENES
-#undef X
-    fprintf(stderr, "[ERROR] Unknown scene '%s'", name);
-    abort();
-}
-
-void jeff_set_scene(jeff_scene_t *scene) {
-    if (!scene) {
-        sapp_quit();
-        return;
-    }
-
-    if (!state.scene_current) {
-        state.scene_current = scene;
-        state.scene_current->enter();
-    } else
-        if (strncmp(scene->name, state.scene_current->name, strlen(scene->name)))
-            state.next_scene = scene;
-}
-
-void jeff_set_scene_named(const char *name) {
-    jeff_set_scene(find_scene(name));
-}
-
-void jeff_atexit(jeff_exit_callback_t callback, void *userdata) {
-    state._exit_callback = callback;
-    state._exit_userdata = userdata;
-}
-
+#ifndef JEFF_NO_SCENES
 #ifndef JEFF_NO_CONFIG
+// TODO: Whole config loading needs looking at
 // TODO: Add ini parser
 static int load_config(const char *path) {
     const char *data = paul_read_file(path, NULL);
@@ -146,7 +104,7 @@ static int load_config(const char *path) {
     const struct json_attr_t config_attr[] = {
 #define X(NAME, TYPE, VAL, DEFAULT,DOCS) \
         {(char*)#NAME, t_##TYPE, .addr.TYPE=&state.desc.VAL},
-        SETTINGS
+        _JEFF_SETTINGS
 #undef X
         {NULL}
     };
@@ -171,7 +129,7 @@ static int export_config(const char *path) {
 #define X(NAME, TYPE, VAL, DEFAULT, DOCS) \
     jim_member_key(&jim, NAME);           \
     jim_##TYPE(&jim, state.desc.VAL);
-    SETTINGS
+    _JEFF_SETTINGS
 #undef X
     jim_object_end(&jim);
     fclose(fh);
@@ -186,7 +144,7 @@ static void usage(const char *name, int exit_code) {
     printf("\t  config (string) -- Path to .json config file\n");
 #define X(NAME, TYPE, VAL, DEFAULT, DOCS) \
     printf("\t  %s (%s) -- %s (default: %d)\n", NAME, #TYPE, DOCS, DEFAULT);
-    SETTINGS
+    _JEFF_SETTINGS
 #undef X
     exit(exit_code);
 }
@@ -221,31 +179,48 @@ static int parse_arguments(int argc, char *argv[]) {
         else                                                                            \
             state.desc.VAL = sargs_boolean(NAME);                                       \
     }
-    SETTINGS
+    _JEFF_SETTINGS
 #undef X
 #undef boolean
 #undef integer
     return 1;
 }
 #endif
-
-extern void update_timers(void);
-#ifndef JEFF_NO_INPUT
-extern void sapp_input_init(void);
-extern void sapp_input_flush(void);
-extern void sapp_input_event(const sapp_event*);
-extern void check_keymaps(void);
 #endif
-extern void init_events(void);
-extern void check_event(sapp_event_type type);
-extern void init_vfs(void);
 
-static void init(void) {
+bool jeff_config(int argc, char* argv[]) {
+#ifndef JEFF_NO_CONFIG
+    const char *configPath = JEFF_CONFIG_PATH;
+    if (!access(configPath, F_OK)) {
+        if (!load_config(configPath)) {
+            fprintf(stderr, "[IMPORT CONFIG ERROR] Failed to import config from \"%s\"\n", configPath);
+            fprintf(stderr, "errno (%d): \"%s\"\n", errno, strerror(errno));
+            goto EXPORT_CONFIG;
+        }
+    } else {
+    EXPORT_CONFIG:
+        if (!export_config(configPath)) {
+            fprintf(stderr, "[EXPORT CONFIG ERROR] Failed to export config to \"%s\"\n", configPath);
+            fprintf(stderr, "errno (%d): \"%s\"\n", errno, strerror(errno));
+            return false;
+        }
+    }
+#endif
+#ifndef JEFF_NO_ARGUMENTS
+    if (argc > 1)
+        if (!parse_arguments(argc, argv)) {
+            fprintf(stderr, "[PARSE ARGUMENTS ERROR] Failed to parse arguments\n");
+            return false;
+        }
+#endif
+    return true;
+}
+
+void jeff_init(void) {
     sg_setup(&(sg_desc){
         .environment = sglue_environment(),
         .logger.func = slog_func,
     });
-
 
     sapp_input_init();
 #ifdef JEFF_WORKING_PATH
@@ -256,22 +231,11 @@ static void init(void) {
 #endif
     init_events();
     jeff_srand(JEFF_RNG_SEED);
-#ifdef JEFF_FIRST_SCENE
-    jeff_set_scene_named(STRINGIFY(JEFF_FIRST_SCENE));
-#else
-#ifndef JEFF_SCENES
-#error "No scenes specified"
-#else
-    scene_t* tmp_scenes[] = {
-#define X(NAME) &NAME##_scene,
-#undef X
-    };
-#endif
-    jeff_set_scene(tmp_scenes[0]);
-#endif
+
+    sapp_run(&state.desc);
 }
 
-static void frame(void) {
+void jeff_frame(void) {
     if (!state.scene_current) {
         sapp_quit();
         return;
@@ -301,7 +265,7 @@ static void frame(void) {
     }
 }
 
-static void event(const sapp_event *event) {
+void jeff_event(const sapp_event *event) {
 #ifdef JEFF_NO_INPUT
     state.scene_current->event(event);
 #else
@@ -310,7 +274,7 @@ static void event(const sapp_event *event) {
 #endif
 }
 
-static void cleanup(void) {
+void jeff_shutdown(void) {
     if (state.scene_current)
         state.scene_current->exit();
     if (state._exit_callback)
@@ -318,35 +282,36 @@ static void cleanup(void) {
     sg_shutdown();
 }
 
-sapp_desc sokol_main(int argc, char* argv[]) {
-#ifndef JEFF_NO_CONFIG
-    const char *configPath = JEFF_CONFIG_PATH;
-    if (!access(configPath, F_OK)) {
-        if (!load_config(configPath)) {
-            fprintf(stderr, "[IMPORT CONFIG ERROR] Failed to import config from \"%s\"\n", configPath);
-            fprintf(stderr, "errno (%d): \"%s\"\n", errno, strerror(errno));
-            goto EXPORT_CONFIG;
-        }
-    } else {
-    EXPORT_CONFIG:
-        if (!export_config(configPath)) {
-            fprintf(stderr, "[EXPORT CONFIG ERROR] Failed to export config to \"%s\"\n", configPath);
-            fprintf(stderr, "errno (%d): \"%s\"\n", errno, strerror(errno));
-            abort();
-        }
-    }
-#endif
-#ifndef JEFF_NO_ARGUMENTS
-    if (argc > 1)
-        if (!parse_arguments(argc, argv)) {
-            fprintf(stderr, "[PARSE ARGUMENTS ERROR] Failed to parse arguments\n");
-            abort();
-        }
-#endif
+static jeff_scene_t* find_scene(const char *name) {
+    size_t name_len = strlen(name);
+#define X(NAME) \
+    if (!strncmp(name, #NAME, name_len)) \
+        return &NAME##_scene;
+    JEFF_SCENES
+#undef X
+    fprintf(stderr, "[ERROR] Unknown scene '%s'", name);
+    abort();
+}
 
-    state.desc.init_cb = init;
-    state.desc.frame_cb = frame;
-    state.desc.event_cb = event;
-    state.desc.cleanup_cb = cleanup;
-    return state.desc;
+void jeff_set_scene(jeff_scene_t *scene) {
+    if (!scene) {
+        sapp_quit();
+        return;
+    }
+
+    if (!state.scene_current) {
+        state.scene_current = scene;
+        state.scene_current->enter();
+    } else
+        if (strncmp(scene->name, state.scene_current->name, strlen(scene->name)))
+            state.next_scene = scene;
+}
+
+void jeff_set_scene_named(const char *name) {
+    jeff_set_scene(find_scene(name));
+}
+
+void jeff_atexit(jeff_exit_callback_t callback, void *userdata) {
+    state._exit_callback = callback;
+    state._exit_userdata = userdata;
 }

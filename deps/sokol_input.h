@@ -93,12 +93,12 @@ bool sapp_check_scrolled(void);
 float sapp_scroll_x(void);
 float sapp_scroll_y(void);
 
-bool sapp_check_input_str_down(const char *str);
-bool sapp_check_input_down(int modifiers, int n, ...);
-bool sapp_check_input_str_released(const char *str);
-bool sapp_check_input_released(int modifiers, int n, ...);
-bool sapp_check_input_str_up(const char *str);
-bool sapp_check_input_up(int modifiers, int n, ...);
+bool sapp_input_check_str_down(const char *str);
+bool sapp_input_check_down(int modifiers, int n, ...);
+bool sapp_input_check_str_released(const char *str);
+bool sapp_input_check_released(int modifiers, int n, ...);
+bool sapp_input_check_str_up(const char *str);
+bool sapp_input_check_up(int modifiers, int n, ...);
 
 #if defined(__cplusplus)
 }
@@ -614,7 +614,7 @@ bool sapp_create_input_str(sapp_input_state *dst, const char *str) {
     return true;
 }
 
-bool sapp_check_input_str_down(const char *str) {
+bool sapp_input_check_str_down(const char *str) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
@@ -635,7 +635,7 @@ bool sapp_check_input_str_down(const char *str) {
     return mod_check && key_check;
 }
 
-bool sapp_check_input_down(int modifiers, int n, ...) {
+bool sapp_input_check_down(int modifiers, int n, ...) {
     int *tmp = NULL;
     bool result = false;
     if (modifiers != 0)
@@ -662,7 +662,7 @@ BAIL:
     return result;
 }
 
-bool sapp_check_input_str_released(const char *str) {
+bool sapp_input_check_str_released(const char *str) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
@@ -683,7 +683,7 @@ bool sapp_check_input_str_released(const char *str) {
     return mod_check || key_check;
 }
 
-bool sapp_check_input_released(int modifiers, int n, ...) {
+bool sapp_input_check_released(int modifiers, int n, ...) {
     int *tmp = NULL;
     bool result = false;
     if (modifiers != 0)
@@ -710,7 +710,7 @@ BAIL:
     return result;
 }
 
-bool sapp_check_input_str_up(const char *str) {
+bool sapp_input_check_str_up(const char *str) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
@@ -732,7 +732,7 @@ bool sapp_check_input_str_up(const char *str) {
     return mod_check && key_check;
 }
 
-bool sapp_check_input_up(int modifiers, int n, ...) {
+bool sapp_input_check_up(int modifiers, int n, ...) {
     int *tmp = NULL;
     bool result = false;
     if (modifiers != 0)

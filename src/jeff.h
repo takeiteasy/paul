@@ -76,8 +76,10 @@ extern "C" {
 #define _CALLBACK_TYPEDEF(RET, NAME, ...) typedef RET(*NAME)(__VA_ARGS__)
 #endif
 
+#if !defined(JEFF_NO_SCENES) && !defined(JEFF_NO_HEADER_CONFIG)
 #if __has_include("jeff_config.h")
 #include "jeff_config.h"
+#endif
 #endif
 
 #ifdef JEFF_NO_THREADS
@@ -125,9 +127,6 @@ extern "C" {
 #ifndef CLIPBOARD_SIZE
 #define CLIPBOARD_SIZE 8192 // sapp default
 #endif
-
-#define _STRINGIFY(s) #s
-#define STRINGIFY(S) _STRINGIFY(S)
 
 #ifndef DEFAULT_CONFIG_NAME
 #ifdef PLATFORM_POSIX
@@ -201,6 +200,9 @@ extern "C" {
 #include "sokol/sokol_audio.h"
 #include "sokol/sokol_log.h"
 #include "sokol/sokol_time.h"
+#ifndef JEFF_NO_ARGUMENTS
+#include "sokol/sokol_args.h"
+#endif
 //#include "sokol/sokol_fetch.h"
 #include "sokol/util/sokol_color.h"
 #include "sokol/util/sokol_shape.h"
@@ -209,10 +211,11 @@ extern "C" {
 #ifndef JEFF_NO_INPUT
 #include "sokol_input.h"
 #endif
+#include "garry.h"
+#include "table.h"
 
-typedef struct jeff_scene_t jeff_scene_t;
-
-struct jeff_scene_t {
+#ifndef JEFF_NO_SCENES
+typedef struct jeff_scene_t {
     const char *name;
     void(*enter)(void);
     void(*exit)(void);
@@ -220,7 +223,7 @@ struct jeff_scene_t {
     void(*event)(const sapp_event*);
 #endif
     void(*step)(void);
-};
+} jeff_scene_t;
 
 #define X(NAME) extern jeff_scene_t NAME##_scene;
 JEFF_SCENES
@@ -228,6 +231,14 @@ JEFF_SCENES
 
 void jeff_set_scene(jeff_scene_t *scene);
 void jeff_set_scene_named(const char *name);
+#else
+bool jeff_config(int argc, char* argv[]);
+void jeff_init(void);
+bool jeff_frame(void);
+void jeff_event(const sapp_event*);
+void jeff_shutdown(void);
+#endif
+
 _CALLBACK_TYPEDEF(void, jeff_exit_callback_t, void*);
 void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
 
@@ -314,7 +325,7 @@ typedef struct thread_pool_t {
     int kill;
 } jeff_thrd_pool_t;
 
-jeff_thrd_pool_t* jeff_thrd_pool(size_t maxThreads);
+bool jeff_thrd_pool(size_t maxThreads, jeff_thrd_pool_t *dst);
 void jeff_thrd_pool_destroy(jeff_thrd_pool_t *pool);
 int jeff_thrd_pool_push_work(jeff_thrd_pool_t *pool, void(*func)(void*), void *arg);
 // Adds work to the front of the queue
@@ -332,7 +343,7 @@ typedef struct thread_queue_t {
     size_t count;
 } jeff_thrd_queue_t;
 
-jeff_thrd_queue_t* jeff_thrd_queue(void);
+bool jeff_thrd_queue(jeff_thrd_queue_t* dst);
 void jeff_thrd_queue_push(jeff_thrd_queue_t *queue, void *data);
 void* jeff_thrd_queue_pop(jeff_thrd_queue_t *queue);
 void jeff_thrd_queue_destroy(jeff_thrd_queue_t *queue);
