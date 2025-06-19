@@ -12,10 +12,8 @@ settings:
 
 targets:
   jeff:
-    type: application
+    type: tool
     platform: macOS
-    info:
-        path: Info.plist
     sources:
         - path: src/
         - path: scenes/
@@ -47,9 +45,7 @@ targets:
         - sdk: AudioToolbox.framework
     settings:
         HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps,
-                              $(PROJECT_DIR)/deps/cimgui,
-                              $(PROJECT_DIR)/src,
-                              $(PROJECT_DIR)/scenes,
                               $(PROJECT_DIR)/deps/paul,
-                              $(PROJECT_DIR)/build]
+                              $(PROJECT_DIR)/src,
+                              $(PROJECT_DIR)/scenes]
         OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fno-objc-arc]

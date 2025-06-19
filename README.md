@@ -14,14 +14,17 @@ There really is a sokol, and these people are using it, but it is just a part of
 ## Goals
 
 - [ ] Cross platform (see: [paul](https://github.com/takeiteasy/paul))
-    - [X] Mac, Windows, Linux
+    - [X] Mac
+    - [ ] Windows
+    - [ ] Linux
     - [ ] Web
     - [ ] iOS
     - [ ] Android
-- [X] Easy to use scene system
-- [X] Optional config + cli arguments
-- [X] PRNG + noise functions
-- [X] Optional input handling
+- [X] (Optional) Scene framework
+- [X] (Optional) Default config file + cli arguments
+- [ ] Rendering framework
+- [X] PRNG + noise
+- [X] (Optional) Input handling
     - [X] Key mapping
     - [ ] Gamepads
     - [ ] Input recording + playback
