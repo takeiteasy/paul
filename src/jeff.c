@@ -74,7 +74,9 @@ static struct {
     const char *dropped[MAX_DROPPED_FILES];
     int dropped_count;
     char clipboard[CLIPBOARD_SIZE];
+#ifndef JEFF_NO_SCENES
     jeff_scene_t *scene_prev, *scene_current, *next_scene;
+#endif
     jeff_exit_callback_t _exit_callback;
     void *_exit_userdata;
 } state = {
@@ -92,7 +94,6 @@ static struct {
     }
 };
 
-#ifndef JEFF_NO_SCENES
 #ifndef JEFF_NO_CONFIG
 // TODO: Whole config loading needs looking at
 // TODO: Add ini parser
@@ -186,7 +187,6 @@ static int parse_arguments(int argc, char *argv[]) {
     return 1;
 }
 #endif
-#endif
 
 bool jeff_config(int argc, char* argv[]) {
 #ifndef JEFF_NO_CONFIG
@@ -236,10 +236,12 @@ void jeff_init(void) {
 }
 
 void jeff_frame(void) {
+#ifndef JEFF_NO_SCENES
     if (!state.scene_current) {
         sapp_quit();
         return;
     }
+#endif
     update_timers();
 #ifndef JEFF_NO_INPUT
     check_keymaps();
@@ -248,11 +250,16 @@ void jeff_frame(void) {
         .action = state.pass_action,
         .swapchain = sglue_swapchain()
     });
+#ifndef JEFF_NO_SCENES
     state.scene_current->step();
+#endif
     sg_end_pass();
     sg_commit();
+#ifndef JEFF_NO_INPUT
     sapp_input_flush();
+#endif
 
+#ifndef JEFF_NO_SCENES
     if (state.next_scene) {
         if ((state.scene_prev = state.scene_current)) {
             state.scene_current->exit();
@@ -263,6 +270,7 @@ void jeff_frame(void) {
             state.scene_current->enter();
         state.next_scene = NULL;
     }
+#endif
 }
 
 void jeff_event(const sapp_event *event) {
@@ -275,13 +283,16 @@ void jeff_event(const sapp_event *event) {
 }
 
 void jeff_shutdown(void) {
+#ifndef JEFF_NO_SCENES
     if (state.scene_current)
         state.scene_current->exit();
+#endif
     if (state._exit_callback)
         state._exit_callback(state._exit_userdata);
     sg_shutdown();
 }
 
+#ifndef JEFF_NO_SCENES
 static jeff_scene_t* find_scene(const char *name) {
     size_t name_len = strlen(name);
 #define X(NAME) \
@@ -310,6 +321,7 @@ void jeff_set_scene(jeff_scene_t *scene) {
 void jeff_set_scene_named(const char *name) {
     jeff_set_scene(find_scene(name));
 }
+#endif
 
 void jeff_atexit(jeff_exit_callback_t callback, void *userdata) {
     state._exit_callback = callback;

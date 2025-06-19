@@ -27,8 +27,7 @@ There really is a sokol, and these people are using it, but it is just a part of
     - [ ] Input recording + playback
 - [X] Timers + events
     - [ ] Async
-- [ ] Audio manager
-- [ ] Basic collision detection
+- [ ] Audio mixer + playback
 - [ ] Basic networking (TCP/UDP/HTTP)
 - [ ] Asset loading
     - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)

@@ -13,17 +13,18 @@ SHDC_FLAGS=metal_macos
 SOURCE=$(wildcard src/*.c) $(wildcard deps/paul/native/macos/*.m) deps/gamepad/Gamepad_private.c deps/gamepad/Gamepad_macosx.c
 SCENES=$(wildcard scenes/*.c)
 EXE=build/jeff_$(ARCH)$(PROG_EXT)
+LIB=build/libjeff_$(ARCH).$(LIB_EXT)
 INC=-Isrc -Iscenes -Ibuild -Lbuild -Ideps -Ideps/paul
 
 ARCH_PATH=./bin/$(ARCH)
 SHDC_PATH=$(ARCH_PATH)/sokol-shdc$(PROG_EXT)
-SHADERS=$(wildcard assets/*.glsl)
-SHADER_OUTS=$(patsubst assets/%,build/%.h,$(SHADERS))
+SHADERS=$(wildcard shaders/*.glsl)
+SHADER_OUTS=$(patsubst shaders/%,src/%.h,$(SHADERS))
 
-all: app
+all: app library
 
 .SECONDEXPANSION:
-SHADER=$(patsubst build/%.h,assets/%,$@)
+SHADER=$(patsubst src/%.h,shaders/%,$@)
 SHADER_OUT=$@
 %.glsl.h: $(SHADERS)
 	$(SHDC_PATH) -i $(SHADER) -o $(SHADER_OUT) -l $(SHDC_FLAGS)
@@ -33,6 +34,9 @@ shaders: $(SHADER_OUTS)
 app: shaders
 	$(CC) $(INC) $(CFLAGS) $(SOURCE) $(SCENES) -o $(EXE)
 
+library: shaders
+	$(CC) -shared -fpic -DJEFF_NO_SCENES $(INC) $(CFLAGS) $(SOURCE) -o $(LIB)
+
 default: app
 
-.PHONY: default all app shaders
+.PHONY: default all app library shaders

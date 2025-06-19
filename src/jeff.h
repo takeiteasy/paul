@@ -88,7 +88,7 @@ extern "C" {
 #define PAUL_NO_CLIPBOARD
 #include "paul/paul.h"
 
-#if !defined(JEFF_SCENES)
+#if !defined(JEFF_NO_SCENES) && !defined(JEFF_SCENES)
 #ifndef JEFF_FIRST_SCENE
 #error No scenes! Define JEFF_SCENES or JEFF_FIRST_SCENE first
 #else
@@ -234,7 +234,7 @@ void jeff_set_scene_named(const char *name);
 #else
 bool jeff_config(int argc, char* argv[]);
 void jeff_init(void);
-bool jeff_frame(void);
+void jeff_frame(void);
 void jeff_event(const sapp_event*);
 void jeff_shutdown(void);
 #endif
