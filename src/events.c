@@ -19,19 +19,6 @@
 #include "garry.h"
 #include "table.h"
 
-#ifndef JEFF_NO_INPUT
-typedef struct keymap {
-    sapp_keyboard_state input;
-    // TODO: Add action type (up/down)
-    void *userdata;
-} keymap_t;
-
-typedef struct sevent {
-    const char *event;
-    jeff_input_event_callback_t cb;
-} sevent;
-#endif
-
 typedef struct listener {
     const char *name;
     jeff_event_callback_t cb;
@@ -53,20 +40,11 @@ typedef struct timer {
 static struct {
     table_t timers;
     table_t events;
-#ifndef JEFF_NO_INPUT
-    table_t keymap;
-    sevent* sevents[_SAPP_EVENTTYPE_NUM];
-#endif
 } state;
 
 void init_events(void) {
     memset(&state.timers, 0, sizeof(table_t));
     memset(&state.events, 0, sizeof(table_t));
-#ifndef JEFF_NO_INPUT
-    memset(&state.sevents, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
-    memset(&state.keymap, 0, sizeof(table_t));
-    state.keymap = table_new();
-#endif
 }
 
 static void add_event(const char *name, bool once, jeff_event_callback_t cb, void *userdata) {
@@ -209,117 +187,3 @@ static int _check(table_pair_t *pair, void *userdata) {
 void update_timers(void) {
     table_each(&state.timers, _check, NULL);
 }
-
-#ifndef JEFF_NO_INPUT
-bool jeff_on_input_str(const char *input_str, const char *event, void *userdata) {
-    keymap_t *keymap = malloc(sizeof(keymap_t));
-    if (!sapp_input_create_state_str(&keymap->input, input_str)) {
-        free(keymap);
-        return false;
-    }
-    keymap->userdata = userdata;
-    table_set(&state.keymap, event, (void*)keymap);
-    return true;
-}
-
-bool jeff_on_input(const char *event, void *userdata, int modifiers, int n, ...) {
-    keymap_t keymap;
-    va_list args;
-    va_start(args, n);
-    if (!sapp_input_create_state(&keymap.input, modifiers, n, args))
-        return false;
-    keymap.userdata = userdata;
-    keymap_t *arr = NULL;
-    if (table_has(&state.keymap, event)) {
-        table_get(&state.keymap, event, (void**)&arr);
-        garry_append(arr, keymap);
-    } else {
-        garry_append(arr, keymap);
-        table_set(&state.keymap, event, (void*)arr);
-    }
-    return true;
-}
-
-void sapp_remove_input_event(const char *event) {
-    if (table_has(&state.keymap, event)) {
-        keymap_t *old = NULL;
-        table_get(&state.keymap, event, (void**)&old);
-        if (old)
-            garry_free(old);
-        table_del(&state.keymap, event);
-    }
-}
-
-static bool sapp_check_state(sapp_keyboard_state *istate) {
-    bool mod_check = true;
-    bool key_check = true;
-    if (istate->modifiers != 0)
-        mod_check = sapp_modifier_equals(istate->modifiers);
-    if (istate->keys > 0)
-        for (int i = 0; i < garry_count(istate->keys); i++)
-            if (!sapp_is_key_down(istate->keys[i])) {
-                key_check = false;
-                break;
-            }
-    return mod_check && key_check;
-}
-
-static int __check(table_pair_t *pair, void *userdata) {
-    keymap_t *keymap = (keymap_t*)pair->value;
-    if (keymap && sapp_check_state(&keymap->input))
-        jeff_event_emit(pair->key.string);
-    return 1;
-}
-
-void check_keymaps(void) {
-    table_each(&state.keymap, __check, NULL);
-}
-
-void jeff_emit_on_event(sapp_event_type event_type, const char *event) {
-    sevent e = {
-        .event = strdup(event),
-        .cb = NULL
-    };
-    garry_append(state.sevents[event_type], e);
-}
-
-void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callback) {
-    sevent e = {
-        .event = NULL,
-        .cb = callback
-    };
-    garry_append(state.sevents[event_type], e);
-}
-
-int _free(table_pair_t *pair, void *userdata) {
-    keymap_t *keymap = (keymap_t*)pair->value;
-    if (keymap)
-        garry_free(keymap);
-    return 1;
-}
-
-void jeff_clear_events(void) {
-    for (int i = 0; i < _SAPP_EVENTTYPE_NUM; i++)
-        if (state.sevents[i])
-            garry_free(state.sevents[i]);
-    memset(&state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
-    table_each(&state.keymap, _free, NULL);
-    table_free(&state.keymap);
-    state.keymap = table_new();
-}
-
-void check_event(sapp_event_type type) {
-    if (!state.sevents[type])
-        return;
-    for (int i = 0; i < garry_count(state.sevents[type]); i++) {
-        sevent *event = &state.sevents[type][i];
-        if (event->event != NULL)
-            jeff_event_emit(event->event);
-    }
-}
-
-void jeff_remove_event(sapp_event_type type) {
-    if (state.sevents[type])
-        garry_free(state.sevents[type]);
-}
-#endif // JEFF_NO_INPUT

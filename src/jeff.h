@@ -303,19 +303,6 @@ void jeff_timer_emit_after(const char *name, int64_t ms, const char *event, void
 void jeff_timer_remove(const char *name);
 void jeff_timers_clear(void);
 
-#ifndef JEFF_NO_INPUT
-_CALLBACK_TYPEDEF(int, jeff_input_event_callback_t, void*);
-
-void jeff_emit_on_event(sapp_event_type event_type, const char *event);
-void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callback);
-void jeff_remove_event(sapp_event_type event_type);
-// TODO: Add action type (up/down)
-bool jeff_on_input_str(const char *input_str, const char *event, void *userdata);
-bool jeff_on_input(const char *event, void *userdata, int modifiers, int n, ...);
-void jeff_remove_input_event(const char *event);
-void jeff_clear_events(void);
-#endif
-
 #ifndef JEFF_NO_THREADS
 typedef struct thread_work_t {
     void(*func)(void*);

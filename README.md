@@ -33,10 +33,8 @@ There really is a sokol, and these people are using it, but it is just a part of
 - [ ] Basic networking (TCP/UDP/HTTP)
 - [ ] Asset loading
     - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)
-        - [ ] Export image
     - [X] Audio (.wav, .qoa, .ogg, .mp3, .flac)
-        - [ ] Export wave
-    - [ ] Fonts (truetype)
+    - [ ] Fonts (truetype, fontstash)
     - [ ] Models (.obj, .iqm)
         - [ ] Materials (.mtl)
     - [ ] Video (.mpg)

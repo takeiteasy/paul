@@ -243,10 +243,6 @@ void jeff_frame(void) {
 #endif
 
     update_timers();
-#ifndef JEFF_NO_INPUT
-    check_keymaps();
-#endif
-
 #ifndef JEFF_NO_SCENES
     state.scene_current->step();
 #endif
@@ -278,7 +274,6 @@ void jeff_event(const sapp_event *event) {
     state.scene_current->event(event);
 #else
     sapp_input_event(event);
-    check_event(event->type);
 #endif
     if (state.event_cb)
         state.event_cb(event);
