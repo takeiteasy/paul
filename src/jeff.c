@@ -23,10 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 #define SOKOL_IMAGE_IMPL
 #define JIM_IMPLEMENTATION
 #define MJSON_IMPLEMENTATION
-#define GARRY_IMPLEMENTATION
-#define TABLE_IMPLEMENTATION
 #endif
 #include "jeff.h"
+#define GARRY_IMPLEMENTATION
+#include "garry.h"
+#define TABLE_IMPLEMENTATION
+#include "table.h"
 #ifndef JEFF_NO_CONFIG
 #define JIM_IMPLEMENTATION
 #include "jim.h"
@@ -68,29 +70,23 @@ extern void check_event(sapp_event_type type);
 extern void init_vfs(void);
 
 static struct {
-    sg_color clear_color;
     sapp_desc desc;
-    sg_pass_action pass_action;
     const char *dropped[MAX_DROPPED_FILES];
     int dropped_count;
     char clipboard[CLIPBOARD_SIZE];
 #ifndef JEFF_NO_SCENES
     jeff_scene_t *scene_prev, *scene_current, *next_scene;
 #endif
-    jeff_exit_callback_t _exit_callback;
-    void *_exit_userdata;
+    jeff_app_callback_t init_cb;
+    jeff_app_callback_t frame_cb;
+    jeff_app_event_callback_t event_cb;
+    jeff_app_callback_t exit_cb;
 } state = {
     .desc = (sapp_desc) {
 #define X(NAME, TYPE, VAL, DEFAULT, DOCS) .VAL = DEFAULT,
         _JEFF_SETTINGS
 #undef X
         .window_title = DEFAULT_WINDOW_TITLE
-    },
-    .pass_action = {
-        .colors[0] = {
-            .load_action = SG_LOADACTION_CLEAR,
-            .clear_value = {0}
-        }
     }
 };
 
@@ -232,6 +228,9 @@ void jeff_init(void) {
     init_events();
     jeff_srand(JEFF_RNG_SEED);
 
+    if (state.init_cb)
+        state.init_cb();
+
     sapp_run(&state.desc);
 }
 
@@ -242,18 +241,19 @@ void jeff_frame(void) {
         return;
     }
 #endif
+
     update_timers();
 #ifndef JEFF_NO_INPUT
     check_keymaps();
 #endif
-    sg_begin_pass(&(sg_pass) {
-        .action = state.pass_action,
-        .swapchain = sglue_swapchain()
-    });
+
 #ifndef JEFF_NO_SCENES
     state.scene_current->step();
 #endif
-    sg_end_pass();
+
+    if (state.frame_cb)
+        state.frame_cb();
+
     sg_commit();
 #ifndef JEFF_NO_INPUT
     sapp_input_flush();
@@ -280,6 +280,8 @@ void jeff_event(const sapp_event *event) {
     sapp_input_event(event);
     check_event(event->type);
 #endif
+    if (state.event_cb)
+        state.event_cb(event);
 }
 
 void jeff_shutdown(void) {
@@ -287,9 +289,25 @@ void jeff_shutdown(void) {
     if (state.scene_current)
         state.scene_current->exit();
 #endif
-    if (state._exit_callback)
-        state._exit_callback(state._exit_userdata);
+    if (state.exit_cb)
+        state.exit_cb();
     sg_shutdown();
+}
+
+void jeff_set_init_callback(jeff_app_callback_t callback) {
+    state.init_cb = callback;
+}
+
+void jeff_set_frame_callback(jeff_app_callback_t callback) {
+    state.frame_cb = callback;
+}
+
+void jeff_set_event_callback(jeff_app_event_callback_t callback) {
+    state.event_cb = callback;
+}
+
+void jeff_set_exit_callback(jeff_app_callback_t callback) {
+    state.exit_cb = callback;
 }
 
 #ifndef JEFF_NO_SCENES
@@ -322,8 +340,3 @@ void jeff_set_scene_named(const char *name) {
     jeff_set_scene(find_scene(name));
 }
 #endif
-
-void jeff_atexit(jeff_exit_callback_t callback, void *userdata) {
-    state._exit_callback = callback;
-    state._exit_userdata = userdata;
-}

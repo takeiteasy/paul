@@ -43,18 +43,9 @@ extern "C" {
 
 #include <stdarg.h>
 
-#ifndef MAX_INPUT_STATE_KEYS
-#define MAX_INPUT_STATE_KEYS 8
-#endif
-
 #ifndef DEFAULT_KEY_HOLD_DELAY
 #define DEFAULT_KEY_HOLD_DELAY 1
 #endif
-
-typedef struct sapp_input_state {
-    int keys[MAX_INPUT_STATE_KEYS];
-    int modifiers;
-} sapp_input_state;
 
 // Assign sapp_desc.event_cb = sapp_input_event
 // Or just pass the event to it inside the callback
@@ -100,6 +91,18 @@ bool sapp_input_check_released(int modifiers, int n, ...);
 bool sapp_input_check_str_up(const char *str);
 bool sapp_input_check_up(int modifiers, int n, ...);
 
+#ifndef MAX_KB_STATE_KEYS
+#define MAX_KB_STATE_KEYS 8
+#endif
+
+typedef struct sapp_keyboard_state {
+    int keys[MAX_KB_STATE_KEYS];
+    int modifiers;
+} sapp_keyboard_state;
+
+bool sapp_input_create_state(sapp_keyboard_state *dst, int modifiers, int n, ...);
+bool sapp_input_create_state_str(sapp_keyboard_state *dst, const char *str);
+
 #if defined(__cplusplus)
 }
 #endif
@@ -127,15 +130,15 @@ typedef struct {
     struct {
         float x, y;
     } scroll;
-} input_t;
+} _state;
 
 static struct {
-    input_t input_prev, input_current;
+    _state input_prev, input_current;
 } _input_state;
 
 void sapp_input_init(void) {
-    memset(&_input_state.input_prev,    0, sizeof(input_t));
-    memset(&_input_state.input_current, 0, sizeof(input_t));
+    memset(&_input_state.input_prev,    0, sizeof(_state));
+    memset(&_input_state.input_current, 0, sizeof(_state));
 }
 
 void sapp_input_event(const sapp_event* e) {
@@ -166,7 +169,7 @@ void sapp_input_event(const sapp_event* e) {
 }
 
 void sapp_input_flush(void) {
-    memcpy(&_input_state.input_prev, &_input_state.input_current, sizeof(input_t));
+    memcpy(&_input_state.input_prev, &_input_state.input_current, sizeof(_state));
     _input_state.input_current.scroll.x = _input_state.input_current.scroll.y = 0.f;
 }
 
@@ -577,7 +580,7 @@ static int* _vaargs(int n, va_list args) {
 
 #define _MIN(A, B) ((A) < (B) ? (A) : (B))
 
-bool sapp_create_input(sapp_input_state *dst, int modifiers, int n, ...) {
+bool sapp_input_create_state(sapp_keyboard_state *dst, int modifiers, int n, ...) {
     dst->modifiers = modifiers;
     va_list args;
     va_start(args, n);
@@ -586,17 +589,17 @@ bool sapp_create_input(sapp_input_state *dst, int modifiers, int n, ...) {
         vector_free(tmp);
         return false;
     }
-    for (int i = 0; i < MAX_INPUT_STATE_KEYS; i++)
+    for (int i = 0; i < MAX_KB_STATE_KEYS; i++)
         dst->keys[i] = -1;
-    int max = _MIN(vector_count(tmp), MAX_INPUT_STATE_KEYS);
+    int max = _MIN(vector_count(tmp), MAX_KB_STATE_KEYS);
     memcpy(dst->keys, tmp, max * sizeof(int));
     vector_free(tmp);
     return true;
 }
 
-bool sapp_create_input_str(sapp_input_state *dst, const char *str) {
+bool sapp_input_create_state_str(sapp_keyboard_state *dst, const char *str) {
     dst->modifiers = -1;
-    for (int i = 0; i < MAX_INPUT_STATE_KEYS; i++)
+    for (int i = 0; i < MAX_KB_STATE_KEYS; i++)
         dst->keys[i] = -1;
 
     input_parser_t p;
@@ -607,7 +610,7 @@ bool sapp_create_input_str(sapp_input_state *dst, const char *str) {
     if (p.modifiers)
         dst->modifiers = p.modifiers;
     if (p.keys) {
-        int max = _MIN(vector_count(p.keys), MAX_INPUT_STATE_KEYS);
+        int max = _MIN(vector_count(p.keys), MAX_KB_STATE_KEYS);
         memcpy(dst->keys, p.keys, max * sizeof(int));
         vector_free(p.keys);
     }

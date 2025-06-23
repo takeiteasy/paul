@@ -167,21 +167,24 @@ extern "C" {
 #define _EULER 2.71828182845904523536
 #define _EPSILON 0.000001f
 #define _SQRT2 1.41421356237309504880168872420969808
+
 #define _BYTES(N) (N)
 #define _KILOBYTES(N) ((N) << 10)
 #define _MEGABYTES(N) ((N) << 20)
 #define _GIGABYTES(N) (((unsigned long long)(N)) << 30)
 #define _TERABYTES(N) (((unsigned long long)(N)) << 40)
+
 #define _THOUSAND(N)  ((N) * 1000)
 #define _MILLION(N)   ((N) * 1000000)
 #define _BILLION(N)   (((unsigned long long)(N)) * 1000000000LL)
+
 #define _DEGREES(N)   (((double)(N)) * (180. / PI))
 #define _RADIANS(N)   (((double)(N)) * (_PI / 180.))
 #define _MIN(A, B)    ((A) < (B) ? (A) : (B))
 #define _MAX(A, B)    ((A) > (B) ? (A) : (B))
+#define _CLAMP(x, low, high) _MIN(_MAX(x, low), high)
 #define _SWAP(A, B)   ((A)^=(B)^=(A)^=(B))
 #define _REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
-#define _CLAMP(x, low, high) _MIN(_MAX(x, low), high)
 
 #include <stdint.h>
 #include <stddef.h>
@@ -211,8 +214,6 @@ extern "C" {
 #ifndef JEFF_NO_INPUT
 #include "sokol_input.h"
 #endif
-#include "garry.h"
-#include "table.h"
 
 #ifndef JEFF_NO_SCENES
 typedef struct jeff_scene_t {
@@ -239,8 +240,12 @@ void jeff_event(const sapp_event*);
 void jeff_shutdown(void);
 #endif
 
-_CALLBACK_TYPEDEF(void, jeff_exit_callback_t, void*);
-void jeff_atexit(jeff_exit_callback_t callback, void *userdata);
+_CALLBACK_TYPEDEF(void, jeff_app_callback_t, void);
+_CALLBACK_TYPEDEF(void, jeff_app_event_callback_t, const sapp_event*);
+void jeff_set_init_callback(jeff_app_callback_t);
+void jeff_set_frame_callback(jeff_app_callback_t);
+void jeff_set_event_callback(jeff_app_event_callback_t);
+void jeff_set_exit_callback(jeff_app_callback_t);
 
 enum jeff_easing_fn {
     JEFF_EASING_LINEAR = 0,
@@ -261,13 +266,14 @@ enum jeff_easing_t {
 };
 
 float jeff_ease(enum jeff_easing_fn func, enum jeff_easing_t type, float t, float b, float c, float d);
-bool jeff_flt_cmp(float a, float b);
-bool jeff_dbl_cmp(double a, double b);
+bool jeff_float_cmp(float a, float b);
+bool jeff_double_cmp(double a, double b);
 
 bool jeff_vfs_mount(const char *src, const char *dst);
 bool jeff_vfs_unmount(const char *name);
 void jeff_vfs_unmount_all(void);
-unsigned char *vfs_read(const char *filename, size_t *size);
+unsigned char* jeff_vfs_read(const char *filename, size_t *size);
+bool jeff_vfs_write(const char *filename, void *data, size_t size, bool overwrite_existing);
 _CALLBACK_TYPEDEF(int, jeff_glob_callback_t, const char*);
 void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback);
 
@@ -277,8 +283,8 @@ float jeff_rand_float(void);
 int jeff_rand_int_range(int min, int max);
 float jeff_rand_float_range(float min, float max);
 
-uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve);
-uint8_t* jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves);
+void jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* dst);
+void jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves, uint8_t* dst);
 // TODO: Poisson disc sampling
 
 _CALLBACK_TYPEDEF(void, jeff_event_callback_t, void*);

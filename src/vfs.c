@@ -20,8 +20,6 @@
 #undef SWAP
 #define ZIP_C
 #include "zip.h"
-#define DIR_C
-#include "dir.h"
 #include "garry.h"
 #include "table.h"
 #endif
@@ -112,11 +110,19 @@ void jeff_vfs_unmount_all(void) {
     state.vfs = table_new();
 }
 
-unsigned char *vfs_read(const char *filename, size_t *size) { // must free() after use
+unsigned char *jeff_vfs_read(const char *filename, size_t *size) { // must free() after use
 #ifndef JEFF_NO_VFS
     return NULL;
 #else
     return paul_read_file(filename, size);
+#endif
+}
+
+bool jeff_vfs_write(const char *filename, void *data, size_t size, bool overwrite_existing) {
+#ifndef JEFF_NO_VFS
+    return NULL; // TODO
+#else
+    return paul_write_file(filename, (const char*)data, size, overwrite_existing);
 #endif
 }
 

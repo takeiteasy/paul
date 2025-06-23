@@ -383,10 +383,10 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
     }
 }
 
-bool jeff_flt_cmp(float a, float b) {
+bool jeff_float_cmp(float a, float b) {
     return fabsf(a - b) <= _EPSILON * fmaxf(1.f, fmaxf(fabsf(a), fabsf(b)));
 }
 
-bool jeff_dbl_cmp(double a, double b) {
+bool jeff_double_cmp(double a, double b) {
     return fabs(a - b) <= _EPSILON * fmax(1.f, fmax(fabs(a), fabs(b)));
 }

@@ -111,10 +111,8 @@ float jeff_rand_float_range(float min, float max) {
     return jeff_rand_float() * (max - min) + min;
 }
 
-uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve) {
-    size_t sz = width * height * sizeof(int);
-    uint8_t *result = malloc(sz);
-    memset(result, 0, sz);
+void jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
+    memset(result, 0, width * height * sizeof(int));
     // Randomly fill the grid
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
@@ -139,7 +137,6 @@ uint8_t* jeff_cellular_automata(unsigned int width, unsigned int height, unsigne
                 else if (neighbours < starve)
                     result[y * width + x] = 0;
             }
-    return result;
 }
 
 static const float grad3[][3] = {
@@ -234,7 +231,7 @@ static float perlin(float x, float y, float z) {
 }
 
 
-uint8_t* jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves) {
+void jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves, uint8_t* result) {
     float min = FLT_MAX, max = FLT_MIN;
     float *grid = malloc(width * height * sizeof(float));
     // Loop through grid and apply noise transformation to each cell
@@ -258,13 +255,11 @@ uint8_t* jeff_noise_fbm(unsigned int width, unsigned int height, float z, float 
                 max = sum;
         }
     // Convert float values to 0-255 range
-    uint8_t *result = malloc(width * height * sizeof(uint8_t));
+    memset(result, 0, width * height * sizeof(uint8_t));
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++) {
             float height = 255.f - (255.f * _REMAP(grid[y * width + x], min, max, 0, 1.f));
             result[y * width + x] = (uint8_t)height;
         }
-    // Free float grid, return uint8 grid
     free(grid);
-    return result;
 }

@@ -21,7 +21,7 @@
 
 #ifndef JEFF_NO_INPUT
 typedef struct keymap {
-    sapp_input_state input;
+    sapp_keyboard_state input;
     // TODO: Add action type (up/down)
     void *userdata;
 } keymap_t;
@@ -57,15 +57,15 @@ static struct {
     table_t keymap;
     sevent* sevents[_SAPP_EVENTTYPE_NUM];
 #endif
-} _state;
+} state;
 
 void init_events(void) {
-    memset(&_state.timers, 0, sizeof(table_t));
-    memset(&_state.events, 0, sizeof(table_t));
+    memset(&state.timers, 0, sizeof(table_t));
+    memset(&state.events, 0, sizeof(table_t));
 #ifndef JEFF_NO_INPUT
-    memset(&_state.sevents, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
-    memset(&_state.keymap, 0, sizeof(table_t));
-    _state.keymap = table_new();
+    memset(&state.sevents, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
+    memset(&state.keymap, 0, sizeof(table_t));
+    state.keymap = table_new();
 #endif
 }
 
@@ -77,12 +77,12 @@ static void add_event(const char *name, bool once, jeff_event_callback_t cb, voi
         .userdata = userdata
     };
     listener_t *arr = NULL;
-    if (table_has(&_state.events, name)) {
-        table_get(&_state.events, name, (void**)&arr);
+    if (table_has(&state.events, name)) {
+        table_get(&state.events, name, (void**)&arr);
         garry_append(arr, listener);
     } else {
         garry_append(arr, listener);
-        table_set(&_state.events, name, (void*)arr);
+        table_set(&state.events, name, (void*)arr);
     }
 }
 
@@ -102,7 +102,7 @@ static int _remove_match(const char *name, void *value, void *userdata) {
 }
 
 void jeff_event_remove(const char *name) {
-    table_find(&_state.events, name, _remove_match, NULL);
+    table_find(&state.events, name, _remove_match, NULL);
 }
 
 static int _fire_event(const char *name, void *value, void *userdata) {
@@ -119,7 +119,7 @@ static int _fire_event(const char *name, void *value, void *userdata) {
 }
 
 void jeff_event_emit(const char *name) {
-    table_find(&_state.events, name, _fire_event, NULL);
+    table_find(&state.events, name, _fire_event, NULL);
 }
 
 int _free_event(table_pair_t *pair, void *userdata) {
@@ -130,9 +130,9 @@ int _free_event(table_pair_t *pair, void *userdata) {
 }
 
 void jeff_events_clear(void) {
-    table_each(&_state.events, _free_event, NULL);
-    table_free(&_state.events);
-    _state.events = table_new();
+    table_each(&state.events, _free_event, NULL);
+    table_free(&state.events);
+    state.events = table_new();
 }
 
 static void add_timer(const char *name, int64_t duration, bool loop, jeff_timer_callback_t cb, const char *event, void *userdata) {
@@ -145,12 +145,12 @@ static void add_timer(const char *name, int64_t duration, bool loop, jeff_timer_
         .event = event
     };
     timer_t *arr = NULL;
-    if (table_has(&_state.timers, name)) {
-        table_get(&_state.timers, name, (void**)&arr);
+    if (table_has(&state.timers, name)) {
+        table_get(&state.timers, name, (void**)&arr);
         garry_append(arr, timer);
     } else {
         garry_append(arr, timer);
-        table_set(&_state.timers, name, (void*)arr);
+        table_set(&state.timers, name, (void*)arr);
     }
 }
 
@@ -171,7 +171,7 @@ void jeff_timer_emit_after(const char *name, int64_t ms, const char *event, void
 }
 
 void jeff_timer_remove(const char *name) {
-    table_find(&_state.timers, name, _remove_match, NULL);
+    table_find(&state.timers, name, _remove_match, NULL);
 }
 
 int _free_timer(table_pair_t *pair, void *userdata) {
@@ -182,9 +182,9 @@ int _free_timer(table_pair_t *pair, void *userdata) {
 }
 
 void jeff_timers_clear(void) {
-    table_each(&_state.timers, _free_timer, NULL);
-    table_free(&_state.timers);
-    _state.events = table_new();
+    table_each(&state.timers, _free_timer, NULL);
+    table_free(&state.timers);
+    state.events = table_new();
 }
 
 static int _check(table_pair_t *pair, void *userdata) {
@@ -207,21 +207,18 @@ static int _check(table_pair_t *pair, void *userdata) {
 }
 
 void update_timers(void) {
-    table_each(&_state.timers, _check, NULL);
+    table_each(&state.timers, _check, NULL);
 }
 
 #ifndef JEFF_NO_INPUT
-extern bool sapp_create_input(sapp_input_state *dst, int modifiers, int n, ...);
-extern bool sapp_create_input_str(sapp_input_state *dst, const char *str);
-
 bool jeff_on_input_str(const char *input_str, const char *event, void *userdata) {
     keymap_t *keymap = malloc(sizeof(keymap_t));
-    if (!sapp_create_input_str(&keymap->input, input_str)) {
+    if (!sapp_input_create_state_str(&keymap->input, input_str)) {
         free(keymap);
         return false;
     }
     keymap->userdata = userdata;
-    table_set(&_state.keymap, event, (void*)keymap);
+    table_set(&state.keymap, event, (void*)keymap);
     return true;
 }
 
@@ -229,31 +226,31 @@ bool jeff_on_input(const char *event, void *userdata, int modifiers, int n, ...)
     keymap_t keymap;
     va_list args;
     va_start(args, n);
-    if (!sapp_create_input(&keymap.input, modifiers, n, args))
+    if (!sapp_input_create_state(&keymap.input, modifiers, n, args))
         return false;
     keymap.userdata = userdata;
     keymap_t *arr = NULL;
-    if (table_has(&_state.keymap, event)) {
-        table_get(&_state.keymap, event, (void**)&arr);
+    if (table_has(&state.keymap, event)) {
+        table_get(&state.keymap, event, (void**)&arr);
         garry_append(arr, keymap);
     } else {
         garry_append(arr, keymap);
-        table_set(&_state.keymap, event, (void*)arr);
+        table_set(&state.keymap, event, (void*)arr);
     }
     return true;
 }
 
 void sapp_remove_input_event(const char *event) {
-    if (table_has(&_state.keymap, event)) {
+    if (table_has(&state.keymap, event)) {
         keymap_t *old = NULL;
-        table_get(&_state.keymap, event, (void**)&old);
+        table_get(&state.keymap, event, (void**)&old);
         if (old)
             garry_free(old);
-        table_del(&_state.keymap, event);
+        table_del(&state.keymap, event);
     }
 }
 
-static bool sapp_check_state(sapp_input_state *istate) {
+static bool sapp_check_state(sapp_keyboard_state *istate) {
     bool mod_check = true;
     bool key_check = true;
     if (istate->modifiers != 0)
@@ -275,7 +272,7 @@ static int __check(table_pair_t *pair, void *userdata) {
 }
 
 void check_keymaps(void) {
-    table_each(&_state.keymap, __check, NULL);
+    table_each(&state.keymap, __check, NULL);
 }
 
 void jeff_emit_on_event(sapp_event_type event_type, const char *event) {
@@ -283,7 +280,7 @@ void jeff_emit_on_event(sapp_event_type event_type, const char *event) {
         .event = strdup(event),
         .cb = NULL
     };
-    garry_append(_state.sevents[event_type], e);
+    garry_append(state.sevents[event_type], e);
 }
 
 void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callback) {
@@ -291,7 +288,7 @@ void jeff_on_event(sapp_event_type event_type, jeff_input_event_callback_t callb
         .event = NULL,
         .cb = callback
     };
-    garry_append(_state.sevents[event_type], e);
+    garry_append(state.sevents[event_type], e);
 }
 
 int _free(table_pair_t *pair, void *userdata) {
@@ -303,26 +300,26 @@ int _free(table_pair_t *pair, void *userdata) {
 
 void jeff_clear_events(void) {
     for (int i = 0; i < _SAPP_EVENTTYPE_NUM; i++)
-        if (_state.sevents[i])
-            garry_free(_state.sevents[i]);
-    memset(&_state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
-    table_each(&_state.keymap, _free, NULL);
-    table_free(&_state.keymap);
-    _state.keymap = table_new();
+        if (state.sevents[i])
+            garry_free(state.sevents[i]);
+    memset(&state.events, 0, _SAPP_EVENTTYPE_NUM * sizeof(sevent*));
+    table_each(&state.keymap, _free, NULL);
+    table_free(&state.keymap);
+    state.keymap = table_new();
 }
 
 void check_event(sapp_event_type type) {
-    if (!_state.sevents[type])
+    if (!state.sevents[type])
         return;
-    for (int i = 0; i < garry_count(_state.sevents[type]); i++) {
-        sevent *event = &_state.sevents[type][i];
+    for (int i = 0; i < garry_count(state.sevents[type]); i++) {
+        sevent *event = &state.sevents[type][i];
         if (event->event != NULL)
             jeff_event_emit(event->event);
     }
 }
 
 void jeff_remove_event(sapp_event_type type) {
-    if (_state.sevents[type])
-        garry_free(_state.sevents[type]);
+    if (state.sevents[type])
+        garry_free(state.sevents[type]);
 }
 #endif // JEFF_NO_INPUT

@@ -22,7 +22,6 @@ There really is a sokol, and these people are using it, but it is just a part of
     - [ ] Android
 - [X] (Optional) Scene framework
 - [X] (Optional) Default config file + cli arguments
-- [ ] Rendering framework
 - [X] PRNG + noise
 - [X] (Optional) Input handling
     - [X] Key mapping
