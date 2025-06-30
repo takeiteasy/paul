@@ -10,7 +10,7 @@ else
 endif
 SHDC_FLAGS=metal_macos
 
-SOURCE=$(wildcard src/*.c) $(wildcard deps/hal/native/macos/*.m) deps/gamepad/Gamepad_private.c deps/gamepad/Gamepad_macosx.c
+SOURCE=$(wildcard src/*.c) $(wildcard deps/hal/native/macos/*.m)
 SCENES=$(wildcard scenes/*.c)
 EXE=build/paul_$(ARCH)$(PROG_EXT)
 LIB=build/libpaul_$(ARCH).$(LIB_EXT)

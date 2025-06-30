@@ -17,10 +17,6 @@ targets:
     sources:
         - path: src/
         - path: scenes/
-        - path: deps/gamepad
-          includes:
-            - "Gamepad_private.c"
-            - "Gamepad_macosx.c"
         - path: deps/hal/native/macos
         - path: deps/
           type: folder
