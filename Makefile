@@ -10,11 +10,11 @@ else
 endif
 SHDC_FLAGS=metal_macos
 
-SOURCE=$(wildcard src/*.c) $(wildcard deps/paul/native/macos/*.m) deps/gamepad/Gamepad_private.c deps/gamepad/Gamepad_macosx.c
+SOURCE=$(wildcard src/*.c) $(wildcard deps/hal/native/macos/*.m) deps/gamepad/Gamepad_private.c deps/gamepad/Gamepad_macosx.c
 SCENES=$(wildcard scenes/*.c)
-EXE=build/jeff_$(ARCH)$(PROG_EXT)
-LIB=build/libjeff_$(ARCH).$(LIB_EXT)
-INC=-Isrc -Iscenes -Ibuild -Lbuild -Ideps -Ideps/paul
+EXE=build/paul_$(ARCH)$(PROG_EXT)
+LIB=build/libpaul_$(ARCH).$(LIB_EXT)
+INC=-Isrc -Iscenes -Ibuild -Lbuild -Ideps -Ideps/hal
 
 ARCH_PATH=./bin/$(ARCH)
 SHDC_PATH=$(ARCH_PATH)/sokol-shdc$(PROG_EXT)
@@ -35,7 +35,7 @@ app: shaders
 	$(CC) $(INC) $(CFLAGS) $(SOURCE) $(SCENES) -o $(EXE)
 
 library: shaders
-	$(CC) -shared -fpic -DJEFF_NO_SCENES $(INC) $(CFLAGS) $(SOURCE) -o $(LIB)
+	$(CC) -shared -fpic -DPAUL_NO_SCENES $(INC) $(CFLAGS) $(SOURCE) -o $(LIB)
 
 default: app
 

@@ -1,4 +1,4 @@
-/* jeff/math.c -- https://github.com/takeiteasy/jeff
+/* paul/math.c -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025  George Watson
 
@@ -96,7 +96,7 @@
 *
 **********************************************************************************************/
 
-#include "jeff.h"
+#include "paul.h"
 
 static float ease_linear_None(float t, float b, float c, float d) {
     return (c * t / d + b);
@@ -293,10 +293,10 @@ static float ease_elastic_inout(float t, float b, float c, float d) {
     return (postFix * sinf((t * d - s) * (2.0f * M_PI) / p) * 0.5f + c + b);
 }
 
-float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float b, float c, float d) {
+float paul_ease(enum paul_easing_fn fn, enum paul_easing_t type, float t, float b, float c, float d) {
     switch (fn) {
         default:
-        case JEFF_EASING_LINEAR:
+        case PAUL_EASING_LINEAR:
             switch ((int)type) {
                 default:
                 case 0:
@@ -308,7 +308,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_linear_inout(t, b, c, d);
             }
-        case JEFF_EASING_SINE:
+        case PAUL_EASING_SINE:
             switch (type) {
                 case EASE_IN:
                     return ease_sine_in(t, b, c, d);
@@ -317,7 +317,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_sine_inout(t, b, c, d);
             };
-        case JEFF_EASING_CIRCULAR:
+        case PAUL_EASING_CIRCULAR:
             switch (type) {
                 case EASE_IN:
                     return ease_circ_in(t, b, c, d);
@@ -326,7 +326,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_circ_inout(t, b, c, d);
             };
-        case JEFF_EASING_CUBIC:
+        case PAUL_EASING_CUBIC:
             switch (type) {
                 case EASE_IN:
                     return ease_cubic_in(t, b, c, d);
@@ -335,7 +335,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_cubic_inout(t, b, c, d);
             };
-        case JEFF_EASING_QUAD:
+        case PAUL_EASING_QUAD:
             switch (type) {
                 case EASE_IN:
                     return ease_quad_in(t, b, c, d);
@@ -344,7 +344,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_quad_inout(t, b, c, d);
             };
-        case JEFF_EASING_EXPONENTIAL:
+        case PAUL_EASING_EXPONENTIAL:
             switch (type) {
                 case EASE_IN:
                     return ease_expo_in(t, b, c, d);
@@ -353,7 +353,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_expo_inout(t, b, c, d);
             };
-        case JEFF_EASING_BACK:
+        case PAUL_EASING_BACK:
             switch (type) {
                 case EASE_IN:
                     return ease_back_in(t, b, c, d);
@@ -362,7 +362,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_back_inout(t, b, c, d);
             };
-        case JEFF_EASING_BOUNCE:
+        case PAUL_EASING_BOUNCE:
             switch (type) {
                 case EASE_IN:
                     return ease_bounce_in(t, b, c, d);
@@ -371,7 +371,7 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
                 case EASE_INOUT:
                     return ease_bounce_inout(t, b, c, d);
             };
-        case JEFF_EASING_ELASTIC:
+        case PAUL_EASING_ELASTIC:
             switch (type) {
                 case EASE_IN:
                     return ease_elastic_in(t, b, c, d);
@@ -383,10 +383,10 @@ float jeff_ease(enum jeff_easing_fn fn, enum jeff_easing_t type, float t, float 
     }
 }
 
-bool jeff_float_cmp(float a, float b) {
+bool paul_float_cmp(float a, float b) {
     return fabsf(a - b) <= _EPSILON * fmaxf(1.f, fmaxf(fabsf(a), fabsf(b)));
 }
 
-bool jeff_double_cmp(double a, double b) {
+bool paul_double_cmp(double a, double b) {
     return fabs(a - b) <= _EPSILON * fmax(1.f, fmax(fabs(a), fabs(b)));
 }

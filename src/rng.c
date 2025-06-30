@@ -1,4 +1,4 @@
-/* jeff/rng.h -- https://github.com/takeiteasy/jeff
+/* paul/rng.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025  George Watson
 
@@ -29,7 +29,7 @@
  *  (overlapping 5-tuple permutations, which is allegedly buggy)
  */
 
-#include "jeff.h"
+#include "paul.h"
 
 #define _PRNG_LAG1 (UINT16_C(24))
 #define _PRNG_LAG2 (UINT16_C(55))
@@ -48,7 +48,7 @@ static struct {
     uint_fast16_t c;
 } state;
 
-void jeff_srand(uint64_t seed) {
+void paul_srand(uint64_t seed) {
     if (!seed)
         seed = (uint64_t)time(NULL);
     uint_fast16_t i;
@@ -62,10 +62,10 @@ void jeff_srand(uint64_t seed) {
         state.s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
-        (void)jeff_rand_int();
+        (void)paul_rand_int();
 }
 
-uint64_t jeff_rand_int(void) {
+uint64_t paul_rand_int(void) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
@@ -87,14 +87,14 @@ uint64_t jeff_rand_int(void) {
     return state.s[i&_PRNG_RAND_SMASK];
 }
 
-float jeff_rand_float(void) {
-    return (float)jeff_rand_int() / (float)PRNG_RAND_MAX;
+float paul_rand_float(void) {
+    return (float)paul_rand_int() / (float)PRNG_RAND_MAX;
 }
 
-int jeff_rand_int_range(int min, int max) {
+int paul_rand_int_range(int min, int max) {
     if (min > max)
         _SWAP(min, max);
-    return (int)(jeff_rand_float() * (max - min + 1) + min);
+    return (int)(paul_rand_float() * (max - min + 1) + min);
 }
 
 #define __SWAP(a, b)    \
@@ -105,19 +105,19 @@ int jeff_rand_int_range(int min, int max) {
         b = temp;     \
     } while (0)
 
-float jeff_rand_float_range(float min, float max) {
+float paul_rand_float_range(float min, float max) {
     if (min > max)
         __SWAP(min, max);
-    return jeff_rand_float() * (max - min) + min;
+    return paul_rand_float() * (max - min) + min;
 }
 
-void jeff_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
+void paul_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
     memset(result, 0, width * height * sizeof(int));
     // Randomly fill the grid
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            result[y * width + x] = jeff_rand_int_range(1, 100) < fill_chance;
+            result[y * width + x] = paul_rand_int_range(1, 100) < fill_chance;
     // Run cellular-automata on grid n times
     for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
@@ -231,7 +231,7 @@ static float perlin(float x, float y, float z) {
 }
 
 
-void jeff_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves, uint8_t* result) {
+void paul_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves, uint8_t* result) {
     float min = FLT_MAX, max = FLT_MIN;
     float *grid = malloc(width * height * sizeof(float));
     // Loop through grid and apply noise transformation to each cell

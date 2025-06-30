@@ -1,4 +1,4 @@
-/* jeff/vfs.c -- https://github.com/takeiteasy/jeff
+/* paul/vfs.c -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025  George Watson
 
@@ -15,8 +15,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#include "jeff.h"
-#ifndef JEFF_NO_VFS
+#include "paul.h"
+#ifndef PAUL_NO_VFS
 #undef SWAP
 #define ZIP_C
 #include "zip.h"
@@ -24,7 +24,7 @@
 #include "table.h"
 #endif
 
-#ifndef JEFF_NO_VFS
+#ifndef PAUL_NO_VFS
 typedef struct vfs_dir {
     const char *path;
     zip *archive;
@@ -40,17 +40,17 @@ void init_vfs(void) {
 }
 #endif
 
-bool jeff_vfs_mount(const char *src, const char *dst) {
-#ifndef JEFF_NO_VFS
+bool paul_vfs_mount(const char *src, const char *dst) {
+#ifndef PAUL_NO_VFS
     // TODO: test + sanitize dst
     if (table_has(&state.vfs, dst)) {
         fprintf(stderr, "[MOUNT ERROR] Entry already mounted at \"%s\"\n", dst);
         return false;
     }
-    const char *ext = paul_file_extension(src);
+    const char *ext = hal_file_extension(src);
     vfs_dir *d = NULL;
     if (ext && !strncmp(".zip", ext, 4)) {
-        if (paul_file_exists(src)) {
+        if (hal_file_exists(src)) {
             d = malloc(sizeof(vfs_dir));
             d->path = NULL;
             if (!(d->archive = zip_open(src, "rb"))) {
@@ -64,7 +64,7 @@ bool jeff_vfs_mount(const char *src, const char *dst) {
             return false;
         }
     } else {
-        if (paul_dir_exists(src)) {
+        if (hal_dir_exists(src)) {
             d = malloc(sizeof(vfs_dir));
             d->path = strdup(src);
             d->archive = NULL;
@@ -80,7 +80,7 @@ bool jeff_vfs_mount(const char *src, const char *dst) {
 #endif
 }
 
-bool jeff_vfs_unmount(const char *name) {
+bool paul_vfs_unmount(const char *name) {
     if (table_has(&state.vfs, name))
         return false;
     vfs_dir *dir = NULL;
@@ -104,28 +104,28 @@ int _delete(table_pair_t *pair, void *userdata) {
     return 1;
 }
 
-void jeff_vfs_unmount_all(void) {
+void paul_vfs_unmount_all(void) {
     table_each(&state.vfs, _delete, NULL);
     table_free(&state.vfs);
     state.vfs = table_new();
 }
 
-unsigned char *jeff_vfs_read(const char *filename, size_t *size) { // must free() after use
-#ifndef JEFF_NO_VFS
+unsigned char *paul_vfs_read(const char *filename, size_t *size) { // must free() after use
+#ifndef PAUL_NO_VFS
     return NULL;
 #else
-    return paul_read_file(filename, size);
+    return hal_read_file(filename, size);
 #endif
 }
 
-bool jeff_vfs_write(const char *filename, void *data, size_t size, bool overwrite_existing) {
-#ifndef JEFF_NO_VFS
+bool paul_vfs_write(const char *filename, void *data, size_t size, bool overwrite_existing) {
+#ifndef PAUL_NO_VFS
     return NULL; // TODO
 #else
-    return paul_write_file(filename, (const char*)data, size, overwrite_existing);
+    return hal_write_file(filename, (const char*)data, size, overwrite_existing);
 #endif
 }
 
-void jeff_vfs_glob(const char *glob, jeff_glob_callback_t callback) {
+void paul_vfs_glob(const char *glob, paul_glob_callback_t callback) {
     // TODO
 }

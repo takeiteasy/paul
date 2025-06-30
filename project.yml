@@ -1,4 +1,4 @@
-name: jeff
+name: paul
 
 options:
   bundleIdPrefix: io.github.takeiteasy
@@ -11,7 +11,7 @@ settings:
   CLANG_WARN_DOCUMENTATION_COMMENTS: false
 
 targets:
-  jeff:
+  paul:
     type: tool
     platform: macOS
     sources:
@@ -21,7 +21,7 @@ targets:
           includes:
             - "Gamepad_private.c"
             - "Gamepad_macosx.c"
-        - path: deps/paul/native/macos
+        - path: deps/hal/native/macos
         - path: deps/
           type: folder
         - path: assets/
@@ -45,7 +45,7 @@ targets:
         - sdk: AudioToolbox.framework
     settings:
         HEADER_SEARCH_PATHS: [$(PROJECT_DIR)/deps,
-                              $(PROJECT_DIR)/deps/paul,
+                              $(PROJECT_DIR)/deps/hal,
                               $(PROJECT_DIR)/src,
                               $(PROJECT_DIR)/scenes]
         OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fno-objc-arc]

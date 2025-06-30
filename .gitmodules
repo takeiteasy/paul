@@ -1,6 +1,6 @@
 [submodule "deps/sokol"]
 	path = deps/sokol
 	url = https://github.com/floooh/sokol.git
-[submodule "deps/paul"]
-	path = deps/paul
-	url = git@github.com:takeiteasy/paul.git
+[submodule "deps/hal"]
+	path = deps/hal
+	url = git@github.com:takeiteasy/hal.git
