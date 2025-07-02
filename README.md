@@ -17,17 +17,20 @@
 - [X] (Optional) Scene framework
 - [X] (Optional) Default config file + cli arguments
 - [X] PRNG + noise
-- [X] (Optional) Input handling
+- [X] (Optional) Input handling (see: [sokol_input](https://github.com/takeiteasy/sokol_input))
     - [X] Key mapping
-    - [ ] Gamepads
+    - [X] Gamepads
     - [ ] Input recording + playback
 - [X] Timers + events
     - [ ] Async
-- [ ] Audio mixer + playback
-- [ ] Basic networking (TCP/UDP/HTTP)
+- [ ] Audio mixer + playback (see: [sokol_mixer](https://github.com/takeiteasy/sokol_mixer))
+- [ ] Networking
+    - [ ] TCP
+    - [ ] UDP
+    - [ ] HTTP
 - [ ] Asset loading
-    - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)
-    - [X] Audio (.wav, .qoa, .ogg, .mp3, .flac)
+    - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi) (see: [sokol_image](https://github.com/takeiteasy/sokol_image))
+    - [X] Audio (.wav, .qoa, .ogg, .mp3, .flac) (see: [sokol_mixer](https://github.com/takeiteasy/sokol_mixer))
     - [ ] Fonts (truetype, fontstash)
     - [ ] Models (.obj, .iqm)
         - [ ] Materials (.mtl)

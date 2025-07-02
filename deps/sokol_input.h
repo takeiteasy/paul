@@ -64,7 +64,7 @@ int sapp_cursor_x(void);
 int sapp_cursor_y(void);
 bool sapp_cursor_delta_x(void);
 bool sapp_cursor_delta_y(void);
-bool sapp_check_scrolled(void);
+bool sapp_scrolled(void);
 float sapp_scroll_x(void);
 float sapp_scroll_y(void);
 
@@ -96,28 +96,9 @@ float sapp_gamepad_axis_delta_y(void);
 float sapp_gamepad_axis_delta_y_id(int gid);
 #endif
 
-bool sapp_input_check_str_down(const char *str);
-bool sapp_input_check_down(int modifiers, int n, ...);
-bool sapp_input_check_str_released(const char *str);
-bool sapp_input_check_released(int modifiers, int n, ...);
-bool sapp_input_check_str_up(const char *str);
-bool sapp_input_check_up(int modifiers, int n, ...);
-
-#ifndef MAX_KB_STATE_KEYS
-#define MAX_KB_STATE_KEYS 8
-#endif
-
-typedef struct sapp_keyboard_state {
-    int keys[MAX_KB_STATE_KEYS];
-    int modifiers;
-} sapp_keyboard_state;
-
-bool sapp_input_create_state(sapp_keyboard_state *dst, int modifiers, int n, ...);
-bool sapp_input_create_state_str(sapp_keyboard_state *dst, const char *str);
-
-#ifndef SOKOL_INPUT_NO_GAMEPADS
-// ...
-#endif
+bool sapp_input_is_str_down(const char *str);
+bool sapp_input_is_down(int modifiers, int n, ...);
+int* sapp_parse_input_str(const char *str, int *modifiers);
 
 #if defined(__cplusplus)
 }
@@ -518,7 +499,7 @@ bool sapp_cursor_delta_y(void) {
     return _input_state.input_current.cursor.y - _input_state.input_prev.cursor.y;
 }
 
-bool sapp_check_scrolled(void) {
+bool sapp_scrolled(void) {
     return _input_state.input_current.scroll.x != 0 || _input_state.input_current.scroll.y != 0;
 }
 
@@ -783,46 +764,7 @@ static int* _vaargs(int n, va_list args) {
     return result;
 }
 
-#define _MIN(A, B) ((A) < (B) ? (A) : (B))
-
-bool sapp_input_create_state(sapp_keyboard_state *dst, int modifiers, int n, ...) {
-    dst->modifiers = modifiers;
-    va_list args;
-    va_start(args, n);
-    int *tmp = _vaargs(n, args);
-    if (tmp) {
-        vector_free(tmp);
-        return false;
-    }
-    for (int i = 0; i < MAX_KB_STATE_KEYS; i++)
-        dst->keys[i] = -1;
-    int max = _MIN(vector_count(tmp), MAX_KB_STATE_KEYS);
-    memcpy(dst->keys, tmp, max * sizeof(int));
-    vector_free(tmp);
-    return true;
-}
-
-bool sapp_input_create_state_str(sapp_keyboard_state *dst, const char *str) {
-    dst->modifiers = -1;
-    for (int i = 0; i < MAX_KB_STATE_KEYS; i++)
-        dst->keys[i] = -1;
-
-    input_parser_t p;
-    memset(&p, 0, sizeof(input_parser_t));
-    p.original = p.offset = p.cursor = str;
-    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
-        return false;
-    if (p.modifiers)
-        dst->modifiers = p.modifiers;
-    if (p.keys) {
-        int max = _MIN(vector_count(p.keys), MAX_KB_STATE_KEYS);
-        memcpy(dst->keys, p.keys, max * sizeof(int));
-        vector_free(p.keys);
-    }
-    return true;
-}
-
-bool sapp_input_check_str_down(const char *str) {
+bool sapp_input_is_str_down(const char *str) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
@@ -843,7 +785,7 @@ bool sapp_input_check_str_down(const char *str) {
     return mod_check && key_check;
 }
 
-bool sapp_input_check_down(int modifiers, int n, ...) {
+bool sapp_input_is_down(int modifiers, int n, ...) {
     int *tmp = NULL;
     bool result = false;
     if (modifiers != 0)
@@ -870,100 +812,18 @@ BAIL:
     return result;
 }
 
-bool sapp_input_check_str_released(const char *str) {
+int* sapp_parse_input_str(const char *str, int *modifiers) {
     input_parser_t p;
     memset(&p, 0, sizeof(input_parser_t));
     p.original = p.offset = p.cursor = str;
     if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
         return false;
-    bool mod_check = true;
-    bool key_check = true;
-    if (p.modifiers)
-        mod_check = sapp_modifier_equals(p.modifiers);
-    if (p.keys) {
-        for (int i = 0; i < vector_count(p.keys); i++)
-            if (!sapp_was_key_released(p.keys[i])) {
-                key_check = false;
-                break;
-            }
-        vector_free(p.keys);
-    }
-    return mod_check || key_check;
-}
-
-bool sapp_input_check_released(int modifiers, int n, ...) {
-    int *tmp = NULL;
-    bool result = false;
-    if (modifiers != 0)
-        if (!sapp_modifier_equals(modifiers))
-            goto BAIL;
-    if (!n)
-        goto BAIL;
-    va_list args;
-    va_start(args, n);
-    if (!(tmp = _vaargs(n, args)))
-        goto BAIL;
-    bool check = true;
-    for (int i = 0; i < vector_count(args); i++)
-        if (!sapp_was_key_released(tmp[i])) {
-            check = false;
-            break;
-        }
-    va_end(args);
-    if (check)
-        result = true;
-BAIL:
-    if (tmp)
-        vector_free(tmp);
-    return result;
-}
-
-bool sapp_input_check_str_up(const char *str) {
-    input_parser_t p;
-    memset(&p, 0, sizeof(input_parser_t));
-    p.original = p.offset = p.cursor = str;
-    if (!parse_input_str(&p) || (!p.modifiers && !p.keys))
-        return false;
-    bool mod_check = true;
-    bool key_check = true;
-    if (p.modifiers)
-        if ((mod_check = sapp_modifier_equals(p.modifiers)))
-            return false;
-    if (p.keys) {
-        for (int i = 0; i < vector_count(p.keys); i++)
-            if (sapp_is_key_down(p.keys[i])) {
-                key_check = false;
-                break;
-            }
-        vector_free(p.keys);
-    }
-    return mod_check && key_check;
-}
-
-bool sapp_input_check_up(int modifiers, int n, ...) {
-    int *tmp = NULL;
-    bool result = false;
-    if (modifiers != 0)
-        if (sapp_modifier_equals(modifiers))
-            goto BAIL;
-    if (!n)
-        goto BAIL;
-    va_list args;
-    va_start(args, n);
-    if (!(tmp = _vaargs(n, args)))
-        goto BAIL;
-    bool check = true;
-    for (int i = 0; i < vector_count(args); i++)
-        if (sapp_is_key_down(tmp[i])) {
-            check = false;
-            break;
-        }
-    va_end(args);
-    if (check)
-        result = true;
-BAIL:
-    if (tmp)
-        vector_free(tmp);
+    if (p.modifiers && modifiers)
+        *modifiers = p.modifiers ? p.modifiers : 0;
+    int count = vector_count(p.keys);
+    int *result = malloc(count * sizeof(int));
+    memcpy(result, p.keys, count * sizeof(int));
+    vector_free(p.keys);
     return result;
 }
 #endif // SOKOL_IMPL
