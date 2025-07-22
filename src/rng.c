@@ -41,6 +41,10 @@
 
 #define PRNG_RAND_MAX UINT64_MAX
 
+#define _MAX(A, B) ((A) > (B) ? (A) : (B))
+#define _CLAMP(X, LO, HI) ((X) < (LO) ? (LO) : ((X) > (HI) ? (HI) : (X)))
+#define _REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
+
 // TODO: Thread saftey
 static struct {
     uint64_t s[_PRNG_RAND_SSIZE];
@@ -62,10 +66,10 @@ void paul_srand(uint64_t seed) {
         state.s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
-        (void)paul_rand_int();
+        (void)paul_rand();
 }
 
-uint64_t paul_rand_int(void) {
+uint64_t paul_rand(void) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
@@ -87,28 +91,8 @@ uint64_t paul_rand_int(void) {
     return state.s[i&_PRNG_RAND_SMASK];
 }
 
-float paul_rand_float(void) {
-    return (float)paul_rand_int() / (float)PRNG_RAND_MAX;
-}
-
-int paul_rand_int_range(int min, int max) {
-    if (min > max)
-        _SWAP(min, max);
-    return (int)(paul_rand_float() * (max - min + 1) + min);
-}
-
-#define __SWAP(a, b)    \
-    do                \
-    {                 \
-        int temp = a; \
-        a = b;        \
-        b = temp;     \
-    } while (0)
-
-float paul_rand_float_range(float min, float max) {
-    if (min > max)
-        __SWAP(min, max);
-    return paul_rand_float() * (max - min) + min;
+float paul_randf(void) {
+    return (float)paul_rand() / (float)PRNG_RAND_MAX;
 }
 
 void paul_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
@@ -117,7 +101,7 @@ void paul_cellular_automata(unsigned int width, unsigned int height, unsigned in
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            result[y * width + x] = paul_rand_int_range(1, 100) < fill_chance;
+            result[y * width + x] = (paul_randf() * 99) + 1 < fill_chance;
     // Run cellular-automata on grid n times
     for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)

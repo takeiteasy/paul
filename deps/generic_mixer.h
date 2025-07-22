@@ -1,6 +1,6 @@
-/* sokol_mixer.h -- https://github.com/takeiteasy/sokol_mixer
+/* generic_mixer.h -- https://github.com/takeiteasy/generic_mixer
 
- sokol_mixer Copyright (C) 2025 George Watson
+ generic_mixer Copyright (C) 2025 George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -15,37 +15,39 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#ifndef SOKOL_MIXER_HEADER
-#define SOKOL_MIXER_HEADER
-#if defined(__cplusplus)
+#ifndef GENERIC_MIXER_HEADER
+#define GENERIC_MIXER_HEADER
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct smixer_audio {
+#include <stdbool.h>
+
+typedef struct audio {
     unsigned int count;
     unsigned int rate;
     unsigned int size; // 8, 16, or 32
     unsigned int channels;
     void *buffer;
-} smixer_audio;
+} audio_t;
 
-bool smixer_load_from_path(const char *path, smixer_audio *dst);
-bool smixer_load_from_memory(const unsigned char *data, int size, smixer_audio *dst);
-bool smixer_audio_export_wav(smixer_audio *audio, const char *path);
-void smixer_audio_destroy(smixer_audio *audio);
-bool smixer_audio_dupe(smixer_audio *src, smixer_audio *dst);
-bool smixer_audio_crop(smixer_audio *src, int init_sample, int final_sample, smixer_audio *dst);
-float* smixer_audio_read_all_samples(smixer_audio *audio);
-float smixer_audio_sample(smixer_audio *audio, int frame);
-void smixer_audio_read_samples(smixer_audio *audio, int start_frame, int end_frame, float *dst);
-float smixer_audio_length(smixer_audio *audio);
+bool audio_load_from_path(const char *path, audio_t *dst);
+bool audio_load_from_memory(const unsigned char *data, int size, audio_t *dst);
+bool audio_export_wav(audio_t *audio, const char *path);
+void audio_destroy(audio_t *audio);
+bool audio_dupe(audio_t *src, audio_t *dst);
+bool audio_crop(audio_t *src, int init_sample, int final_sample, audio_t *dst);
+float* audio_read_all_samples(audio_t *audio);
+float audio_sample(audio_t *audio, int frame);
+void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst);
+float audio_length(audio_t *audio);
 
-#if defined(__cplusplus)
+#ifdef __cplusplus
 }
 #endif
-#endif // SOKOL_MIXER_HEADER
+#endif // GENERIC_MIXER_HEADER
 
-#ifdef SOKOL_MIXER_IMPL
+#ifdef GENERIC_MIXER_IMPLEMENTATION
 #ifdef _WIN32
 #include <io.h>
 #include <dirent.h>
@@ -72,7 +74,7 @@ float smixer_audio_length(smixer_audio *audio);
 #define _SWAP(A, B)   ((A)^=(B)^=(A)^=(B))
 #define _CLAMP(x, low, high) _MIN(_MAX(x, low), high)
 
-bool smixer_load_from_path(const char *path, smixer_audio *dst) {
+bool audio_load_from_path(const char *path, audio_t *dst) {
     bool result = false;
     unsigned char *data = NULL;
     if (access(path, F_OK))
@@ -89,7 +91,7 @@ bool smixer_load_from_path(const char *path, smixer_audio *dst) {
         goto BAIL;
     if (fread(data, sz, 1, fh) != 1)
         goto BAIL;
-    result = smixer_load_from_memory(data, (int)sz, dst);
+    result = audio_load_from_memory(data, (int)sz, dst);
 BAIL:
     if (fh)
         fclose(fh);
@@ -98,14 +100,14 @@ BAIL:
     return result;
 }
 
-static bool load_wav(const unsigned char *data, int size, smixer_audio *dst) {
+static bool load_wav(const unsigned char *data, int size, audio_t *dst) {
     drwav wav;
     memset(&wav, 0, sizeof(drwav));
     bool success = drwav_init_memory(&wav, data, size, NULL);
     if (!success)
         return NULL;
 
-    smixer_audio *result = malloc(sizeof(smixer_audio));
+    audio_t *result = malloc(sizeof(audio_t));
     dst->count = (unsigned int)wav.totalPCMFrameCount;
     dst->rate = wav.sampleRate;
     dst->size = 16;
@@ -114,12 +116,12 @@ static bool load_wav(const unsigned char *data, int size, smixer_audio *dst) {
     return result;
 }
 
-static bool load_ogg(const unsigned char *data, int size, smixer_audio *dst) {
+static bool load_ogg(const unsigned char *data, int size, audio_t *dst) {
     stb_vorbis *ogg = stb_vorbis_open_memory((unsigned char *)data, size, NULL, NULL);
     if (!ogg)
         return NULL;
 
-    smixer_audio *result = malloc(sizeof(smixer_audio));
+    audio_t *result = malloc(sizeof(audio_t));
     stb_vorbis_info info = stb_vorbis_get_info(ogg);
     dst->rate = info.sample_rate;
     dst->size = 16;
@@ -131,11 +133,11 @@ static bool load_ogg(const unsigned char *data, int size, smixer_audio *dst) {
     return result;
 }
 
-static bool load_mp3(const unsigned char *data, int size, smixer_audio *dst) {
+static bool load_mp3(const unsigned char *data, int size, audio_t *dst) {
     drmp3_config config;
     memset(&config, 0, sizeof(drmp3_config));
 
-    smixer_audio *result = malloc(sizeof(smixer_audio));
+    audio_t *result = malloc(sizeof(audio_t));
     unsigned long long int total_count = 0;
     if (!(dst->buffer = drmp3_open_memory_and_read_pcm_frames_f32(data, size, &config, &total_count, NULL))) {
         free(result);
@@ -148,11 +150,11 @@ static bool load_mp3(const unsigned char *data, int size, smixer_audio *dst) {
     return result;
 }
 
-static bool load_qoa(const unsigned char *data, int size, smixer_audio *dst) {
+static bool load_qoa(const unsigned char *data, int size, audio_t *dst) {
     qoa_desc qoa;
     memset(&qoa, 0, sizeof(qoa_desc));
 
-    smixer_audio *result = malloc(sizeof(smixer_audio));
+    audio_t *result = malloc(sizeof(audio_t));
     if (!(dst->buffer = qoa_decode(data, size, &qoa))) {
         free(result);
         return NULL;
@@ -164,9 +166,9 @@ static bool load_qoa(const unsigned char *data, int size, smixer_audio *dst) {
     return result;
 }
 
-static bool load_flac(const unsigned char *data, int size, smixer_audio *dst) {
+static bool load_flac(const unsigned char *data, int size, audio_t *dst) {
     unsigned long long int total_count = 0;
-    smixer_audio *result = malloc(sizeof(smixer_audio));
+    audio_t *result = malloc(sizeof(audio_t));
     if (!(dst->buffer = drflac_open_memory_and_read_pcm_frames_s16(data, size, &dst->channels, &dst->rate, &total_count, NULL))) {
         free(result);
         return NULL;
@@ -219,7 +221,7 @@ static bool check_if_flac(const unsigned char *data, int size) {
     return size > 4 && memcmp(data, flac, 4);
 }
 
-bool smixer_load_from_memory(const unsigned char *data, int size, smixer_audio *dst) {
+bool audio_load_from_memory(const unsigned char *data, int size, audio_t *dst) {
     if (check_if_mp3(data, size))
         return load_wav(data, size, dst);
     else if (check_if_ogg(data, size))
@@ -234,12 +236,12 @@ bool smixer_load_from_memory(const unsigned char *data, int size, smixer_audio *
         return false;
 }
 
-bool smixer_audio_export_wav(smixer_audio *audio, const char *path) {
+bool audio_export_wav(audio_t *audio, const char *path) {
     // TODO: Write wave file
     return false;
 }
 
-void smixer_audio_destroy(smixer_audio *audio) {
+void audio_destroy(audio_t *audio) {
     if (audio) {
         if (audio->buffer)
             free(audio->buffer);
@@ -247,7 +249,7 @@ void smixer_audio_destroy(smixer_audio *audio) {
     }
 }
 
-bool smixer_audio_dupe(smixer_audio *src, smixer_audio *dst) {
+bool audio_dupe(audio_t *src, audio_t *dst) {
     if (!src || !dst)
         return false;
     size_t size = src->count * src->channels * src->size / 8;
@@ -260,10 +262,10 @@ bool smixer_audio_dupe(smixer_audio *src, smixer_audio *dst) {
     return true;
 }
 
-bool smixer_audio_crop(smixer_audio *audio, int init_sample, int final_sample, smixer_audio *dst) {
+bool audio_crop(audio_t *audio, int init_sample, int final_sample, audio_t *dst) {
     if (init_sample <= 0 || init_sample >= final_sample || (unsigned int)final_sample >= audio->count * audio->channels)
         return false;
-    smixer_audio_dupe(audio, dst);
+    audio_dupe(audio, dst);
     int diff = final_sample - init_sample;
     void *buffer = malloc(diff * audio->size / 8);
     memcpy(buffer, (unsigned char*)audio->buffer + (init_sample * audio->channels * audio->size / 8), diff * audio->size / 8);
@@ -287,11 +289,11 @@ static float _sample(void *buffer, int size, int index, size_t max_index) {
     }
 }
 
-float smixer_audio_sample(smixer_audio *audio, int frame) {
+float audio_sample(audio_t *audio, int frame) {
     return _sample(audio->buffer, audio->size, frame, audio->count * audio->channels);
 }
 
-float* smixer_audio_read_all_samples(smixer_audio *audio) {
+float* audio_read_all_samples(audio_t *audio) {
     int sz = audio->count * audio->channels;
     float *samples = malloc(sz * sizeof(float));
     for (unsigned int i = 0; i < sz; i++)
@@ -299,7 +301,7 @@ float* smixer_audio_read_all_samples(smixer_audio *audio) {
     return samples;
 }
 
-void smixer_audio_read_samples(smixer_audio *audio, int start_frame, int end_frame, float *dst) {
+void audio_read_samples(audio_t *audio, int start_frame, int end_frame, float *dst) {
     if (!dst)
         return;
     int sz = audio->count * audio->channels;
@@ -314,7 +316,7 @@ void smixer_audio_read_samples(smixer_audio *audio, int start_frame, int end_fra
         dst[i] = _sample(audio->buffer, audio->size, _a + i, sz);
 }
 
-float smixer_audio_length(smixer_audio *audio) {
+float audio_length(audio_t *audio) {
     return (float)(audio->count / audio->channels) / (float)audio->rate;
 }
-#endif // SOKOL_MIXER_IMPL
+#endif // GENERIC_MIXER_IMPL

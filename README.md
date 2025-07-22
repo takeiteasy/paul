@@ -7,39 +7,29 @@
 
 ## Goals
 
-- [ ] Cross platform (see: [hal](https://github.com/takeiteasy/hal))
+- [ ] Cross platform
     - [X] Mac
     - [ ] Windows
     - [ ] Linux
     - [ ] Web
     - [ ] iOS
     - [ ] Android
-- [X] (Optional) Scene framework
-- [X] (Optional) Default config file + cli arguments
+- [X] Scene management
+- [X] Default config file + cli arguments
+    - [X] Arguments
+    - [X] JSON config
+    - [ ] INI config
 - [X] PRNG + noise
-- [X] (Optional) Input handling (see: [sokol_input](https://github.com/takeiteasy/sokol_input))
-    - [X] Key mapping
-    - [X] Gamepads
-    - [ ] Input recording + playback
-- [X] Timers + events
-    - [ ] Async
-- [ ] Audio mixer + playback (see: [sokol_mixer](https://github.com/takeiteasy/sokol_mixer))
-- [ ] Networking
-    - [ ] TCP
-    - [ ] UDP
-    - [ ] HTTP
+- [ ] Timers + events
 - [ ] Asset loading
-    - [X] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi) (see: [sokol_image](https://github.com/takeiteasy/sokol_image))
-    - [X] Audio (.wav, .qoa, .ogg, .mp3, .flac) (see: [sokol_mixer](https://github.com/takeiteasy/sokol_mixer))
+    - [ ] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)
+    - [ ] Audio (.wav, .qoa, .ogg, .mp3, .flac)
     - [ ] Fonts (truetype, fontstash)
     - [ ] Models (.obj, .iqm)
         - [ ] Materials (.mtl)
     - [ ] Video (.mpg)
-    - [X] Virtual filesystem (.zip)
-    - [ ] Cache
-        - [ ] Per scene
-        - [ ] Global
-        - [ ] Async
+- [ ] Cache
+- [ ] Virtual file system
     
 ## LICENSE
 

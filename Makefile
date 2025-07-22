@@ -1,7 +1,8 @@
 UNAME:=$(shell uname -s)
 PROG_EXT=
+CC=clang
 LIB_EXT=dylib
-CFLAGS=-x objective-c -DSOKOL_METAL -fno-objc-arc -framework Metal -framework Cocoa -framework IOKit -framework MetalKit -framework Quartz -framework AudioToolbox
+CFLAGS=-x objective-c -DSOKOL_METAL -fenable-matrix -fno-objc-arc -framework Metal -framework Cocoa -framework IOKit -framework MetalKit -framework Quartz -framework AudioToolbox
 ARCH:=$(shell uname -m)
 ifeq ($(ARCH),arm64)
 	ARCH=osx_arm64

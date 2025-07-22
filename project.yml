@@ -44,4 +44,4 @@ targets:
                               $(PROJECT_DIR)/deps/hal,
                               $(PROJECT_DIR)/src,
                               $(PROJECT_DIR)/scenes]
-        OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fno-objc-arc]
+        OTHER_CFLAGS: [-x objective-c, -DSOKOL_METAL, -fno-objc-arc, -fenable-matrix]

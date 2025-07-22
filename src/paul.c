@@ -1,19 +1,19 @@
 /* paul.c -- https://github.com/takeiteasy/paul
 
-paul Copyright (C) 2025 George Watson
+ paul Copyright (C) 2025 George Watson
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>. */
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
 #ifdef PAUL_NO_SCENES
 #define SOKOL_NO_ENTRY
@@ -23,26 +23,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 #define SOKOL_IMAGE_IMPL
 #define JIM_IMPLEMENTATION
 #define MJSON_IMPLEMENTATION
+#define GARRY_IMPLEMENTATION
+#define TABLE_IMPLEMENTATION
+#define BLA_IMPLEMENTATION
+#define PAT_IMPLEMENTATION
 #endif
 #include "paul.h"
-#define GARRY_IMPLEMENTATION
-#include "garry.h"
-#define TABLE_IMPLEMENTATION
-#include "table.h"
 #ifndef PAUL_NO_CONFIG
 #define JIM_IMPLEMENTATION
 #include "jim.h"
 #define MJSON_IMPLEMENTATION
 #include "mjson.h"
 #endif
-#ifdef _WIN32
-#include <io.h>
-#include <dirent.h>
-#define F_OK 0
-#define access _access
-#else
+#ifndef PLATFORM_WINDOWS
 #include <unistd.h>
 #endif
+#define GENERIC_IMAGE_IMPLEMENTATION
+#include "generic_image.h"
+#define GENERIC_MIXER_IMPLEMENTATION
+#include "generic_mixer.h"
 
 #define _PAUL_SETTINGS                                                                           \
     X("width", integer, width, DEFAULT_WINDOW_WIDTH, "Set window width")                         \
@@ -57,17 +56,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
     X("drapAndDrop", boolean, enable_dragndrop, false, "Enable drag-and-drop files")             \
     X("maxDroppedFiles", integer, max_dropped_files, 1, "Max number of dropped files")           \
     X("maxDroppedFilesPathLength", integer, max_dropped_file_path_length, MAX_PATH, "Max path length for dropped files")
-
-extern void update_timers(void);
-#ifndef PAUL_NO_INPUT
-extern void sapp_input_init(void);
-extern void sapp_input_flush(void);
-extern void sapp_input_event(const sapp_event*);
-extern void check_keymaps(void);
-#endif
-extern void init_events(void);
-extern void check_event(sapp_event_type type);
-extern void init_vfs(void);
 
 static struct {
     sapp_desc desc;
@@ -91,10 +79,34 @@ static struct {
 };
 
 #ifndef PAUL_NO_CONFIG
-// TODO: Whole config loading needs looking at
+static const char* read_file(const char *path, size_t *size) {
+    FILE *fh = fopen(path, "rb");
+    const char *data = NULL;
+    size_t sz = -1;
+    if (!fh)
+        return NULL;
+    if (fseek(fh, 0, SEEK_END) != 0 ||
+        (sz = ftell(fh)) <= 0 ||
+        fseek(fh, 0, SEEK_SET) != 0 ||
+        !(data = malloc(sz + 1)))
+        goto BAIL;
+    if (fread((void*)data, 1, sz, fh) != sz) {
+        free((void*)data);
+        data = NULL;
+        goto BAIL;
+    }
+    ((char*)data)[sz] = '\0';
+BAIL:
+    if (fh)
+        fclose(fh);
+    if (size)
+        *size = sz;
+    return data;
+}
+
 // TODO: Add ini parser
 static int load_config(const char *path) {
-    const char *data = hal_read_file(path, NULL);
+    const char *data = read_file(path, NULL);
     if (data)
         return 0;
 
@@ -222,10 +234,6 @@ void paul_init(void) {
 #ifdef PAUL_WORKING_PATH
     hal_set_working_dir(PAUL_WORKING_PATH);
 #endif
-#ifndef PAUL_NO_VFS
-    init_vfs();
-#endif
-    init_events();
     paul_srand(PAUL_RNG_SEED);
 
     if (state.init_cb)
@@ -242,7 +250,6 @@ void paul_frame(void) {
     }
 #endif
 
-    update_timers();
 #ifndef PAUL_NO_SCENES
     state.scene_current->step();
 #endif
@@ -257,11 +264,8 @@ void paul_frame(void) {
 
 #ifndef PAUL_NO_SCENES
     if (state.next_scene) {
-        if ((state.scene_prev = state.scene_current)) {
+        if ((state.scene_prev = state.scene_current))
             state.scene_current->exit();
-            paul_events_clear();
-            paul_timers_clear();
-        }
         if ((state.scene_current = state.next_scene))
             state.scene_current->enter();
         state.next_scene = NULL;
