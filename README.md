@@ -3,33 +3,7 @@
 > [!WARNING]
 > Work in progress
 
-**P**latform **A**gnostic **U**tility **L**ibrary
-
-## Goals
-
-- [ ] Cross platform
-    - [X] Mac
-    - [ ] Windows
-    - [ ] Linux
-    - [ ] Web
-    - [ ] iOS
-    - [ ] Android
-- [X] Scene management
-- [X] Default config file + cli arguments
-    - [X] Arguments
-    - [X] JSON config
-    - [ ] INI config
-- [X] PRNG + noise
-- [ ] Timers + events
-- [ ] Asset loading
-    - [ ] Images (.png, .jpg, .tga, .bmp, .psd, .hdr, .pic, .pnm, .qoi)
-    - [ ] Audio (.wav, .qoa, .ogg, .mp3, .flac)
-    - [ ] Fonts (truetype, fontstash)
-    - [ ] Models (.obj, .iqm)
-        - [ ] Materials (.mtl)
-    - [ ] Video (.mpg)
-- [ ] Cache
-- [ ] Virtual file system
+**P**latform **A**gnostic **U**tility **L**ibraries
     
 ## LICENSE
 

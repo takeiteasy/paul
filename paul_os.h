@@ -1,4 +1,4 @@
-/* pat.h -- https://github.com/takeiteasy/pat
+/* paul/paul_os.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2024  George Watson
 
@@ -16,7 +16,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
 /*!
- @header pat.h
+ @header paul_os.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
  @abstract Cross-platform file and path utilities for C/C++.
@@ -25,8 +25,8 @@
              Designed to be used in C/C++ projects with C17 standard.
  */
 
-#ifndef PAT_H
-#define PAT_H
+#ifndef PAUL_OS_H
+#define PAUL_OS_H
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,13 +43,13 @@ extern "C" {
 #endif
 
 #ifdef __EMSCRIPTEN__
-#define PAT_NO_NATIVE
+#define PAUL_OS_NO_NATIVE
 #endif
 
-#ifdef PAT_NO_NATIVE
+#ifdef PAUL_OS_NO_NATIVE
 #define PLATFORM_UNKNOWN
-#elif (defined(PAT_NO_COCOA) && defined(PLATFORM_MACOS)) || \
-       defined(PAT_FORCE_POSIX)
+#elif (defined(PAUL_OS_NO_COCOA) && defined(PLATFORM_MACOS)) || \
+       defined(PAUL_OS_FORCE_POSIX)
 #define PLATFORM_NIX
 #else
 #if defined(_WIN32) || defined(_WIN64)
@@ -765,9 +765,9 @@ const char** path_split(const char *path, size_t *count); // !!
 #ifdef __cplusplus
 }
 #endif
-#endif // PAT_H
+#endif // PAUL_OS_H
 
-#ifdef PAT_IMPL
+#ifdef PAUL_OS_IMPLEMENTATION
 #include <stdlib.h>
 #include <string.h>
 
@@ -1064,12 +1064,12 @@ bool io_truncate(file_t file, long size) {
     if (SetFilePointer(file.fd, size, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         return false;
     return SetEndOfFile(file.fd) != 0;
-#elif defined(PLATFORM_POSIX)    
+#elif defined(PLATFORM_POSIX)
     return ftruncate(file.fd, size) == 0;
 #else
     long fsize, pos;
-    if ((pos = io_tell(file)) == -1|| 
-        !io_seek(file, 0, FILE_FINISH) || 
+    if ((pos = io_tell(file)) == -1||
+        !io_seek(file, 0, FILE_FINISH) ||
         (fsize = io_tell(file)) == -1)
         return false;
     return size > fsize ? true : io_seek(file, pos <= size ? pos : size, FILE_CURSOR);
@@ -1083,7 +1083,7 @@ char* enviroment_variable(const char *var_name) {
     DWORD buffer_size = GetEnvironmentVariableA(var_name, NULL, 0);
     if (!buffer_size)
         return NULL;
-    char* value = malloc(buffer_size * sizeof(char));
+    char* value = (char*)malloc(buffer_size * sizeof(char));
     if (!value)
         return NULL;
     DWORD result = GetEnvironmentVariableA(var_name, value, buffer_size);
@@ -1107,7 +1107,7 @@ char* enviroment_variable(const char *var_name) {
         if (strlen(var_name) == name_len && strncmp(env_str, var_name, name_len)) {
             const char* env_value = equals_sign + 1;
             size_t value_len = strlen(env_value);
-            char *value = malloc(value_len + 1);
+            char *value = (char*)malloc(value_len + 1);
             if (!value)
                 return NULL;
             for (size_t k = 0; k <= value_len; k++)
@@ -1218,7 +1218,7 @@ const char* file_read(const char *path, size_t *size) {
     if ((_size = io_tell(file)) == -1)
         goto BAIL;
     io_seek(file, 0, FILE_START);
-    if (!(result = malloc(_size * sizeof(char))))
+    if (!(result = (char*)malloc(_size * sizeof(char))))
         goto BAIL;
     if (!io_read(file, result, _size)) {
         free(result);
@@ -1320,7 +1320,7 @@ bool directory_delete(const char *path, bool recursive, bool and_files) {
             dir_t d = {.path=path};
             const char *name = NULL;
             bool is_dir = false;
-            const char **files = malloc(0);
+            const char **files = (const char**)malloc(0);
             size_t files_size = 0;
             if (!files)
                 return false;
@@ -1337,7 +1337,7 @@ bool directory_delete(const char *path, bool recursive, bool and_files) {
                     directory_iter_end(&d);
                     return false;
                 }
-                if (!(files = realloc(files, ++files_size * sizeof(char *)))) {
+                if (!(files = (const char**)realloc(files, ++files_size * sizeof(char *)))) {
                     free((void *)full_path);
                     directory_iter_end(&d);
                     return false;
@@ -1505,7 +1505,7 @@ const char* directory_iter(dir_t *dir, bool *is_dir) {
 #ifdef PLATFORM_WINDOWS
 NEXT:
     if (dir->hFind <= 0) {
-        if (!directory_exists(dir->path) || 
+        if (!directory_exists(dir->path) ||
             (hFind = FindFirstFile(dir->path, &dir->findData)) == INVALID_HANDLE_VALUE)
             return NULL;
     } else {
@@ -1514,7 +1514,7 @@ NEXT:
             return NULL;
         }
     }
-    
+
     if (!strcmp(dir->findData.cFileName, ".") ||
         !strcmp(dir->findData.cFileName, ".."))
         goto NEXT;
@@ -1544,7 +1544,7 @@ NEXT:
         goto NEXT;
     }
     free((void*)full_path);
-    
+
     if (is_dir)
         *is_dir = S_ISDIR(_stat.st_mode);
     return entry->d_name;
@@ -1763,7 +1763,7 @@ static const char* __get_path_ptr(const char *name) {
                 return strdup(line);
         }
     }
-    
+
 BAIL:
     if (io_valid(ud))
         io_close(&ud);
@@ -1926,7 +1926,7 @@ const char* path_get_file_name_no_extension(const char *path) {
         if (length == 0)
             return NULL;
     }
-    char *result = malloc(length + 1);
+    char *result = (char*)malloc(length + 1);
     if (!result)
         return NULL;
     strncpy(result, file_name, length);
@@ -1941,7 +1941,7 @@ const char* path_without_file_name(const char *path) {
     if (!last_slash)
         return NULL;
     size_t length = last_slash - path;
-    char *result = malloc(length + 1);
+    char *result = (char*)malloc(length + 1);
     if (!result)
         return NULL;
     strncpy(result, path, length);
@@ -1964,7 +1964,7 @@ const char* path_get_parent_directory(const char *path) {
     if (!last_slash || last_slash == path)
         return path_get_root_dir();
     size_t length = last_slash - path;
-    char *result = malloc(length + 1);
+    char *result = (char*)malloc(length + 1);
     if (!result)
         return NULL;
     strncpy(result, path, length);
@@ -1995,7 +1995,7 @@ const char* path_resolve(const char *path) {
     while (p) {
         size_t len = strlen(p);
         if (len == 1 && *p == '.') {
-            const char **new_parts = malloc(--parts_count * sizeof(char*));
+            const char **new_parts = (const char**)malloc(--parts_count * sizeof(char*));
             if (!new_parts)
                 goto BAIL;
             for (int i = 0, j = 0; i < parts_count + 1; i++)
@@ -2009,7 +2009,7 @@ const char* path_resolve(const char *path) {
         } else if (len == 2 && !strncmp(p, "..", 2)) {
             if (index == 0)
                 goto BAIL;
-            const char **new_parts = malloc(parts_count - 2 * sizeof(char*));
+            const char **new_parts = (const char**)malloc(parts_count - 2 * sizeof(char*));
             if (!new_parts)
                 goto BAIL;
             for (int i = 0, j = 0; i < parts_count; i++)
@@ -2044,7 +2044,7 @@ const char* path_resolve(const char *path) {
         memcpy(buffer + length, parts[i], part_len * sizeof(char));
         length += part_len;
     }
-    if (!(result = malloc(length + 1 * sizeof(char))))
+    if (!(result = (char*)malloc(length + 1 * sizeof(char))))
         goto BAIL;
     memcpy(result, buffer, length * sizeof(char));
     result[length] = '\0';
@@ -2065,7 +2065,7 @@ const char* path_join(const char *a, const char *b) {
     if (!a_len || !b_len)
         return NULL;
     size_t total_len = a_len + b_len + 2;
-    char *result = malloc(total_len);
+    char *result = (char*)malloc(total_len);
     if (!result)
         return NULL;
     memcpy(result, a, a_len * sizeof(char));
@@ -2092,10 +2092,10 @@ const char* path_join_va(int n, ...) {
     va_end(args);
     if (total_length == 0)
         return NULL;
-    char *result = malloc(total_length + 1);
+    char *result = (char*)malloc(total_length + 1);
     if (!result)
         return NULL;
-    
+
     va_start(args, n);
     size_t pos = 0;
     for (int i = 0; i < n; i++) {
@@ -2129,8 +2129,8 @@ const char** path_split(const char *path, size_t *count) {
         parts_count++;
     if (parts_count == 0)
         goto BAIL;
-    
-    if (!(parts = malloc(parts_count * sizeof(char*))))
+
+    if (!(parts = (const char**)malloc(parts_count * sizeof(char*))))
         goto BAIL;
     start = path;
     int index = 0;
@@ -2138,7 +2138,7 @@ const char** path_split(const char *path, size_t *count) {
         if (*p == PATH_SEPERATOR) {
             if (p > start) {
                 size_t length = p - start;
-                parts[index] = malloc(length + 1);
+                parts[index] = (char*)malloc(length + 1);
                 if (!parts[index])
                     goto DEAD;
                 strncpy((char*)parts[index], start, length);
@@ -2149,7 +2149,7 @@ const char** path_split(const char *path, size_t *count) {
         }
     if (start < path + strlen(path)) {
         size_t length = path + strlen(path) - start;
-        parts[index] = malloc(length + 1);
+        parts[index] = (char*)malloc(length + 1);
         if (!parts[index])
             goto DEAD;
         strncpy((char*)parts[index], start, length);

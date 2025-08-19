@@ -1,7 +1,1 @@
 .DS_Store
-**/.DS_Store
-build/
-bin/
-*.plist
-*.xcodeproj/
-.vscode/

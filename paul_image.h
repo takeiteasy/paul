@@ -1,6 +1,6 @@
-/* generic_image.h -- https://github.com/takeiteasy/generic_image
+/* paul/paul_image.h -- https://github.com/takeiteasy/paul
 
- generic_image Copyright (C) 2025 George Watson
+ Copyright (C) 2025 George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#ifndef GENERIC_IMAGE_HEADER
-#define GENERIC_IMAGE_HEADER
+#ifndef PAUL_IMAGE_HEADER
+#define PAUL_IMAGE_HEADER
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -671,7 +671,9 @@ color_t rgb(uint8_t r, uint8_t g, uint8_t b);
 color_t rgbaf(float r, float g, float b, float a);
 color_t rgbf(float r, float g, float b);
 color_t hsva(float h, float s, float v, float a);
+color_t hsv(float h, float s, float v);
 color_t hsla(float h, float s, float l, float a);
+color_t hsl(float h, float s, float l);
 color_t lab(float l, float a, float b, float alpha);
 color_t xyz(float x, float y, float z, float a);
 color_t yuv(float y, float u, float v, float a);
@@ -729,9 +731,9 @@ float color_purity(color_t color);                // Calculate color purity (0-1
 float color_energy(color_t color);                // Calculate color energy (0-1)
 
 // Brightness and contrast
-color_t color_brightness_adjust(color_t color, float amount);   // -1.0 to 1.0
-color_t color_contrast_adjust(color_t color, float amount);     // -1.0 to 1.0
-color_t color_gamma_adjust(color_t color, float gamma);         // Gamma correction
+color_t color_adjust_brightness(color_t color, float amount);   // -1.0 to 1.0
+color_t color_adjust_contrast(color_t color, float amount);     // -1.0 to 1.0
+color_t color_adjust_gamma(color_t color, float gamma);         // Gamma correction
 
 // Saturation and hue
 color_t color_saturate(color_t color, float amount);    // 0.0 to 2.0+
@@ -739,17 +741,17 @@ color_t color_desaturate(color_t color, float amount);  // 0.0 to 1.0
 color_t color_hue_shift(color_t color, float degrees);  // -360 to 360
 
 // Temperature and tint
-color_t color_temperature_adjust(color_t color, float kelvin);  // 1000-40000K
+color_t color_adjust_temperature(color_t color, float kelvin);  // 1000-40000K
 color_t color_tint(color_t color, float amount);                // -1.0 to 1.0
 
 // Additional adjustments
-color_t color_exposure_adjust(color_t color, float stops);
-color_t color_highlights_adjust(color_t color, float amount);
-color_t color_shadows_adjust(color_t color, float amount);
-color_t color_whites_adjust(color_t color, float amount);
-color_t color_blacks_adjust(color_t color, float amount);
-color_t color_clarity_adjust(color_t color, float amount);
-color_t color_vibrance_adjust(color_t color, float amount);
+color_t color_adjust_exposure(color_t color, float stops);
+color_t color_adjust_highlights(color_t color, float amount);
+color_t color_adjust_shadows(color_t color, float amount);
+color_t color_adjust_whites(color_t color, float amount);
+color_t color_adjust_blacks(color_t color, float amount);
+color_t color_adjust_clarity(color_t color, float amount);
+color_t color_adjust_vibrance(color_t color, float amount);
 
 // Blending modes
 color_t color_multiply(color_t a, color_t b);
@@ -776,9 +778,8 @@ void color_tetradic(color_t base, color_t* color1, color_t* color2, color_t* col
 void color_split_complementary(color_t base, color_t* color1, color_t* color2);       // Split complement
 void color_monochromatic(color_t base, color_t* colors, int count);                   // Same hue, different lightness
 
-// Palette generation
-void color_generate_gradient(color_t start, color_t end, color_t* colors, int count);
-// void color_generate_palette_from_image(color_t* pixels, int count, color_t* palette, int palette_size);
+// Gradient generation
+void color_gradient(color_t start, color_t end, color_t* colors, int count); // 1D gradient
 
 // Color space conversions with custom white points
 color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz);
@@ -804,7 +805,6 @@ color_t color_selective_color(color_t color, int channel, float cyan, float mage
 // Quantization
 color_t color_quantize(color_t color, int bits_per_channel);
 color_t color_posterize(color_t color, int levels);
-void color_reduce_palette(color_t* colors, int count, color_t* palette, int palette_size);
 
 // Dithering
 color_t color_dither_floyd_steinberg(color_t color, color_t* palette, int palette_size, int x, int y);
@@ -823,8 +823,6 @@ int color_wcag_aaa_compliant(color_t fg, color_t bg);      // AAA compliance
 
 // Color matching
 color_t color_match_closest(color_t target, color_t* palette, int palette_size);
-// int color_find_dominant(color_t* pixels, int count);
-// void color_histogram(color_t* pixels, int count, int* histogram);
 
 // Color comparison
 float color_similarity(color_t a, color_t b);
@@ -844,18 +842,10 @@ color_t color_fast_grayscale(color_t color);       // Integer-only grayscale
 color_t color_fast_sepia(color_t color);           // Fast sepia tone
 color_t color_fast_invert(color_t color);          // Bitwise invert
 
-// Batch operations
-// void color_batch_adjust_brightness(color_t* colors, int count, float brightness);
-// void color_batch_apply_lut(color_t* colors, int count, color_t* lut);
-
 typedef color_t* image_t;
 
 image_t image_empty(unsigned int w, unsigned int h, color_t color);
-image_t image_load_from_path(const char *path);
-image_t image_load_from_memory(const void *data, size_t length);
-bool image_export(const char *path, const image_t img);
 void image_destroy(image_t img);
-
 int image_width(const image_t img);
 int image_height(const image_t img);
 bool image_size(const image_t img, int *w, int *h);
@@ -875,6 +865,10 @@ image_t image_resized(image_t src, int nw, int nh);
 image_t image_rotated(image_t src, float angle);
 image_t image_clipped(image_t src, int rx, int ry, int rw, int rh);
 
+color_t image_dominant_color(const image_t img);
+int* image_histogram(const image_t img);
+color_t* image_palette(const image_t img, int count);
+
 bool image_draw_line(image_t img, int x0, int y0, int x1, int y1, color_t color);
 bool image_draw_circle(image_t img, int xc, int yc, int r, color_t color, int fill);
 bool image_draw_rectangle(image_t img, int x, int y, int w, int h, color_t color, int fill);
@@ -883,9 +877,9 @@ bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, in
 #ifdef __cplusplus
 }
 #endif
-#endif // GENERIC_IMAGE_HEADER
+#endif // PAUL_IMAGE_HEADER
 
-#ifdef GENERIC_IMAGE_IMPLEMENTATION
+#if defined(PAUL_IMAGE_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
 #ifdef _WIN32
 #include <io.h>
 #include <dirent.h>
@@ -899,14 +893,6 @@ bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, in
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-// INCLUDES
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-#define QOI_IMPLEMENTATION
-#include "qoi.h"
 
 #define _RGBA(R, G, B, A) (((unsigned int)(R) << 24) | ((unsigned int)(B) << 16) | ((unsigned int)(G) << 8) | (A))
 #define _RADIANS(N) (((double)(N)) * (M_PI / 180.))
@@ -922,7 +908,7 @@ bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, in
 static _CONSTEXPR color_t _black = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 color_t rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    return (color_t){ r, g, b, a };   
+    return (color_t){ r, g, b, a };
 }
 
 color_t rgb(uint8_t r, uint8_t g, uint8_t b) {
@@ -940,8 +926,16 @@ color_t hsva(float h, float s, float v, float a) {
     return hsva_to_rgba((color_hsva_t){ h, s, v, a });
 }
 
+color_t hsv(float h, float s, float v) {
+    return hsva(h, s, v, 1.f);
+}
+
 color_t hsla(float h, float s, float l, float a) {
     return hsla_to_rgba((color_hsla_t){ h, s, l, a });
+}
+
+color_t hsl(float h, float s, float l) {
+    return hsla(h, s, l, 1.f);
 }
 
 color_t lab(float l, float a, float b, float alpha) {
@@ -994,13 +988,13 @@ color_hsva_t rgbaf_to_hsva(color_rgbaf_t rgbaf) {
     float max = _FMAX3(rgbaf.r, rgbaf.g, rgbaf.b);
     float min = _FMIN3(rgbaf.r, rgbaf.g, rgbaf.b);
     float delta = max - min;
-    
+
     // Value
     hsva.v = max;
-    
+
     // Saturation
     hsva.s = (max == 0) ? 0 : delta / max;
-    
+
     // Hue
     if (delta == 0) {
         hsva.h = 0; // achromatic
@@ -1014,7 +1008,7 @@ color_hsva_t rgbaf_to_hsva(color_rgbaf_t rgbaf) {
         }
         hsva.h /= 6.0f;
     }
-    
+
     hsva.a = rgbaf.a;
     return hsva;
 }
@@ -1026,13 +1020,13 @@ color_t hsva_to_rgba(color_hsva_t hsva) {
 
 color_rgbaf_t hsva_to_rgbaf(color_hsva_t hsva) {
     color_rgbaf_t rgbaf;
-    
+
     float c = hsva.v * hsva.s;
     float x = c * (1 - fabsf(fmodf(hsva.h * 6.0f, 2.0f) - 1));
     float m = hsva.v - c;
-    
+
     float r1, g1, b1;
-    
+
     if (hsva.h < 1.0f/6.0f) {
         r1 = c; g1 = x; b1 = 0;
     } else if (hsva.h < 2.0f/6.0f) {
@@ -1065,16 +1059,16 @@ color_hsla_t rgbaf_to_hsla(color_rgbaf_t rgbaf) {
     float max = _FMAX3(rgbaf.r, rgbaf.g, rgbaf.b);
     float min = _FMIN3(rgbaf.r, rgbaf.g, rgbaf.b);
     float delta = max - min;
-    
+
     // Lightness
     hsla.l = (max + min) / 2.0f;
-    
+
     if (delta == 0)
         hsla.h = hsla.s = 0; // achromatic
     else {
         // Saturation
         hsla.s = hsla.l > 0.5f ? delta / (2.0f - max - min) : delta / (max + min);
-        
+
         // Hue
         if (max == rgbaf.r)
             hsla.h = (rgbaf.g - rgbaf.b) / delta + (rgbaf.g < rgbaf.b ? 6 : 0);
@@ -1084,7 +1078,7 @@ color_hsla_t rgbaf_to_hsla(color_rgbaf_t rgbaf) {
             hsla.h = (rgbaf.r - rgbaf.g) / delta + 4;
         hsla.h /= 6.0f;
     }
-    
+
     hsla.a = rgbaf.a;
     return hsla;
 }
@@ -1110,18 +1104,18 @@ static inline float hue_to_rgb(float p, float q, float t) {
 
 color_rgbaf_t hsla_to_rgbaf(color_hsla_t hsla) {
     color_rgbaf_t rgbaf;
-    
+
     if (hsla.s == 0)
         rgbaf.r = rgbaf.g = rgbaf.b = hsla.l; // achromatic
     else {
         float q = hsla.l < 0.5f ? hsla.l * (1 + hsla.s) : hsla.l + hsla.s - hsla.l * hsla.s;
         float p = 2 * hsla.l - q;
-        
+
         rgbaf.r = hue_to_rgb(p, q, hsla.h + 1.0f/3.0f);
         rgbaf.g = hue_to_rgb(p, q, hsla.h);
         rgbaf.b = hue_to_rgb(p, q, hsla.h - 1.0f/3.0f);
     }
-    
+
     rgbaf.a = hsla.a;
     return rgbaf;
 }
@@ -1129,20 +1123,20 @@ color_rgbaf_t hsla_to_rgbaf(color_hsla_t hsla) {
 // XYZ conversions (sRGB D65 white point)
 color_xyz_t rgba_to_xyz(color_t rgba) {
     color_rgbaf_t rgbaf = rgba_to_rgbaf(rgba);
-    
+
     // Apply gamma correction (sRGB to linear RGB)
     float r = (rgbaf.r > 0.04045f) ? powf((rgbaf.r + 0.055f) / 1.055f, 2.4f) : rgbaf.r / 12.92f;
     float g = (rgbaf.g > 0.04045f) ? powf((rgbaf.g + 0.055f) / 1.055f, 2.4f) : rgbaf.g / 12.92f;
     float b = (rgbaf.b > 0.04045f) ? powf((rgbaf.b + 0.055f) / 1.055f, 2.4f) : rgbaf.b / 12.92f;
-    
+
     color_xyz_t xyz;
-    
+
     // sRGB to XYZ matrix (D65)
     xyz.x = r * 0.4124564f + g * 0.3575761f + b * 0.1804375f;
     xyz.y = r * 0.2126729f + g * 0.7151522f + b * 0.0721750f;
     xyz.z = r * 0.0193339f + g * 0.1191920f + b * 0.9503041f;
     xyz.a = rgbaf.a;
-    
+
     return xyz;
 }
 
@@ -1151,12 +1145,12 @@ color_t xyz_to_rgba(color_xyz_t xyz) {
     float r = xyz.x *  3.2404542f + xyz.y * -1.5371385f + xyz.z * -0.4985314f;
     float g = xyz.x * -0.9692660f + xyz.y *  1.8760108f + xyz.z *  0.0415560f;
     float b = xyz.x *  0.0556434f + xyz.y * -0.2040259f + xyz.z *  1.0572252f;
-    
+
     // Apply gamma correction (linear RGB to sRGB)
     r = (r > 0.0031308f) ? 1.055f * powf(r, 1.0f/2.4f) - 0.055f : 12.92f * r;
     g = (g > 0.0031308f) ? 1.055f * powf(g, 1.0f/2.4f) - 0.055f : 12.92f * g;
     b = (b > 0.0031308f) ? 1.055f * powf(b, 1.0f/2.4f) - 0.055f : 12.92f * b;
-    
+
     color_rgbaf_t rgbaf = {
         _CLAMP_FLOAT(r),
         _CLAMP_FLOAT(g),
@@ -1172,22 +1166,22 @@ color_lab_t xyz_to_lab(color_xyz_t xyz) {
     const float xn = 0.95047f;
     const float yn = 1.00000f;
     const float zn = 1.08883f;
-    
+
     float x = xyz.x / xn;
     float y = xyz.y / yn;
     float z = xyz.z / zn;
-    
+
     // Apply Lab transformation
     x = (x > 0.008856f) ? cbrtf(x) : (7.787f * x + 16.0f/116.0f);
     y = (y > 0.008856f) ? cbrtf(y) : (7.787f * y + 16.0f/116.0f);
     z = (z > 0.008856f) ? cbrtf(z) : (7.787f * z + 16.0f/116.0f);
-    
+
     color_lab_t lab;
     lab.l = 116.0f * y - 16.0f;
     lab.a = 500.0f * (x - y);
     lab.b = 200.0f * (y - z);
     lab.alpha = xyz.a;
-    
+
     return lab;
 }
 
@@ -1196,21 +1190,21 @@ color_xyz_t lab_to_xyz(color_lab_t lab) {
     const float xn = 0.95047f;
     const float yn = 1.00000f;
     const float zn = 1.08883f;
-    
+
     float fy = (lab.l + 16.0f) / 116.0f;
     float fx = lab.a / 500.0f + fy;
     float fz = fy - lab.b / 200.0f;
-    
+
     float x = (fx > 0.206897f) ? fx*fx*fx : (fx - 16.0f/116.0f) / 7.787f;
     float y = (fy > 0.206897f) ? fy*fy*fy : (fy - 16.0f/116.0f) / 7.787f;
     float z = (fz > 0.206897f) ? fz*fz*fz : (fz - 16.0f/116.0f) / 7.787f;
-    
+
     color_xyz_t xyz;
     xyz.x = x * xn;
     xyz.y = y * yn;
     xyz.z = z * zn;
     xyz.a = lab.alpha;
-    
+
     return xyz;
 }
 
@@ -1227,24 +1221,24 @@ color_t lab_to_rgba(color_lab_t lab) {
 // YUV conversions (BT.601)
 color_yuv_t rgba_to_yuv(color_t rgba) {
     color_rgbaf_t rgbaf = rgba_to_rgbaf(rgba);
-    
+
     color_yuv_t yuv;
     yuv.y = 0.299f * rgbaf.r + 0.587f * rgbaf.g + 0.114f * rgbaf.b;
     yuv.u = -0.14713f * rgbaf.r - 0.28886f * rgbaf.g + 0.436f * rgbaf.b;
     yuv.v = 0.615f * rgbaf.r - 0.51499f * rgbaf.g - 0.10001f * rgbaf.b;
     yuv.a = rgbaf.a;
-    
+
     return yuv;
 }
 
 color_t yuv_to_rgba(color_yuv_t yuv) {
     color_rgbaf_t rgbaf;
-    
+
     rgbaf.r = yuv.y + 1.13983f * yuv.v;
     rgbaf.g = yuv.y - 0.39465f * yuv.u - 0.58060f * yuv.v;
     rgbaf.b = yuv.y + 2.03211f * yuv.u;
     rgbaf.a = yuv.a;
-    
+
     // Clamp values
     rgbaf.r = _CLAMP_FLOAT(rgbaf.r);
     rgbaf.g = _CLAMP_FLOAT(rgbaf.g);
@@ -1256,7 +1250,7 @@ color_t yuv_to_rgba(color_yuv_t yuv) {
 // CMYK conversions
 color_cmyk_t rgba_to_cmyk(color_t rgba) {
     color_rgbaf_t rgbaf = rgba_to_rgbaf(rgba);
-    
+
     color_cmyk_t cmyk;
     // Find K (black)
     cmyk.k = 1.0f - _FMAX3(rgbaf.r, rgbaf.g, rgbaf.b);
@@ -1269,52 +1263,52 @@ color_cmyk_t rgba_to_cmyk(color_t rgba) {
         cmyk.m = (1.0f - rgbaf.g - cmyk.k) / inv_k;
         cmyk.y = (1.0f - rgbaf.b - cmyk.k) / inv_k;
     }
-    
+
     cmyk.a = rgbaf.a;
     return cmyk;
 }
 
 color_t cmyk_to_rgba(color_cmyk_t cmyk) {
     color_rgbaf_t rgbaf;
-    
+
     float inv_k = 1.0f - cmyk.k;
     rgbaf.r = (1.0f - cmyk.c) * inv_k;
     rgbaf.g = (1.0f - cmyk.m) * inv_k;
     rgbaf.b = (1.0f - cmyk.y) * inv_k;
     rgbaf.a = cmyk.a;
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // RGB565 conversions
 color_rgb_t565 rgba_to_rgb565(color_t rgba) {
     color_rgb_t565 rgb565;
-    
+
     // Convert to 5-6-5 format
     uint16_t r = (rgba.r >> 3) & 0x1F;
     uint16_t g = (rgba.g >> 2) & 0x3F;
     uint16_t b = (rgba.b >> 3) & 0x1F;
-    
+
     rgb565.rgb565 = (r << 11) | (g << 5) | b;
     rgb565.a = rgba.a;
-    
+
     return rgb565;
 }
 
 color_t rgb565_to_rgba(color_rgb_t565 rgb565) {
     color_t rgba;
-    
+
     // Extract components
     uint16_t r = (rgb565.rgb565 >> 11) & 0x1F;
     uint16_t g = (rgb565.rgb565 >> 5) & 0x3F;
     uint16_t b = rgb565.rgb565 & 0x1F;
-    
+
     // Scale back to 8-bit
     rgba.r = (r << 3) | (r >> 2);
     rgba.g = (g << 2) | (g >> 4);
     rgba.b = (b << 3) | (b >> 2);
     rgba.a = rgb565.a;
-    
+
     return rgba;
 }
 
@@ -1351,12 +1345,12 @@ float color_luminance(color_t color) {
 // Relative luminance for WCAG calculations (uses gamma-corrected values)
 float color_relative_luminance(color_t color) {
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
-    
+
     // Apply gamma correction (sRGB to linear RGB)
     float r = (rgbaf.r > 0.04045f) ? powf((rgbaf.r + 0.055f) / 1.055f, 2.4f) : rgbaf.r / 12.92f;
     float g = (rgbaf.g > 0.04045f) ? powf((rgbaf.g + 0.055f) / 1.055f, 2.4f) : rgbaf.g / 12.92f;
     float b = (rgbaf.b > 0.04045f) ? powf((rgbaf.b + 0.055f) / 1.055f, 2.4f) : rgbaf.b / 12.92f;
-    
+
     return 0.2126f * r + 0.7152f * g + 0.0722f * b;
 }
 
@@ -1427,10 +1421,10 @@ int color_is_grayscale(color_t color) {
 // Get color temperature estimate (very rough approximation)
 float color_temperature_estimate(color_t color) {
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
-    
+
     // Rough approximation based on blue/red ratio
     if (rgbaf.r == 0.0f) return 6500.0f; // Default daylight
-    
+
     float ratio = rgbaf.b / rgbaf.r;
     if (ratio > 1.0f) {
         // More blue than red - cooler
@@ -1466,59 +1460,59 @@ float color_energy(color_t color) {
 }
 
 // Adjust brightness (-1.0 to 1.0, where 0 = no change)
-color_t color_brightness_adjust(color_t color, float amount) {
+color_t color_adjust_brightness(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     rgbaf.r = _CLAMP_FLOAT(rgbaf.r + amount);
     rgbaf.g = _CLAMP_FLOAT(rgbaf.g + amount);
     rgbaf.b = _CLAMP_FLOAT(rgbaf.b + amount);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust contrast (-1.0 to 1.0, where 0 = no change)
-color_t color_contrast_adjust(color_t color, float amount) {
+color_t color_adjust_contrast(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
     float factor = (1.0f + amount) / (1.0f - amount);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     rgbaf.r = _CLAMP_FLOAT((rgbaf.r - 0.5f) * factor + 0.5f);
     rgbaf.g = _CLAMP_FLOAT((rgbaf.g - 0.5f) * factor + 0.5f);
     rgbaf.b = _CLAMP_FLOAT((rgbaf.b - 0.5f) * factor + 0.5f);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Apply gamma correction
-color_t color_gamma_adjust(color_t color, float gamma) {
+color_t color_adjust_gamma(color_t color, float gamma) {
     if (gamma <= 0.0f) gamma = 0.01f; // Prevent division by zero
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     rgbaf.r = powf(rgbaf.r, 1.0f / gamma);
     rgbaf.g = powf(rgbaf.g, 1.0f / gamma);
     rgbaf.b = powf(rgbaf.b, 1.0f / gamma);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Increase saturation (0.0 to 2.0+, where 1.0 = no change)
 color_t color_saturate(color_t color, float amount) {
     if (amount < 0.0f) amount = 0.0f;
-    
+
     color_hsva_t hsva = rgba_to_hsva(color);
     hsva.s = _CLAMP_FLOAT(hsva.s * amount);
-    
+
     return hsva_to_rgba(hsva);
 }
 
 // Decrease saturation (0.0 to 1.0, where 0.0 = grayscale, 1.0 = no change)
 color_t color_desaturate(color_t color, float amount) {
     amount = _CLAMP_FLOAT(amount);
-    
+
     color_hsva_t hsva = rgba_to_hsva(color);
     hsva.s *= amount;
-    
+
     return hsva_to_rgba(hsva);
 }
 
@@ -1526,21 +1520,21 @@ color_t color_desaturate(color_t color, float amount) {
 color_t color_hue_shift(color_t color, float degrees) {
     float shift = fmodf(degrees / 360.0f, 1.0f);
     if (shift < 0.0f) shift += 1.0f;
-    
+
     color_hsva_t hsva = rgba_to_hsva(color);
     hsva.h = fmodf(hsva.h + shift, 1.0f);
-    
+
     return hsva_to_rgba(hsva);
 }
 
 // Adjust color temperature (1000K to 40000K, 6500K = daylight)
-color_t color_temperature_adjust(color_t color, float kelvin) {
+color_t color_adjust_temperature(color_t color, float kelvin) {
     kelvin = _CLAMP_FLOAT_RANGE(kelvin, 1000.0f, 40000.0f);
-    
+
     // Temperature to RGB conversion (rough approximation)
     float temp = kelvin / 100.0f;
     float r, g, b;
-    
+
     if (temp <= 66.0f) {
         r = 255.0f;
         g = temp;
@@ -1551,7 +1545,7 @@ color_t color_temperature_adjust(color_t color, float kelvin) {
         g = temp - 60.0f;
         g = 288.1221695283f * powf(g, -0.0755148492f);
     }
-    
+
     if (temp >= 66.0f) {
         b = 255.0f;
     } else if (temp <= 19.0f) {
@@ -1560,26 +1554,26 @@ color_t color_temperature_adjust(color_t color, float kelvin) {
         b = temp - 10.0f;
         b = 138.5177312231f * logf(b) - 305.0447927307f;
     }
-    
+
     // Normalize and blend with original color
     r = _CLAMP_FLOAT_RANGE(r, 0.0f, 255.0f) / 255.0f;
     g = _CLAMP_FLOAT_RANGE(g, 0.0f, 255.0f) / 255.0f;
     b = _CLAMP_FLOAT_RANGE(b, 0.0f, 255.0f) / 255.0f;
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     rgbaf.r *= r;
     rgbaf.g *= g;
     rgbaf.b *= b;
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust tint (magenta-green balance, -1.0 to 1.0)
 color_t color_tint(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
-    
+
     if (amount > 0.0f) {
         // Add magenta (increase red and blue, decrease green)
         rgbaf.r += amount * 0.1f;
@@ -1591,34 +1585,34 @@ color_t color_tint(color_t color, float amount) {
         rgbaf.r -= (-amount) * 0.05f;
         rgbaf.b -= (-amount) * 0.05f;
     }
-    
+
     rgbaf.r = _CLAMP_FLOAT(rgbaf.r);
     rgbaf.g = _CLAMP_FLOAT(rgbaf.g);
     rgbaf.b = _CLAMP_FLOAT(rgbaf.b);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust exposure in stops (-3.0 to 3.0, where 0 = no change)
-color_t color_exposure_adjust(color_t color, float stops) {
+color_t color_adjust_exposure(color_t color, float stops) {
     stops = _CLAMP_FLOAT_RANGE(stops, -3.0f, 3.0f);
     float factor = powf(2.0f, stops);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     rgbaf.r = _CLAMP_FLOAT(rgbaf.r * factor);
     rgbaf.g = _CLAMP_FLOAT(rgbaf.g * factor);
     rgbaf.b = _CLAMP_FLOAT(rgbaf.b * factor);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust highlights (-1.0 to 1.0, affects bright areas)
-color_t color_highlights_adjust(color_t color, float amount) {
+color_t color_adjust_highlights(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     float lum = color_luminance(color);
-    
+
     // Only affect pixels above 50% luminance
     if (lum > 0.5f) {
         float weight = (lum - 0.5f) * 2.0f; // 0 to 1
@@ -1626,17 +1620,17 @@ color_t color_highlights_adjust(color_t color, float amount) {
         rgbaf.g = _CLAMP_FLOAT(rgbaf.g + amount * weight * 0.2f);
         rgbaf.b = _CLAMP_FLOAT(rgbaf.b + amount * weight * 0.2f);
     }
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust shadows (-1.0 to 1.0, affects dark areas)
-color_t color_shadows_adjust(color_t color, float amount) {
+color_t color_adjust_shadows(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     float lum = color_luminance(color);
-    
+
     // Only affect pixels below 50% luminance
     if (lum < 0.5f) {
         float weight = (0.5f - lum) * 2.0f; // 0 to 1
@@ -1644,17 +1638,17 @@ color_t color_shadows_adjust(color_t color, float amount) {
         rgbaf.g = _CLAMP_FLOAT(rgbaf.g + amount * weight * 0.2f);
         rgbaf.b = _CLAMP_FLOAT(rgbaf.b + amount * weight * 0.2f);
     }
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust whites (-1.0 to 1.0, affects very bright areas)
-color_t color_whites_adjust(color_t color, float amount) {
+color_t color_adjust_whites(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     float lum = color_luminance(color);
-    
+
     // Only affect pixels above 80% luminance
     if (lum > 0.8f) {
         float weight = (lum - 0.8f) * 5.0f; // 0 to 1
@@ -1662,17 +1656,17 @@ color_t color_whites_adjust(color_t color, float amount) {
         rgbaf.g = _CLAMP_FLOAT(rgbaf.g + amount * weight * 0.3f);
         rgbaf.b = _CLAMP_FLOAT(rgbaf.b + amount * weight * 0.3f);
     }
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust blacks (-1.0 to 1.0, affects very dark areas)
-color_t color_blacks_adjust(color_t color, float amount) {
+color_t color_adjust_blacks(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     float lum = color_luminance(color);
-    
+
     // Only affect pixels below 20% luminance
     if (lum < 0.2f) {
         float weight = (0.2f - lum) * 5.0f; // 0 to 1
@@ -1680,48 +1674,48 @@ color_t color_blacks_adjust(color_t color, float amount) {
         rgbaf.g = _CLAMP_FLOAT(rgbaf.g + amount * weight * 0.3f);
         rgbaf.b = _CLAMP_FLOAT(rgbaf.b + amount * weight * 0.3f);
     }
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust clarity/structure (-1.0 to 1.0, enhances local contrast)
-color_t color_clarity_adjust(color_t color, float amount) {
+color_t color_adjust_clarity(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     // Simplified clarity - boost contrast in mid-tones
     color_rgbaf_t rgbaf = rgba_to_rgbaf(color);
     float lum = color_luminance(color);
-    
+
     // Maximum effect at 50% luminance
     float weight = 1.0f - fabsf(lum - 0.5f) * 2.0f;
     weight = _CLAMP_FLOAT(weight);
-    
+
     float contrast_factor = 1.0f + amount * weight * 0.5f;
     rgbaf.r = _CLAMP_FLOAT((rgbaf.r - 0.5f) * contrast_factor + 0.5f);
     rgbaf.g = _CLAMP_FLOAT((rgbaf.g - 0.5f) * contrast_factor + 0.5f);
     rgbaf.b = _CLAMP_FLOAT((rgbaf.b - 0.5f) * contrast_factor + 0.5f);
-    
+
     return rgbaf_to_rgba(rgbaf);
 }
 
 // Adjust vibrance (-1.0 to 1.0, smart saturation that protects skin tones)
-color_t color_vibrance_adjust(color_t color, float amount) {
+color_t color_adjust_vibrance(color_t color, float amount) {
     amount = _CLAMP_FLOAT_RANGE(amount, -1.0f, 1.0f);
-    
+
     color_hsva_t hsva = rgba_to_hsva(color);
-    
+
     // Reduce effect on skin tones (hue around 0.05-0.15, or 18-54 degrees)
     float skin_protection = 1.0f;
     if (hsva.h >= 0.05f && hsva.h <= 0.15f) {
         skin_protection = 0.3f; // Reduce vibrance effect on skin tones
     }
-    
+
     // Reduce effect on already saturated colors
     float saturation_protection = 1.0f - hsva.s * 0.5f;
-    
+
     float final_amount = amount * skin_protection * saturation_protection;
     hsva.s = _CLAMP_FLOAT(hsva.s + final_amount * 0.5f);
-    
+
     return hsva_to_rgba(hsva);
 }
 
@@ -1753,7 +1747,7 @@ color_t color_screen(color_t a, color_t b) {
 // Overlay: combines multiply and screen
 color_t color_overlay(color_t a, color_t b) {
     color_t result;
-    
+
     // For each channel: if base < 128, multiply*2, else screen*2-255
     result.r = (a.r < 128) ? (2 * a.r * b.r) / 255 : 255 - (2 * (255 - a.r) * (255 - b.r)) / 255;
     result.g = (a.g < 128) ? (2 * a.g * b.g) / 255 : 255 - (2 * (255 - a.g) * (255 - b.g)) / 255;
@@ -1765,12 +1759,12 @@ color_t color_overlay(color_t a, color_t b) {
 // Soft Light: complex blend mode
 color_t color_soft_light(color_t a, color_t b) {
     color_t result;
-    
+
     // Simplified soft light formula
     for (int i = 0; i < 3; i++) {
         uint8_t base = ((uint8_t*)&a)[i];
         uint8_t blend = ((uint8_t*)&b)[i];
-        
+
         if (blend < 128) {
             ((uint8_t*)&result)[i] = (2 * base * blend) / 255 + (base * base * (255 - 2 * blend)) / (255 * 255);
         } else {
@@ -1785,7 +1779,7 @@ color_t color_soft_light(color_t a, color_t b) {
 // Hard Light: reverse of overlay
 color_t color_hard_light(color_t a, color_t b) {
     color_t result;
-    
+
     // For each channel: if blend < 128, multiply*2, else screen*2-255
     result.r = (b.r < 128) ? (2 * a.r * b.r) / 255 : 255 - (2 * (255 - a.r) * (255 - b.r)) / 255;
     result.g = (b.g < 128) ? (2 * a.g * b.g) / 255 : 255 - (2 * (255 - a.g) * (255 - b.g)) / 255;
@@ -1797,16 +1791,16 @@ color_t color_hard_light(color_t a, color_t b) {
 // Color Dodge: base / (255 - blend)
 color_t color_color_dodge(color_t a, color_t b) {
     color_t result;
-    
+
     result.r = (b.r == 255) ? 255 : (a.r * 255) / (255 - b.r);
     result.g = (b.g == 255) ? 255 : (a.g * 255) / (255 - b.g);
     result.b = (b.b == 255) ? 255 : (a.b * 255) / (255 - b.b);
-    
+
     // Clamp to 255
     result.r = (result.r > 255) ? 255 : result.r;
     result.g = (result.g > 255) ? 255 : result.g;
     result.b = (result.b > 255) ? 255 : result.b;
-    
+
     result.a = blend_alpha(a.a, b.a);
     return result;
 }
@@ -1814,16 +1808,16 @@ color_t color_color_dodge(color_t a, color_t b) {
 // Color Burn: 255 - (255 - base) / blend
 color_t color_color_burn(color_t a, color_t b) {
     color_t result;
-    
+
     result.r = (b.r == 0) ? 0 : 255 - ((255 - a.r) * 255) / b.r;
     result.g = (b.g == 0) ? 0 : 255 - ((255 - a.g) * 255) / b.g;
     result.b = (b.b == 0) ? 0 : 255 - ((255 - a.b) * 255) / b.b;
-    
+
     // Clamp to valid range
     result.r = (result.r > 255) ? 255 : (result.r < 0) ? 0 : result.r;
     result.g = (result.g > 255) ? 255 : (result.g < 0) ? 0 : result.g;
     result.b = (result.b > 255) ? 255 : (result.b < 0) ? 0 : result.b;
-    
+
     result.a = blend_alpha(a.a, b.a);
     return result;
 }
@@ -1871,63 +1865,63 @@ color_t color_exclusion(color_t a, color_t b) {
 // Alpha blending: standard Porter-Duff "over" operation
 color_t color_alpha_blend(color_t fg, color_t bg) {
     color_t result;
-    
+
     // Convert alpha to 0-1 range for calculations
     float fg_alpha = fg.a / 255.0f;
     float bg_alpha = bg.a / 255.0f;
-    
+
     // Calculate output alpha: fg_alpha + bg_alpha * (1 - fg_alpha)
     float out_alpha = fg_alpha + bg_alpha * (1.0f - fg_alpha);
-    
+
     if (out_alpha == 0) {
         // Completely transparent
         result.r = result.g = result.b = result.a = 0;
         return result;
     }
-    
+
     // Alpha blend RGB channels: (fg * fg_alpha + bg * bg_alpha * (1 - fg_alpha)) / out_alpha
     result.r = (uint8_t)((fg.r * fg_alpha + bg.r * bg_alpha * (1.0f - fg_alpha)) / out_alpha);
     result.g = (uint8_t)((fg.g * fg_alpha + bg.g * bg_alpha * (1.0f - fg_alpha)) / out_alpha);
     result.b = (uint8_t)((fg.b * fg_alpha + bg.b * bg_alpha * (1.0f - fg_alpha)) / out_alpha);
     result.a = (uint8_t)(out_alpha * 255);
-    
+
     return result;
 }
 
 // Premultiply alpha: multiply RGB channels by alpha
 color_t color_premultiply_alpha(color_t color) {
     color_t result;
-    
+
     float alpha = color.a / 255.0f;
     result.r = (uint8_t)(color.r * alpha);
     result.g = (uint8_t)(color.g * alpha);
     result.b = (uint8_t)(color.b * alpha);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Unpremultiply alpha: divide RGB channels by alpha
 color_t color_unpremultiply_alpha(color_t color) {
     color_t result;
-    
+
     if (color.a == 0) {
         // Completely transparent - RGB values are undefined
         result.r = result.g = result.b = result.a = 0;
         return result;
     }
-    
+
     float alpha = color.a / 255.0f;
     result.r = (uint8_t)(color.r / alpha);
     result.g = (uint8_t)(color.g / alpha);
     result.b = (uint8_t)(color.b / alpha);
     result.a = color.a;
-    
+
     // Clamp to prevent overflow
     result.r = (result.r > 255) ? 255 : result.r;
     result.g = (result.g > 255) ? 255 : result.g;
     result.b = (result.b > 255) ? 255 : result.b;
-    
+
     return result;
 }
 
@@ -1941,10 +1935,10 @@ static float normalize_hue(float hue) {
 // Analogous colors: adjacent hues (±30° typically)
 void color_analogous(color_t base, color_t* colors, int count) {
     if (count <= 0) return;
-    
+
     color_hsva_t base_hsv = rgba_to_hsva(base);
     float step = 60.0f / (count + 1); // Spread across ±30°
-    
+
     for (int i = 0; i < count; i++) {
         color_hsva_t variant = base_hsv;
         variant.h = normalize_hue(base_hsv.h + (i + 1 - count/2.0f) * step);
@@ -1958,13 +1952,13 @@ void color_triadic(color_t base, color_t* color1, color_t* color2) {
         return;
 
     color_hsva_t base_hsv = rgba_to_hsva(base);
-    
+
     // First triadic color: +120°
     color_hsva_t triadic1 = base_hsv;
     triadic1.h = normalize_hue(base_hsv.h + 120);
     if (color1)
         *color1 = hsva_to_rgba(triadic1);
-    
+
     // Second triadic color: +240°
     color_hsva_t triadic2 = base_hsv;
     triadic2.h = normalize_hue(base_hsv.h + 240);
@@ -1976,7 +1970,7 @@ void color_triadic(color_t base, color_t* color1, color_t* color2) {
 void color_tetradic(color_t base, color_t* color1, color_t* color2, color_t* color3) {
     if (!color1 && !color2 && !color3)
         return;
-    
+
     color_hsva_t base_hsv = rgba_to_hsva(base);
     // Four colors: +90°, +180°, +270°
     color_hsva_t tetradic = base_hsv;
@@ -1998,13 +1992,13 @@ void color_split_complementary(color_t base, color_t* color1, color_t* color2) {
 
     color_hsva_t base_hsv = rgba_to_hsva(base);
     float complement_hue = normalize_hue(base_hsv.h + 180);
-    
+
     // First split complement: complement - 30°
     color_hsva_t split1 = base_hsv;
     split1.h = normalize_hue(complement_hue - 30);
     if (color1)
         *color1 = hsva_to_rgba(split1);
-    
+
     // Second split complement: complement + 30°
     color_hsva_t split2 = base_hsv;
     split2.h = normalize_hue(complement_hue + 30);
@@ -2015,115 +2009,37 @@ void color_split_complementary(color_t base, color_t* color1, color_t* color2) {
 // Monochromatic colors: same hue, different saturation/value
 void color_monochromatic(color_t base, color_t* colors, int count) {
     if (count <= 0) return;
-    
+
     color_hsva_t base_hsv = rgba_to_hsva(base);
-    
+
     for (int i = 0; i < count; i++) {
         color_hsva_t variant = base_hsv;
         float factor = (i + 1.0f) / (count + 1.0f);
-        
+
         // Vary saturation and value
         variant.s = base_hsv.s * (0.3f + 0.7f * factor);
         variant.v = base_hsv.v * (0.4f + 0.6f * factor);
-        
+
         // Clamp values
         variant.s = (variant.s > 1.0f) ? 1.0f : variant.s;
         variant.v = (variant.v > 1.0f) ? 1.0f : variant.v;
-        
+
         colors[i] = hsva_to_rgba(variant);
     }
 }
 
 // Generate gradient between two colors
-void color_generate_gradient(color_t start, color_t end, color_t* colors, int count) {
+void color_gradient(color_t start, color_t end, color_t* colors, int count) {
     if (count <= 0) return;
-    
+
     for (int i = 0; i < count; i++) {
         float t = (count == 1) ? 0.5f : (float)i / (count - 1);
-        
+
         // Linear interpolation in RGB space
         colors[i].r = (uint8_t)(start.r + t * (end.r - start.r));
         colors[i].g = (uint8_t)(start.g + t * (end.g - start.g));
         colors[i].b = (uint8_t)(start.b + t * (end.b - start.b));
         colors[i].a = (uint8_t)(start.a + t * (end.a - start.a));
-    }
-}
-
-// K-means clustering for color quantization
-void color_generate_palette_from_image(color_t* pixels, int count, color_t* palette, int palette_size) {
-    if (count <= 0 || palette_size <= 0) return;
-    
-    // Initialize palette with first few pixels (or random selection)
-    for (int i = 0; i < palette_size && i < count; i++) {
-        palette[i] = pixels[i * count / palette_size];
-    }
-    
-    // If we have fewer pixels than palette size, just copy all pixels
-    if (count <= palette_size) {
-        for (int i = 0; i < count; i++) {
-            palette[i] = pixels[i];
-        }
-        return;
-    }
-    
-    // K-means iterations
-    for (int iter = 0; iter < 10; iter++) {
-        // Arrays to accumulate color values for each cluster
-        int cluster_r[palette_size];
-        int cluster_g[palette_size];
-        int cluster_b[palette_size];
-        int cluster_a[palette_size];
-        int cluster_count[palette_size];
-        
-        // Initialize accumulators
-        for (int i = 0; i < palette_size; i++) {
-            cluster_r[i] = cluster_g[i] = cluster_b[i] = cluster_a[i] = cluster_count[i] = 0;
-        }
-        
-        // Assign each pixel to nearest palette color
-        for (int p = 0; p < count; p++) {
-            int closest_idx = 0;
-            float min_distance = color_distance(pixels[p], palette[0]);
-            
-            for (int i = 1; i < palette_size; i++) {
-                float distance = color_distance(pixels[p], palette[i]);
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    closest_idx = i;
-                }
-            }
-            
-            // Add pixel to cluster
-            cluster_r[closest_idx] += pixels[p].r;
-            cluster_g[closest_idx] += pixels[p].g;
-            cluster_b[closest_idx] += pixels[p].b;
-            cluster_a[closest_idx] += pixels[p].a;
-            cluster_count[closest_idx]++;
-        }
-        
-        // Update palette colors to cluster centroids
-        for (int i = 0; i < palette_size; i++) {
-            if (cluster_count[i] > 0) {
-                palette[i].r = cluster_r[i] / cluster_count[i];
-                palette[i].g = cluster_g[i] / cluster_count[i];
-                palette[i].b = cluster_b[i] / cluster_count[i];
-                palette[i].a = cluster_a[i] / cluster_count[i];
-            }
-        }
-    }
-    
-    // Sort palette by brightness (optional, for consistent ordering)
-    for (int i = 0; i < palette_size - 1; i++) {
-        for (int j = i + 1; j < palette_size; j++) {
-            int brightness_i = palette[i].r + palette[i].g + palette[i].b;
-            int brightness_j = palette[j].r + palette[j].g + palette[j].b;
-            
-            if (brightness_i > brightness_j) {
-                color_t temp = palette[i];
-                palette[i] = palette[j];
-                palette[j] = temp;
-            }
-        }
     }
 }
 
@@ -2148,23 +2064,23 @@ static float inverse_gamma_correct(float value) {
 // Convert RGBA to XYZ with custom white point
 color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz) {
     color_xyz_t xyz;
-    
+
     // Convert to 0-1 range and apply gamma correction
     float r = gamma_correct(rgba.r / 255.0f);
     float g = gamma_correct(rgba.g / 255.0f);
     float b = gamma_correct(rgba.b / 255.0f);
-    
+
     // sRGB to XYZ matrix (D65 illuminant)
     // Then scale by custom white point
     float x = (0.4124564f * r + 0.3575761f * g + 0.1804375f * b) * wx;
     float y = (0.2126729f * r + 0.7151522f * g + 0.0721750f * b) * wy;
     float z = (0.0193339f * r + 0.1191920f * g + 0.9503041f * b) * wz;
-    
+
     xyz.x = x;
     xyz.y = y;
     xyz.z = z;
     xyz.a = rgba.a / 255.0f;
-    
+
     return xyz;
 }
 
@@ -2172,7 +2088,7 @@ color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz) {
 static float xyz_to_lab_f(float t) {
     const float delta = 6.0f / 29.0f;
     const float delta_cubed = delta * delta * delta;
-    
+
     if (t > delta_cubed) {
         return powf(t, 1.0f / 3.0f);
     } else {
@@ -2183,25 +2099,25 @@ static float xyz_to_lab_f(float t) {
 // Convert RGBA to LAB with custom white point
 color_lab_t rgba_to_lab_custom(color_t rgba, float wx, float wy, float wz) {
     color_lab_t lab;
-    
+
     // First convert to XYZ
     color_xyz_t xyz = rgba_to_xyz_custom(rgba, wx, wy, wz);
-    
+
     // Normalize by white point
     float xn = xyz.x / wx;
     float yn = xyz.y / wy;
     float zn = xyz.z / wz;
-    
+
     // Convert to LAB
     float fx = xyz_to_lab_f(xn);
     float fy = xyz_to_lab_f(yn);
     float fz = xyz_to_lab_f(zn);
-    
+
     lab.l = 116.0f * fy - 16.0f;
     lab.a = 500.0f * (fx - fy);
     lab.b = 200.0f * (fy - fz);
     lab.alpha = rgba.a / 255.0f;
-    
+
     return lab;
 }
 
@@ -2210,7 +2126,7 @@ float color_delta_e_76(color_lab_t a, color_lab_t b) {
     float dl = a.l - b.l;
     float da = a.a - b.a;
     float db = a.b - b.b;
-    
+
     return sqrtf(dl*dl + da*da + db*db);
 }
 
@@ -2219,27 +2135,27 @@ float color_delta_e_94(color_lab_t a, color_lab_t b) {
     float dl = a.l - b.l;
     float da = a.a - b.a;
     float db = a.b - b.b;
-    
+
     float c1 = sqrtf(a.a * a.a + a.b * a.b);
     float c2 = sqrtf(b.a * b.a + b.b * b.b);
     float dc = c1 - c2;
-    
+
     float dh_squared = da*da + db*db - dc*dc;
     float dh = (dh_squared < 0) ? 0 : sqrtf(dh_squared);
-    
+
     // Weighting factors for CIE94
     float kl = 1.0f;
     float kc = 1.0f;
     float kh = 1.0f;
-    
+
     float sl = 1.0f;
     float sc = 1.0f + 0.045f * c1;
     float sh = 1.0f + 0.015f * c1;
-    
+
     float dl_term = dl / (kl * sl);
     float dc_term = dc / (kc * sc);
     float dh_term = dh / (kh * sh);
-    
+
     return sqrtf(dl_term*dl_term + dc_term*dc_term + dh_term*dh_term);
 }
 
@@ -2247,41 +2163,41 @@ float color_delta_e_94(color_lab_t a, color_lab_t b) {
 float color_delta_e_2000(color_lab_t a, color_lab_t b) {
     float l1 = a.l, a1 = a.a, b1 = a.b;
     float l2 = b.l, a2 = b.a, b2 = b.b;
-    
+
     float lbar = (l1 + l2) / 2.0f;
     float c1 = sqrtf(a1*a1 + b1*b1);
     float c2 = sqrtf(a2*a2 + b2*b2);
     float cbar = (c1 + c2) / 2.0f;
-    
+
     float cbar7 = powf(cbar, 7.0f);
     float g = 0.5f * (1.0f - sqrtf(cbar7 / (cbar7 + powf(25.0f, 7.0f))));
-    
+
     float ap1 = (1.0f + g) * a1;
     float ap2 = (1.0f + g) * a2;
     float cp1 = sqrtf(ap1*ap1 + b1*b1);
     float cp2 = sqrtf(ap2*ap2 + b2*b2);
-    
+
     float hp1 = (b1 == 0 && ap1 == 0) ? 0 : atan2f(b1, ap1) * 180.0f / M_PI;
     float hp2 = (b2 == 0 && ap2 == 0) ? 0 : atan2f(b2, ap2) * 180.0f / M_PI;
-    
+
     if (hp1 < 0) hp1 += 360.0f;
     if (hp2 < 0) hp2 += 360.0f;
-    
+
     float dl = l2 - l1;
     float dc = cp2 - cp1;
     float dhp = 0;
-    
+
     if (cp1 * cp2 != 0) {
         dhp = hp2 - hp1;
         if (dhp > 180.0f) dhp -= 360.0f;
         if (dhp < -180.0f) dhp += 360.0f;
     }
-    
+
     float dh = 2.0f * sqrtf(cp1 * cp2) * sinf(dhp * M_PI / 360.0f);
-    
+
     float cpbar = (cp1 + cp2) / 2.0f;
     float hpbar = 0;
-    
+
     if (cp1 * cp2 != 0) {
         hpbar = (hp1 + hp2) / 2.0f;
         if (fabsf(hp1 - hp2) > 180.0f) {
@@ -2289,152 +2205,152 @@ float color_delta_e_2000(color_lab_t a, color_lab_t b) {
             else hpbar -= 180.0f;
         }
     }
-    
+
     float t = 1.0f - 0.17f * cosf((hpbar - 30.0f) * M_PI / 180.0f) +
               0.24f * cosf(2.0f * hpbar * M_PI / 180.0f) +
               0.32f * cosf((3.0f * hpbar + 6.0f) * M_PI / 180.0f) -
               0.20f * cosf((4.0f * hpbar - 63.0f) * M_PI / 180.0f);
-    
+
     float dt = 30.0f * expf(-powf((hpbar - 275.0f) / 25.0f, 2.0f));
     float cpbar7 = powf(cpbar, 7.0f);
     float rc = 2.0f * sqrtf(cpbar7 / (cpbar7 + powf(25.0f, 7.0f)));
-    
+
     float sl = 1.0f + (0.015f * powf(lbar - 50.0f, 2.0f)) / sqrtf(20.0f + powf(lbar - 50.0f, 2.0f));
     float sc = 1.0f + 0.045f * cpbar;
     float sh = 1.0f + 0.015f * cpbar * t;
     float rt = -sinf(2.0f * dt * M_PI / 180.0f) * rc;
-    
+
     float kl = 1.0f, kc = 1.0f, kh = 1.0f;
-    
+
     float dl_term = dl / (kl * sl);
     float dc_term = dc / (kc * sc);
     float dh_term = dh / (kh * sh);
-    
+
     return sqrtf(dl_term*dl_term + dc_term*dc_term + dh_term*dh_term + rt * dc_term * dh_term);
 }
 
 // Levels adjustment: black point, white point, gamma
 color_t color_levels(color_t color, float black_point, float white_point, float gamma) {
     color_t result;
-    
+
     // Normalize inputs to 0-1 range
     float r = color.r / 255.0f;
     float g = color.g / 255.0f;
     float b = color.b / 255.0f;
-    
+
     // Apply levels adjustment to each channel
     r = _CLAMP_FLOAT((r - black_point) / (white_point - black_point));
     g = _CLAMP_FLOAT((g - black_point) / (white_point - black_point));
     b = _CLAMP_FLOAT((b - black_point) / (white_point - black_point));
-    
+
     // Apply gamma correction
     r = powf(r, 1.0f / gamma);
     g = powf(g, 1.0f / gamma);
     b = powf(b, 1.0f / gamma);
-    
+
     result.r = _CLAMP_UINT8(r * 255.0f);
     result.g = _CLAMP_UINT8(g * 255.0f);
     result.b = _CLAMP_UINT8(b * 255.0f);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Curves adjustment using lookup tables
 color_t color_curves(color_t color, float* curve_r, float* curve_g, float* curve_b) {
     color_t result;
-    
+
     // Apply curves (assuming curves are 256-element arrays)
     result.r = _CLAMP_UINT8(curve_r[color.r] * 255.0f);
     result.g = _CLAMP_UINT8(curve_g[color.g] * 255.0f);
     result.b = _CLAMP_UINT8(curve_b[color.b] * 255.0f);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Shadow/Highlight adjustment
 color_t color_shadow_highlight(color_t color, float shadow, float highlight) {
     color_t result;
-    
+
     // Convert to 0-1 range
     float r = color.r / 255.0f;
     float g = color.g / 255.0f;
     float b = color.b / 255.0f;
-    
+
     // Calculate luminance
     float lum = 0.299f * r + 0.587f * g + 0.114f * b;
-    
+
     // Apply shadow/highlight adjustments
     float shadow_factor = 1.0f + shadow * (1.0f - lum);
     float highlight_factor = 1.0f + highlight * lum;
-    
+
     r *= shadow_factor * highlight_factor;
     g *= shadow_factor * highlight_factor;
     b *= shadow_factor * highlight_factor;
-    
+
     result.r = _CLAMP_UINT8(r * 255.0f);
     result.g = _CLAMP_UINT8(g * 255.0f);
     result.b = _CLAMP_UINT8(b * 255.0f);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Color balance adjustment
 color_t color_color_balance(color_t color, float cyan_red, float magenta_green, float yellow_blue) {
     color_t result;
-    
+
     // Convert to 0-1 range
     float r = color.r / 255.0f;
     float g = color.g / 255.0f;
     float b = color.b / 255.0f;
-    
+
     // Apply color balance adjustments
     r += cyan_red;
     g += magenta_green;
     b += yellow_blue;
-    
+
     result.r = _CLAMP_UINT8(r * 255.0f);
     result.g = _CLAMP_UINT8(g * 255.0f);
     result.b = _CLAMP_UINT8(b * 255.0f);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Vibrance adjustment (smart saturation)
 color_t color_vibrance(color_t color, float amount) {
     color_t result;
-    
+
     // Convert to HSV for saturation manipulation
     color_hsva_t hsv = rgba_to_hsva(color);
-    
+
     // Calculate existing saturation level
     float sat_factor = 1.0f - hsv.s;
-    
+
     // Apply vibrance (more effect on less saturated colors)
     hsv.s += amount * sat_factor;
     hsv.s = _CLAMP_FLOAT(hsv.s);
-    
+
     result = hsva_to_rgba(hsv);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Selective color adjustment
 color_t color_selective_color(color_t color, int channel, float cyan, float magenta, float yellow, float black) {
     color_t result = color;
-    
+
     // Convert to CMY for selective color work
     float c = 1.0f - color.r / 255.0f;
     float m = 1.0f - color.g / 255.0f;
     float y = 1.0f - color.b / 255.0f;
-    
+
     // Determine which color channel to adjust based on dominant color
     float max_cmy = (c > m) ? ((c > y) ? c : y) : ((m > y) ? m : y);
-    
+
     // Apply selective adjustments based on channel
     switch (channel) {
         case 0: // Reds (low cyan)
@@ -2480,61 +2396,55 @@ color_t color_selective_color(color_t color, int channel, float cyan, float mage
             }
             break;
     }
-    
+
     // Apply black adjustment
     float k = black;
     c = _CLAMP_FLOAT(c + k);
     m = _CLAMP_FLOAT(m + k);
     y = _CLAMP_FLOAT(y + k);
-    
+
     // Convert back to RGB
     result.r = _CLAMP_UINT8((1.0f - c) * 255.0f);
     result.g = _CLAMP_UINT8((1.0f - m) * 255.0f);
     result.b = _CLAMP_UINT8((1.0f - y) * 255.0f);
-    
+
     return result;
 }
 
 // Quantize color to fewer bits per channel
 color_t color_quantize(color_t color, int bits_per_channel) {
     color_t result;
-    
+
     int levels = (1 << bits_per_channel) - 1;
     float scale = 255.0f / levels;
-    
+
     result.r = (uint8_t)((color.r / (int)scale) * scale);
     result.g = (uint8_t)((color.g / (int)scale) * scale);
     result.b = (uint8_t)((color.b / (int)scale) * scale);
     result.a = color.a;
-    
+
     return result;
 }
 
 // Posterize to specific number of levels
 color_t color_posterize(color_t color, int levels) {
     color_t result;
-    
+
     float scale = 255.0f / (levels - 1);
-    
+
     result.r = (uint8_t)((int)(color.r / scale) * scale);
     result.g = (uint8_t)((int)(color.g / scale) * scale);
     result.b = (uint8_t)((int)(color.b / scale) * scale);
     result.a = color.a;
-    
-    return result;
-}
 
-// Reduce palette using median cut algorithm
-void color_reduce_palette(color_t* colors, int count, color_t* palette, int palette_size) {
-    // Simple implementation - use existing palette generation
-    color_generate_palette_from_image(colors, count, palette, palette_size);
+    return result;
 }
 
 // Find closest color in palette
 static int find_closest_color(color_t color, color_t* palette, int palette_size) {
     int closest = 0;
     float min_distance = color_distance(color, palette[0]);
-    
+
     for (int i = 1; i < palette_size; i++) {
         float distance = color_distance(color, palette[i]);
         if (distance < min_distance) {
@@ -2542,7 +2452,7 @@ static int find_closest_color(color_t color, color_t* palette, int palette_size)
             closest = i;
         }
     }
-    
+
     return closest;
 }
 
@@ -2551,7 +2461,7 @@ color_t color_dither_floyd_steinberg(color_t color, color_t* palette, int palett
     // Find closest palette color
     int closest_idx = find_closest_color(color, palette, palette_size);
     color_t closest = palette[closest_idx];
-    
+
     // Calculate error (this would normally be distributed to neighboring pixels)
     // For a single pixel function, we just return the closest color
     return closest;
@@ -2566,18 +2476,18 @@ color_t color_dither_ordered(color_t color, color_t* palette, int palette_size, 
         { 3, 11,  1,  9},
         {15,  7, 13,  5}
     };
-    
+
     // Get threshold from Bayer matrix
     int threshold = bayer_matrix[y % 4][x % 4];
     float dither_value = (threshold / 15.0f - 0.5f) * 32.0f; // Scale dither amount
-    
+
     // Apply dither to color
     color_t dithered;
     dithered.r = _CLAMP_UINT8(color.r + dither_value);
     dithered.g = _CLAMP_UINT8(color.g + dither_value);
     dithered.b = _CLAMP_UINT8(color.b + dither_value);
     dithered.a = color.a;
-    
+
     // Find closest palette color
     int closest_idx = find_closest_color(dithered, palette, palette_size);
     return palette[closest_idx];
@@ -2588,19 +2498,19 @@ color_t color_dither_ordered(color_t color, color_t* palette, int palette_size, 
 color_t color_protanopia(color_t color) {
     // Transformation matrix for protanopia
     // Row 1: [0.567, 0.433, 0.000]
-    // Row 2: [0.558, 0.442, 0.000] 
+    // Row 2: [0.558, 0.442, 0.000]
     // Row 3: [0.000, 0.242, 0.758]
-    
+
     int r = (567 * color.r + 433 * color.g) / 1000;
     int g = (558 * color.r + 442 * color.g) / 1000;
     int b = (242 * color.g + 758 * color.b) / 1000;
-    
+
     color_t result;
     result.r = _CLAMP_UINT8(r);
     result.g = _CLAMP_UINT8(g);
     result.b = _CLAMP_UINT8(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2611,17 +2521,17 @@ color_t color_deuteranopia(color_t color) {
     // Row 1: [0.625, 0.375, 0.000]
     // Row 2: [0.700, 0.300, 0.000]
     // Row 3: [0.000, 0.300, 0.700]
-    
+
     int r = (625 * color.r + 375 * color.g) / 1000;
     int g = (700 * color.r + 300 * color.g) / 1000;
     int b = (300 * color.g + 700 * color.b) / 1000;
-    
+
     color_t result;
     result.r = _CLAMP_UINT8(r);
     result.g = _CLAMP_UINT8(g);
     result.b = _CLAMP_UINT8(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2632,17 +2542,17 @@ color_t color_tritanopia(color_t color) {
     // Row 1: [0.950, 0.050, 0.000]
     // Row 2: [0.000, 0.433, 0.567]
     // Row 3: [0.000, 0.475, 0.525]
-    
+
     int r = (950 * color.r + 50 * color.g) / 1000;
     int g = (433 * color.g + 567 * color.b) / 1000;
     int b = (475 * color.g + 525 * color.b) / 1000;
-    
+
     color_t result;
     result.r = _CLAMP_UINT8(r);
     result.g = _CLAMP_UINT8(g);
     result.b = _CLAMP_UINT8(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2651,16 +2561,16 @@ color_t color_tritanopia(color_t color) {
 color_t color_achromatopsia(color_t color) {
     // Standard luminance formula: 0.299*R + 0.587*G + 0.114*B
     // Using integer arithmetic: (299*R + 587*G + 114*B) / 1000
-    
+
     int luminance = (299 * color.r + 587 * color.g + 114 * color.b) / 1000;
     uint8_t gray = _CLAMP_UINT8(luminance);
-    
+
     color_t result;
     result.r = gray;
     result.g = gray;
     result.b = gray;
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2671,12 +2581,12 @@ static float relative_luminance(color_t color) {
     float r = color.r / 255.0f;
     float g = color.g / 255.0f;
     float b = color.b / 255.0f;
-    
+
     // Apply gamma correction (sRGB to linear RGB)
     r = (r <= 0.03928f) ? r / 12.92f : powf((r + 0.055f) / 1.055f, 2.4f);
     g = (g <= 0.03928f) ? g / 12.92f : powf((g + 0.055f) / 1.055f, 2.4f);
     b = (b <= 0.03928f) ? b / 12.92f : powf((b + 0.055f) / 1.055f, 2.4f);
-    
+
     // Calculate relative luminance using ITU-R BT.709 coefficients
     return 0.2126f * r + 0.7152f * g + 0.0722f * b;
 }
@@ -2685,11 +2595,11 @@ static float relative_luminance(color_t color) {
 float color_contrast_ratio(color_t a, color_t b) {
     float lum_a = relative_luminance(a);
     float lum_b = relative_luminance(b);
-    
+
     // Ensure lighter color is in numerator
     float lighter = (lum_a > lum_b) ? lum_a : lum_b;
     float darker = (lum_a > lum_b) ? lum_b : lum_a;
-    
+
     // WCAG contrast ratio formula: (L1 + 0.05) / (L2 + 0.05)
     return (lighter + 0.05f) / (darker + 0.05f);
 }
@@ -2701,7 +2611,7 @@ int color_wcag_aa_compliant(color_t fg, color_t bg) {
     return ratio >= 4.5f;
 }
 
-// Check if color combination meets WCAG AAA compliance  
+// Check if color combination meets WCAG AAA compliance
 // AAA requires contrast ratio of at least 7:1 for normal text, 4.5:1 for large text
 int color_wcag_aaa_compliant(color_t fg, color_t bg) {
     float ratio = color_contrast_ratio(fg, bg);
@@ -2713,10 +2623,10 @@ color_t color_match_closest(color_t target, color_t* palette, int palette_size) 
     if (palette_size <= 0 || palette == NULL) {
         return target;  // Return target if no palette provided
     }
-    
+
     color_t closest = palette[0];
     float min_distance = color_distance(target, palette[0]);
-    
+
     for (int i = 1; i < palette_size; i++) {
         float distance = color_distance(target, palette[i]);
         if (distance < min_distance) {
@@ -2724,84 +2634,8 @@ color_t color_match_closest(color_t target, color_t* palette, int palette_size) 
             closest = palette[i];
         }
     }
-    
+
     return closest;
-}
-
-// Find the most frequently occurring color in an array of pixels
-// Returns index of the dominant color, or -1 if count is 0
-int color_find_dominant(color_t* pixels, int count) {
-    if (count <= 0 || pixels == NULL) {
-        return -1;
-    }
-    
-    int max_count = 0;
-    int dominant_index = 0;
-    
-    // Simple O(n²) approach - for better performance with large arrays,
-    // consider using a hash table or sorting approach
-    for (int i = 0; i < count; i++) {
-        int current_count = 0;
-        
-        // Count occurrences of pixels[i]
-        for (int j = 0; j < count; j++) {
-            if (pixels[i].rgba == pixels[j].rgba) {
-                current_count++;
-            }
-        }
-        
-        if (current_count > max_count) {
-            max_count = current_count;
-            dominant_index = i;
-        }
-    }
-    
-    return dominant_index;
-}
-
-// Generate a color histogram from an array of pixels
-// histogram array should be pre-allocated with size for all possible colors
-// For practical use, this creates a histogram of unique colors found
-void color_histogram(color_t* pixels, int count, int* histogram) {
-    if (count <= 0 || pixels == NULL || histogram == NULL) {
-        return;
-    }
-    
-    // First, find all unique colors and their indices
-    color_t unique_colors[count];  // Maximum possible unique colors
-    int unique_count = 0;
-    
-    // Initialize histogram
-    for (int i = 0; i < count; i++) {
-        histogram[i] = 0;
-    }
-    
-    // Build histogram of unique colors
-    for (int i = 0; i < count; i++) {
-        // Check if this color is already in our unique list
-        int found_index = -1;
-        for (int j = 0; j < unique_count; j++) {
-            if (unique_colors[j].rgba == pixels[i].rgba) {
-                found_index = j;
-                break;
-            }
-        }
-        
-        if (found_index == -1) {
-            // New unique color
-            unique_colors[unique_count] = pixels[i];
-            histogram[unique_count] = 1;
-            unique_count++;
-        } else {
-            // Increment count for existing color
-            histogram[found_index]++;
-        }
-    }
-    
-    // Zero out unused histogram entries
-    for (int i = unique_count; i < count; i++) {
-        histogram[i] = 0;
-    }
 }
 
 // Calculate color similarity as a normalized value (0.0 = identical, 1.0 = maximum difference)
@@ -2810,7 +2644,7 @@ float color_similarity(color_t a, color_t b) {
     float dr = (a.r - b.r) / 255.0f;
     float dg = (a.g - b.g) / 255.0f;
     float db = (a.b - b.b) / 255.0f;
-    
+
     // Calculate distance and normalize by maximum possible distance (sqrt(3))
     float distance = sqrtf(dr * dr + dg * dg + db * db);
     return distance / sqrtf(3.0f);
@@ -2832,28 +2666,28 @@ color_t color_lift_gamma_gain(color_t color, color_rgbaf_t lift, color_rgbaf_t g
     float r = _C2F(color.r);
     float g = _C2F(color.g);
     float b = _C2F(color.b);
-    
+
     // Apply lift (additive in shadows)
     r = r + lift.r * (1.0f - r);
     g = g + lift.g * (1.0f - g);
     b = b + lift.b * (1.0f - b);
-    
+
     // Apply gamma (power function for midtones)
     if (gamma.r != 0.0f) r = powf(r, 1.0f / gamma.r);
     if (gamma.g != 0.0f) g = powf(g, 1.0f / gamma.g);
     if (gamma.b != 0.0f) b = powf(b, 1.0f / gamma.b);
-    
+
     // Apply gain (multiplicative in highlights)
     r *= gain.r;
     g *= gain.g;
     b *= gain.b;
-    
+
     color_t result;
     result.r = _F2C(r);
     result.g = _F2C(g);
     result.b = _F2C(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2864,31 +2698,31 @@ color_t color_shadow_midtone_highlight(color_t color, color_rgbaf_t shadow, colo
     float r = _C2F(color.r);
     float g = _C2F(color.g);
     float b = _C2F(color.b);
-    
+
     // Calculate luminance for weighting
     float luminance = 0.299f * r + 0.587f * g + 0.114f * b;
-    
+
     // Create weighting functions for shadow, midtone, and highlight
     // Shadow weight: stronger in dark areas
     float shadow_weight = 1.0f - powf(luminance, 2.0f);
-    
+
     // Midtone weight: bell curve centered at 0.5
     float midtone_weight = 4.0f * luminance * (1.0f - luminance);
-    
+
     // Highlight weight: stronger in bright areas
     float highlight_weight = powf(luminance, 2.0f);
-    
+
     // Apply weighted color corrections
     r += shadow.r * shadow_weight + midtone.r * midtone_weight + highlight.r * highlight_weight;
     g += shadow.g * shadow_weight + midtone.g * midtone_weight + highlight.g * highlight_weight;
     b += shadow.b * shadow_weight + midtone.b * midtone_weight + highlight.b * highlight_weight;
-    
+
     color_t result;
     result.r = _F2C(r);
     result.g = _F2C(g);
     result.b = _F2C(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2898,28 +2732,28 @@ static color_t apply_color_matrix(color_t color, const float matrix[3][3]) {
     float r = _C2F(color.r);
     float g = _C2F(color.g);
     float b = _C2F(color.b);
-    
+
     // Apply gamma correction (sRGB to linear) before color space conversion
     r = (r <= 0.04045f) ? r / 12.92f : powf((r + 0.055f) / 1.055f, 2.4f);
     g = (g <= 0.04045f) ? g / 12.92f : powf((g + 0.055f) / 1.055f, 2.4f);
     b = (b <= 0.04045f) ? b / 12.92f : powf((b + 0.055f) / 1.055f, 2.4f);
-    
+
     // Apply matrix transformation
     float new_r = matrix[0][0] * r + matrix[0][1] * g + matrix[0][2] * b;
     float new_g = matrix[1][0] * r + matrix[1][1] * g + matrix[1][2] * b;
     float new_b = matrix[2][0] * r + matrix[2][1] * g + matrix[2][2] * b;
-    
+
     // Apply inverse gamma correction (linear to sRGB)
     new_r = (new_r <= 0.0031308f) ? new_r * 12.92f : 1.055f * powf(new_r, 1.0f / 2.4f) - 0.055f;
     new_g = (new_g <= 0.0031308f) ? new_g * 12.92f : 1.055f * powf(new_g, 1.0f / 2.4f) - 0.055f;
     new_b = (new_b <= 0.0031308f) ? new_b * 12.92f : 1.055f * powf(new_b, 1.0f / 2.4f) - 0.055f;
-    
+
     color_t result;
     result.r = _F2C(new_r);
     result.g = _F2C(new_g);
     result.b = _F2C(new_b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2933,7 +2767,7 @@ color_t color_rec709_to_rec2020(color_t color) {
         {0.069097f, 0.919540f, 0.011362f},
         {0.016391f, 0.088013f, 0.895595f}
     };
-    
+
     return apply_color_matrix(color, matrix);
 }
 
@@ -2944,33 +2778,33 @@ color_t color_prophoto_to_srgb(color_t color) {
     float r = _C2F(color.r);
     float g = _C2F(color.g);
     float b = _C2F(color.b);
-    
+
     // Apply ProPhoto RGB gamma correction (gamma 1.8) to linear
     r = powf(r, 1.8f);
     g = powf(g, 1.8f);
     b = powf(b, 1.8f);
-    
+
     // ProPhoto RGB to XYZ transformation matrix
     float x = 0.7976749f * r + 0.1351917f * g + 0.0313534f * b;
     float y = 0.2880402f * r + 0.7118741f * g + 0.0000857f * b;
     float z = 0.0000000f * r + 0.0000000f * g + 0.8252100f * b;
-    
+
     // XYZ to sRGB transformation matrix
     float new_r = 3.2404542f * x - 1.5371385f * y - 0.4985314f * z;
     float new_g = -0.9692660f * x + 1.8760108f * y + 0.0415560f * z;
     float new_b = 0.0556434f * x - 0.2040259f * y + 1.0572252f * z;
-    
+
     // Apply sRGB gamma correction (linear to sRGB)
     new_r = (new_r <= 0.0031308f) ? new_r * 12.92f : 1.055f * powf(new_r, 1.0f / 2.4f) - 0.055f;
     new_g = (new_g <= 0.0031308f) ? new_g * 12.92f : 1.055f * powf(new_g, 1.0f / 2.4f) - 0.055f;
     new_b = (new_b <= 0.0031308f) ? new_b * 12.92f : 1.055f * powf(new_b, 1.0f / 2.4f) - 0.055f;
-    
+
     color_t result;
     result.r = _F2C(new_r);
     result.g = _F2C(new_g);
     result.b = _F2C(new_b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -2981,33 +2815,33 @@ color_t color_adobe_rgb_to_srgb(color_t color) {
     float r = _C2F(color.r);
     float g = _C2F(color.g);
     float b = _C2F(color.b);
-    
+
     // Apply Adobe RGB gamma correction (gamma 2.2) to linear
     r = powf(r, 2.2f);
     g = powf(g, 2.2f);
     b = powf(b, 2.2f);
-    
+
     // Adobe RGB to XYZ transformation matrix
     float x = 0.5767309f * r + 0.1855540f * g + 0.1881852f * b;
     float y = 0.2973769f * r + 0.6273491f * g + 0.0752741f * b;
     float z = 0.0270343f * r + 0.0706872f * g + 0.9911085f * b;
-    
+
     // XYZ to sRGB transformation matrix
     float new_r = 3.2404542f * x - 1.5371385f * y - 0.4985314f * z;
     float new_g = -0.9692660f * x + 1.8760108f * y + 0.0415560f * z;
     float new_b = 0.0556434f * x - 0.2040259f * y + 1.0572252f * z;
-    
+
     // Apply sRGB gamma correction (linear to sRGB)
     new_r = (new_r <= 0.0031308f) ? new_r * 12.92f : 1.055f * powf(new_r, 1.0f / 2.4f) - 0.055f;
     new_g = (new_g <= 0.0031308f) ? new_g * 12.92f : 1.055f * powf(new_g, 1.0f / 2.4f) - 0.055f;
     new_b = (new_b <= 0.0031308f) ? new_b * 12.92f : 1.055f * powf(new_b, 1.0f / 2.4f) - 0.055f;
-    
+
     color_t result;
     result.r = _F2C(new_r);
     result.g = _F2C(new_g);
     result.b = _F2C(new_b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -3017,13 +2851,13 @@ color_t color_fast_grayscale(color_t color) {
     // Fast integer approximation: (R + G + B) / 3
     // Or slightly better: (R*77 + G*151 + B*28) >> 8 (approximates 0.299, 0.587, 0.114)
     uint8_t gray = (uint8_t)((77 * color.r + 151 * color.g + 28 * color.b) >> 8);
-    
+
     color_t result;
     result.r = gray;
     result.g = gray;
     result.b = gray;
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -3033,15 +2867,15 @@ color_t color_fast_sepia(color_t color) {
     // Calculate sepia values using integer arithmetic
     // Standard sepia transformation with bit shifting for speed
     int r = (color.r * 393 + color.g * 769 + color.b * 189) >> 10;  // / 1024
-    int g = (color.r * 349 + color.g * 686 + color.b * 168) >> 10;  // / 1024  
+    int g = (color.r * 349 + color.g * 686 + color.b * 168) >> 10;  // / 1024
     int b = (color.r * 272 + color.g * 534 + color.b * 131) >> 10;  // / 1024
-    
+
     color_t result;
     result.r = _CLAMP_UINT8(r);
     result.g = _CLAMP_UINT8(g);
     result.b = _CLAMP_UINT8(b);
     result.a = color.a;  // Preserve alpha
-    
+
     return result;
 }
 
@@ -3053,60 +2887,13 @@ color_t color_fast_invert(color_t color) {
     result.g = 255 - color.g;  // Equivalent to: color.g ^ 0xFF
     result.b = 255 - color.b;  // Equivalent to: color.b ^ 0xFF
     result.a = color.a;        // Preserve alpha
-    
+
     return result;
-}
-
-// Batch brightness adjustment for multiple colors
-// brightness: 0.0 = black, 1.0 = original, 2.0 = double brightness
-void color_batch_adjust_brightness(color_t* colors, int count, float brightness) {
-    if (colors == NULL || count <= 0) {
-        return;
-    }
-    
-    // Convert brightness to integer for faster processing
-    int brightness_int = (int)(brightness * 256.0f);  // 8.8 fixed point
-    
-    for (int i = 0; i < count; i++) {
-        // Apply brightness using integer arithmetic
-        int r = (colors[i].r * brightness_int) >> 8;
-        int g = (colors[i].g * brightness_int) >> 8;
-        int b = (colors[i].b * brightness_int) >> 8;
-        
-        colors[i].r = _CLAMP_UINT8(r);
-        colors[i].g = _CLAMP_UINT8(g);
-        colors[i].b = _CLAMP_UINT8(b);
-        // Alpha unchanged
-    }
-}
-
-// Batch apply look-up table (LUT) transformation
-// lut should be a 256-entry array for each color channel
-// This version assumes a simple 1D LUT for all channels
-void color_batch_apply_lut(color_t* colors, int count, color_t* lut) {
-    if (colors == NULL || count <= 0 || lut == NULL) {
-        return;
-    }
-    
-    for (int i = 0; i < count; i++) {
-        // Use original color values as indices into the LUT
-        // Assumes LUT has 256 entries (0-255)
-        uint8_t r_index = colors[i].r;
-        uint8_t g_index = colors[i].g;
-        uint8_t b_index = colors[i].b;
-        
-        // Apply LUT transformation
-        // This is a simplified version - real LUTs often use interpolation
-        colors[i].r = lut[r_index].r;
-        colors[i].g = lut[g_index].g;
-        colors[i].b = lut[b_index].b;
-        // Alpha unchanged
-    }
 }
 
 static color_t* image_make(unsigned int w, unsigned int h) {
     static_assert(sizeof(color_t) == sizeof(uint32_t), "color_t must be 4 bytes");
-    uint32_t *buffer = malloc((w * h + 2) * sizeof(uint32_t));
+    uint32_t *buffer = (uint32_t*)malloc((w * h + 2) * sizeof(uint32_t));
     if (!buffer)
         return NULL;
     buffer[0] = w;
@@ -3121,148 +2908,6 @@ image_t image_empty(unsigned int w, unsigned int h, color_t color) {
     if (!result)
         return NULL;
     image_fill(result, _black);
-    return result;
-}
-
-image_t image_load_from_path(const char *path) {
-    image_t result = NULL;
-    unsigned char *data = NULL;
-    if (access(path, F_OK))
-        return NULL;
-    size_t sz = -1;
-    FILE *fh = fopen(path, "rb");
-    if (!fh)
-        return NULL;
-    fseek(fh, 0, SEEK_END);
-    if (!(sz = ftell(fh)))
-        goto BAIL;
-    fseek(fh, 0, SEEK_SET);
-    if (!(data = malloc(sz * sizeof(unsigned char))))
-        goto BAIL;
-    if (fread(data, sz, 1, fh) != 1)
-        goto BAIL;
-    result = image_load_from_memory(data, (int)sz);
-BAIL:
-    if (fh)
-        fclose(fh);
-    if (data)
-        free(data);
-    return result;
-}
-
-static int check_if_qoi(unsigned char *data) {
-    return _RGBA(data[0], data[0], data[0], data[0]) ==  _RGBA('q', 'o', 'i', 'f');
-}
-
-image_t image_load_from_memory(const void *data, size_t data_size) {
-    if (!data || data_size <= 0)
-        return NULL;
-    int _w, _h, c = 0;
-    unsigned char *img_data = NULL;
-    if (check_if_qoi((unsigned char*)data)) {
-        qoi_desc desc;
-        if (!(img_data = qoi_decode(data, (int)data_size, &desc, 4)))
-            return NULL;
-        _w = desc.width;
-        _h = desc.height;
-    } else
-        if (!(img_data = stbi_load_from_memory(data, (int)data_size, &_w, &_h, &c, 4)))
-            return NULL;
-    if (_w <= 0 || _h <= 0 || c < 3) {
-        free(img_data);
-        return NULL;
-    }
-
-    image_t result = image_make(_w, _h);
-    if (!result) {
-        free(img_data);
-        return NULL;
-    }
-    for (int x = 0; x < _w; x++)
-        for (int y = 0; y < _h; y++) {
-            unsigned char *p = img_data + (x + _w * y) * 4;
-            result[y * _w + x] = (color_t) {
-                .r = p[0],
-                .g = p[1],
-                .b = p[2],
-                .a = p[3]
-            };
-        }
-    free(img_data);
-    return result;
-}
-
-bool image_export(const char *path, const image_t img) {
-    if (!img || !path)
-        return false;
-    int w, h;
-    image_size(img, &w, &h);
-    char *buffer = malloc(w * h * 4);
-    if (!buffer)
-        return false;
-    bool result = true;
-    for (int x = 0; x < w; x++)
-        for (int y = 0; y < h; y++) {
-            color_t color = img[y * w + x];
-            char *p = buffer + (x + w * y) * 4;
-            p[0] = color.r;
-            p[1] = color.g;
-            p[2] = color.b;
-            p[3] = color.a;
-        }
-    
-    const char *_ext = strrchr(path, '.');
-    if (!_ext || _ext[0] == '\0') {
-        result = false;
-        goto BAIL;
-    }
-    char *ext = strdup(_ext);
-    for (char *p = ext; *p; p++)
-        *p = tolower(*p);
-    if (strncmp(".qoi", ext, 4) == 0) {
-        result = false;
-        qoi_desc desc = {
-            .width = w,
-            .height = h,
-            .channels = 4,
-            .colorspace = QOI_SRGB
-        };
-        int size = 0;
-        void *data = qoi_encode(buffer, &desc, &size);
-        if (!data || !size)
-            goto BAIL;
-        FILE *fh = fopen(path, "wb");
-        if (!fh)
-            goto BAIL;
-        size_t written = fwrite(data, size, 1, fh);
-        result = written != 1;
-        if (fh)
-            fclose(fh);
-        if (data)
-            free(data);
-        goto BAIL;
-    } else if (strncmp(".png", ext, 4) == 0) {
-        if (stbi_write_png(path, w, h, 4, buffer, w * 4))
-            goto BAIL;
-    } else if (strncmp(".jpg", ext, 4) == 0 || strncmp(".jpeg", ext, 5) == 0) {
-        if (stbi_write_jpg(path, w, h, 4, buffer, 100))
-            goto BAIL;
-    } else if (strncmp(".bmp", ext, 4) == 0) {
-        if (stbi_write_bmp(path, w, h, 4, buffer))
-            goto BAIL;
-    } else if (strncmp(".tga", ext, 4) == 0) {
-        if (stbi_write_tga(path, w, h, 4, buffer))
-            goto BAIL;
-    } else if (strncmp(".hdr", ext, 4) == 0) {
-        if (stbi_write_hdr(path, w, h, 4 , (float*)buffer))
-            goto BAIL;
-    }
-    result = false;
-BAIL:
-    if (ext)
-        free(ext);
-    if (buffer)
-        free(buffer);
     return result;
 }
 
@@ -3672,7 +3317,7 @@ bool image_draw_circle(image_t img, int xc, int yc, int r, color_t color, int fi
         if (r > x || err > y)
             err += ++x * 2 + 1; /* e_xy+e_x > 0 or no 2nd y-step */
     } while (x < 0);
-    
+
     return true;
 }
 
@@ -3762,7 +3407,125 @@ bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, in
         image_draw_line(img, x1, y1, x2, y2, color);
         image_draw_line(img, x2, y2, x0, y0, color);
     }
-    
+
     return true;
+}
+
+color_t image_dominant_color(const image_t img) {
+    int max_count = 0;
+    int dominant_index = -1;
+    // Simple O(n²) approach - for better performance with large arrays,
+    // consider using a hash table or sorting approach
+    for (int i = 0; i < count; i++) {
+        int current_count = 0;
+        // Count occurrences of pixels[i]
+        for (int j = 0; j < count; j++)
+            if (pixels[i].rgba == pixels[j].rgba)
+                current_count++;
+        if (current_count > max_count) {
+            max_count = current_count;
+            dominant_index = i;
+        }
+    }
+    return dominant_index < 0 ? _black : img[dominant_index];
+}
+
+int* image_histogram(const image_t img) {
+    color_t *histogram = (color_t*)malloc(0);
+    int unique_count = 0;
+    for (int i = 0; i < count; i++) {
+        int found_index = -1;
+        for (int j = 0; j < unique_count; j++) {
+            if (histogram[j].rgba == pixels[i].rgba) {
+                found_index = j;
+                break;
+            }
+        }
+        if (found_index == -1) {
+            histogram = (color_t*)realloc(histogram, (unique_count + 1) * sizeof(color_t));
+            histogram[unique_count] = pixels[i];
+            unique_count++;
+        } else
+            histogram[found_index]++;
+    }
+    if (unique_count == 0) {
+        free(histogram);
+        return NULL;
+    }
+    return histogram;
+}
+
+color_t* image_palette(const image_t img, int count) {
+    if (!img || count <= 0)
+        return NULL;
+
+    color_t *palette = (color_t*)malloc(count * sizeof(color_t));
+    size_t img_size = image_width(img) * image_height(img);
+    if (count > img_size) {
+        for (int i = 0; i < count; i++)
+            palette[i] = i >= img_size ? _black : img[i];
+        return palette;
+    } else
+        for (int i = 0; i < count; i++)
+            palette[i] = pixels[i * img_size / count];
+
+    // K-means iterations
+    for (int iter = 0; iter < 10; iter++) {
+        // Arrays to accumulate color values for each cluster
+        int cluster_r[count];
+        int cluster_g[count];
+        int cluster_b[count];
+        int cluster_a[count];
+        int cluster_count[count];
+        for (int i = 0; i < count; i++)
+            cluster_r[i] = cluster_g[i] = cluster_b[i] = cluster_a[i] = cluster_count[i] = 0;
+
+        // Assign each pixel to nearest palette color
+        for (int p = 0; p < img_size; p++) {
+            int closest_idx = 0;
+            float min_distance = color_distance(pixels[p], palette[0]);
+
+            for (int i = 1; i < count; i++) {
+                float distance = color_distance(pixels[p], palette[i]);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    closest_idx = i;
+                }
+            }
+
+            // Add pixel to cluster
+            cluster_r[closest_idx] += pixels[p].r;
+            cluster_g[closest_idx] += pixels[p].g;
+            cluster_b[closest_idx] += pixels[p].b;
+            cluster_a[closest_idx] += pixels[p].a;
+            cluster_count[closest_idx]++;
+        }
+
+        // Update palette colors to cluster centroids
+        for (int i = 0; i < count; i++) {
+            if (cluster_count[i] > 0) {
+                palette[i].r = cluster_r[i] / cluster_count[i];
+                palette[i].g = cluster_g[i] / cluster_count[i];
+                palette[i].b = cluster_b[i] / cluster_count[i];
+                palette[i].a = cluster_a[i] / cluster_count[i];
+            }
+        }
+    }
+
+    // Sort palette by brightness (optional, for consistent ordering)
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = i + 1; j < count; j++) {
+            int brightness_i = palette[i].r + palette[i].g + palette[i].b;
+            int brightness_j = palette[j].r + palette[j].g + palette[j].b;
+
+            if (brightness_i > brightness_j) {
+                color_t temp = palette[i];
+                palette[i] = palette[j];
+                palette[j] = temp;
+            }
+        }
+    }
+
+    return palette;
 }
 #endif

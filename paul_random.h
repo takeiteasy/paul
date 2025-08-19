@@ -1,6 +1,6 @@
-/* paul/rng.h -- https://github.com/takeiteasy/paul
+/* paul/paul_random.h -- https://github.com/takeiteasy/paul
 
- Copyright (C) 2025  George Watson
+ Copyright (C) 2025 George Watson
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -15,25 +15,43 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-/* Portable pseudorandom number generator
- * Based on a 24,55 Fibonacci generator, using 55/503 rejection
- * c.f.- TAoCP, 3.2.2(7), for j=24,k=55,m=2^64
- *
- * THIS FILE IS PUBLIC DOMAIN CODE.
- *
- * Written by Bob Adolf.
- * Attribution is appreciated but by no means legally required.
- *
- * This function is sufficient for most non-crypto applications.
- * It passes all but one of George Marsaglia's "diehard" randomness tests.
- *  (overlapping 5-tuple permutations, which is allegedly buggy)
- */
+#ifndef PAUL_RANDOM_HEAD
+#define PAUL_RANDOM_HEAD
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "paul.h"
+#include <stdint.h>
 
+#define _PRNG_RAND_SSIZE ((UINT16_C(1))<<6)
+
+typedef struct rng {
+    uint64_t s[_PRNG_RAND_SSIZE];
+    uint_fast16_t i;
+    uint_fast16_t c;
+} rng_t;
+
+void rng_init(rng_t *rng, uint64_t seed);
+uint64_t rnd_randi(rng_t *rng);
+float rnd_randf(rng_t *rng);
+int rnd_randi_range(rng_t *rng, int min, int max);
+float rnd_randf_range(rng_t *rng, float min, float max);
+
+void cellular_automata(rng_t *rng, unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* dst);
+
+float perlin(float x, float y, float z);
+void noise_fbm(unsigned int width, unsigned int height, float z, float offset_x, float offset_y, float scale, float lacunarity, float gain, int octaves, uint8_t* dst);
+
+// TODO: Poisson disc sampling
+
+#ifdef __cplusplus
+}
+#endif
+#endif // PAUL_RANDOM_HEAD
+
+#if defined(PAUL_RANDOM_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
 #define _PRNG_LAG1 (UINT16_C(24))
 #define _PRNG_LAG2 (UINT16_C(55))
-#define _PRNG_RAND_SSIZE ((UINT16_C(1))<<6)
 #define _PRNG_RAND_SMASK (_PRNG_RAND_SSIZE-1)
 #define _PRNG_RAND_EXHAUST_LIMIT _PRNG_LAG2
 // 10x is a heuristic, it just needs to be large enough to remove correlation
@@ -45,63 +63,64 @@
 #define _CLAMP(X, LO, HI) ((X) < (LO) ? (LO) : ((X) > (HI) ? (HI) : (X)))
 #define _REMAP(X, IN_MIN, IN_MAX, OUT_MIN, OUT_MAX) ((OUT_MIN) + (((X) - (IN_MIN)) * ((OUT_MAX) - (OUT_MIN)) / ((IN_MAX) - (IN_MIN))))
 
-// TODO: Thread saftey
-static struct {
-    uint64_t s[_PRNG_RAND_SSIZE];
-    uint_fast16_t i;
-    uint_fast16_t c;
-} state;
-
-void paul_srand(uint64_t seed) {
+void rnd_seed(rng_t *rng, uint64_t seed) {
     if (!seed)
         seed = (uint64_t)time(NULL);
     uint_fast16_t i;
     // Naive seed
-    state.c = _PRNG_RAND_EXHAUST_LIMIT;
-    state.i = 0;
-    state.s[0] = seed;
+    rng->c = _PRNG_RAND_EXHAUST_LIMIT;
+    rng->i = 0;
+    rng->s[0] = seed;
     // Arbitrary magic, mostly to eliminate the effect of low-value seeds.
     // Probably could be better, but the run-up obviates any real need to.
     for(i=1; i<_PRNG_RAND_SSIZE; i++)
-        state.s[i] = i*(UINT64_C(2147483647)) + seed;
+        rng->s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
-        (void)paul_rand();
+        (void)rng_randi();
 }
 
-uint64_t paul_rand(void) {
+uint64_t rng_randi(rng_t *rng) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
-    if( !state.c ) { // Randomness exhausted, run forward to refill
+    if( !rng->c ) { // Randomness exhausted, run forward to refill
         new_rands += _PRNG_RAND_REFILL_COUNT+1;
-        state.c = _PRNG_RAND_EXHAUST_LIMIT-1;
+        rng->c = _PRNG_RAND_EXHAUST_LIMIT-1;
     } else {
         new_rands = 1;
-        state.c--;
+        rng->c--;
     }
 
     for( r=0; r<new_rands; r++ ) {
-        i = state.i;
-        state.s[i&_PRNG_RAND_SMASK] =
-        state.s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG1)&_PRNG_RAND_SMASK] +
-        state.s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG2)&_PRNG_RAND_SMASK];
-        state.i++;
+        i = rng->i;
+        rng->s[i&_PRNG_RAND_SMASK] =
+        rng->s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG1)&_PRNG_RAND_SMASK] +
+        rng->s[(i+_PRNG_RAND_SSIZE-_PRNG_LAG2)&_PRNG_RAND_SMASK];
+        rng->i++;
     }
-    return state.s[i&_PRNG_RAND_SMASK];
+    return rng->s[i&_PRNG_RAND_SMASK];
 }
 
-float paul_randf(void) {
-    return (float)paul_rand() / (float)PRNG_RAND_MAX;
+float rng_randf(rng_t *rng) {
+    return (float)rng_randi(rng) / (float)PRNG_RAND_MAX;
 }
 
-void paul_cellular_automata(unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
+int rnd_randi_range(rng_t *rng, int min, int max) {
+    return _REMAP(rng_randi(rng), 0, PRNG_RAND_MAX, min, max);
+}
+
+float rnd_randf_range(rng_t *rng, float min, float max) {
+    return _REMAP(rng_randf(rng), 0.f, 1.f, min, max);
+}
+
+void cellular_automata(rng_t *rng, unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
     memset(result, 0, width * height * sizeof(int));
     // Randomly fill the grid
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            result[y * width + x] = (paul_randf() * 99) + 1 < fill_chance;
+            result[y * width + x] = (rng_randf(rng) * 99) + 1 < fill_chance;
     // Run cellular-automata on grid n times
     for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
@@ -179,7 +198,7 @@ static float fade(float t) {
 
 #define FASTFLOOR(x) (((x) >= 0) ? (int)(x) : (int)(x)-1)
 
-static float perlin(float x, float y, float z) {
+float perlin(float x, float y, float z) {
     /* Find grid points */
     int gx = FASTFLOOR(x);
     int gy = FASTFLOOR(y);
@@ -215,7 +234,7 @@ static float perlin(float x, float y, float z) {
 }
 
 
-void paul_noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves, uint8_t* result) {
+void noise_fbm(unsigned int width, unsigned int height, float z, float offsetX, float offsetY, float scale, float lacunarity, float gain, int octaves, uint8_t* result) {
     float min = FLT_MAX, max = FLT_MIN;
     float *grid = malloc(width * height * sizeof(float));
     // Loop through grid and apply noise transformation to each cell
@@ -247,3 +266,5 @@ void paul_noise_fbm(unsigned int width, unsigned int height, float z, float offs
         }
     free(grid);
 }
+
+#endif

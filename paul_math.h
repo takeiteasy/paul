@@ -1,6 +1,4 @@
-/* bla.h -- https://github.com/takeiteasy/bla
-
- bla -- Basic Linear Algebra library
+/* paul/paul_math.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2024  George Watson
 
@@ -15,23 +13,15 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
- Functionality relies on Clang + GCC extensions.
- When building `-fenable-matrix` for Matrix support.
- To disable Matrix support define `BLA_NO_MATRICES`
-
- Acknowledgements:
- - A lot of this was hand translated from raylib's raymath.h header
- https://github.com/raysan5/raylib/blob/master/src/raymath.h (Zlib) */
-
-#ifndef BLA_HEADER
-#define BLA_HEADER
+#ifndef PAUL_MATH_HEADER
+#define PAUL_MATH_HEADER
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef BLA_NO_PRINT
+#ifndef PAUL_MATH_NO_PRINT
 #include <stdio.h>
 #endif
 #include <stdint.h>
@@ -47,37 +37,65 @@ extern "C" {
 #include <stdbool.h>
 #endif
 
-#if !defined(__clang__) && !(defined(__GNUC__) || defined(__GNUG__))
-#define BLA_NO_MATRICES
+#if !defined(__cplusplus) && (!defined(__clang__) && !defined(__GNUC__))
+#define PAUL_MATH_NO_MATRICES
 #endif
 
 #ifndef __has_extension
 #define __has_extension(x) 0
 #endif
 
-#if !__has_extension(c_generic_selections)
-#define BLA_NO_GENERICS
+#if defined(__cpluscplus) || __STDC_VERSION__ < 201112L || !__has_extension(c_generic_selections)
+#define PAUL_NO_GENERICS
 #endif
 
-#if defined(__cpluscplus) || (defined(__STDC__) && __STDC_VERSION__ < 201112L)
-#define BLA_NO_GENERICS
+#ifndef PAUL_MATH_FLOAT_EPSILON
+#define PAUL_MATH_FLOAT_EPSILON 0.000001f
 #endif
 
-#define _PI         3.14159265358979323846
-#define _TWO_PI     6.28318530717958647692 // 2 * pi
-#define _TAU        _TWO_PI
-#define _HALF_PI    1.57079632679489661923// pi / 2
-#define _QUARTER_PI 0.78539816339744830961// pi / 4
-#define _PHI        1.61803398874989484820
-#define _INV_PHI    0.61803398874989484820
-#define _EULER      2.71828182845904523536
-#define _EPSILON    0.000001f
-#define _SQRT2      1.41421356237309504880
+#if __cplusplus || __STDC_VERSION__ >= 202311L
+#define CONST constexpr
+#else
+#define CONST const
+#endif
+static CONST float tau = M_2_PI;
+static CONST float phi = 1.61803398874989484820f;
+static CONST float inv_phi = 0.61803398874989484820f;
+static CONST float euler = 2.71828182845904523536f;
+static CONST float epsilon = PAUL_MATH_FLOAT_EPSILON;
 
+#ifdef __cplusplus
+static inline template<typename T> min(T a, T b) {
+    return a < b ? a : b;
+}
+
+static inline template<typename T> max(T a, T b) {
+    return a > b ? a : b;
+}
+
+static inline template<typename T> clamp(T value, T minval, T maxval) {
+    return value < minval ? minval : (value > maxval ? maxval : value);
+}
+
+static inline template<typename T> to_degrees(T radians) {
+    return radians * (180.f / _PI);
+}
+
+static inline template<typename T> to_radians(T degrees) {
+    return degrees * (_PI / 180.f);
+}
+#else
+#if __STDC_VERSION__ < 202311L
+#if defined(__clang__) || defined(__GNUC__)
 #ifndef typeof
 #define typeof(x) __typeof__((x))
 #endif
+#else
+#define PAUL_NO_TYPEOF
+#endif
+#endif
 
+#ifndef PAUL_NO_TYPEOF
 #define min(a, b)           \
     ({typeof (a) _a = (a);  \
       typeof (a) _b = (b);  \
@@ -109,18 +127,39 @@ extern "C" {
       typeof (out_min) _out_min = (out_min);        \
       typeof (out_max) _out_max = (out_max);        \
       _out_min + (_x - _in_min) * (_out_max - _out_min) / (_in_max - _in_min); })
+#else
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define clamp     (value, minval, maxval) \
+    ((value) < (minval) ? (minval) : ((value) > (maxval) ? (maxval) : (value)))
 
-#define bytes(n) (n)
-#define kilobytes(n) (n << 10)
-#define megabytes(n) (n << 20)
-#define gigabytes(n) (((uint64_t)n) << 30)
-#define terabytes(n) (((uint64_t)n) << 40)
+#define to_degrees(radians) ((radians) * (180.f / _PI))
+#define to_radians(degrees) ((degrees) * (_PI / 180.f))
 
-#define thousand(n)  ((n) * 1000)
-#define million(n)   ((n) * 1000000)
-#define billion(n)   ((n) * 1000000000LL)
+#define remap(x, in_min, in_max, out_min, out_max) \
+    ((out_min) + ((x) - (in_min)) * ((out_max) - (out_min)) / ((in_max) - (in_min)))
+#endif // PAUL_NO_TYPEOF
 
-#define __BLA_TYPES \
+#define bytes(n)         (n)
+#define kilobytes(n)     (n << 10)
+#define megabytes(n)     (n << 20)
+#define gigabytes(n)     (((uint64_t)n) << 30)
+#define terabytes(n)     (((uint64_t)n) << 40)
+
+#define thousand(n)      ((n) * 1000)
+#define million(n)       ((n) * 1000000)
+#define billion(n)       ((n) * 1000000000LL)
+
+#define nanoseconds(ms)  ((uint64_t)ms / 1000000LL)
+#define microseconds(ms) (ms / 1000)
+#define milliseconds(n)  (n)
+#define seconds(n)       (n * 1000)
+#define minutes(n)       ((uint64_t)n * 60000LL)
+#define hours(n)         ((uint64_t)n * 3600000LL)
+#define days(n)          ((uint64_t)n * 86400000LL)
+#define weeks(n)         ((uint64_t)n * 604800000LL)
+
+#define __PAUL_MATH_TYPES \
     X(2)            \
     X(3)            \
     X(4)
@@ -549,13 +588,14 @@ public:
     _MAT_OPERATORS(float, 4, 4);
 };
 #else
+#define vector(N) __attribute__((ext_vector_type((N))))
 #define X(SZ) \
-    typedef float vec##SZ __attribute__((ext_vector_type(SZ)));
-__BLA_TYPES
+    typedef float vec##SZ vector(SZ);
+__PAUL_MATH_TYPES
 #undef X
 #define X(N) \
-    typedef int vec##N##i __attribute__((ext_vector_type(N)));
-__BLA_TYPES
+    typedef int vec##N##i vector(SZ);
+__PAUL_MATH_TYPES
 #undef X
 #endif // __cplusplus
 
@@ -572,11 +612,11 @@ __BLA_TYPES
     float vec##SZ##_distance(vec##SZ, vec##SZ);         \
     vec##SZ vec##SZ##_clamp(vec##SZ, vec##SZ, vec##SZ); \
     vec##SZ vec##SZ##_lerp(vec##SZ, vec##SZ, float);
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
 typedef vec4 quat;
 
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 #ifdef __cplusplus
 template<typename T, int N> class mat {
 protected:
@@ -665,9 +705,13 @@ public:
     }
 };
 #else
+#define _MATRIX(X, Y) __attribute__((matrix_type((X), (Y))))
+#define _MATRIX1(X) _MATRIX(X, X)
+#define _MATRIX2(X, Y) _MATRIX(X, Y)
+#define matrix(...) _WRAPPER(_MATRIX, __VA_ARGS__))
 #define X(N) \
-    typedef float mat##N##N __attribute__((matrix_type((N), (N))));
-__BLA_TYPES
+    typedef float mat##N##N matrix(N);
+__PAUL_MATH_TYPES
 #undef X
 #endif // __cplusplus
 
@@ -682,33 +726,33 @@ __BLA_TYPES
     mat##N mat##N##_transpose(mat##N);            \
     vec##N mat##N##_column(mat##N, unsigned int); \
     vec##N mat##N##_row(mat##N, unsigned int);
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
 #endif
 
-#ifndef BLA_NO_PRINT
+#ifndef PAUL_MATH_NO_PRINT
 #ifdef __cplusplus
 template<typename T> void bla_print(const T& data);
-#define X(SZ) template<> void bla_print<vec##SZ>(const vec##SZ& data); 
-__BLA_TYPES
+#define X(SZ) template<> void bla_print<vec##SZ>(const vec##SZ& data);
+__PAUL_MATH_TYPES
 #undef X
-#ifndef BLA_NO_MATRICES
-#define X(SZ) template<> void bla_print<mat##SZ>(const mat##SZ& data); 
-__BLA_TYPES
+#ifndef PAUL_MATH_NO_MATRICES
+#define X(SZ) template<> void bla_print<mat##SZ>(const mat##SZ& data);
+__PAUL_MATH_TYPES
 #undef X
 #endif
 #else
 #define X(SZ) void vec##SZ##_print(vec##SZ);
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 #define X(SZ) void mat##SZ##_print(mat##SZ);
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
-#endif // BLA_NO_MATRICES
+#endif // PAUL_MATH_NO_MATRICES
 
-#ifndef BLA_NO_GENERICS
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_NO_GENERICS
+#ifndef PAUL_MATH_NO_MATRICES
 #define bla_print(data) _Generic((data), \
     vec2: vec2_print,                    \
     vec3: vec3_print,                    \
@@ -723,14 +767,13 @@ __BLA_TYPES
     vec3: vec3_print,                    \
     vec4: vec4_print,                    \
     default: printf("Unsupported type\n"))(data)
-#endif // BLA_NO_MATRICES
-#endif // BLA_NO_GENERICS
-#endif // BLA_NO_PRINT
+#endif // PAUL_MATH_NO_MATRICES
+#endif // PAUL_NO_GENERICS
+#endif // PAUL_MATH_NO_PRINT
 #endif
 
-// Taken from: https://gist.github.com/61131/7a22ac46062ee292c2c8bd6d883d28de
-#ifndef N_ARGS
-#define N_ARGS(...) _NARG_(__VA_ARGS__, _RSEQ())
+#ifndef COUNT_ARGS
+#define COUNT_ARGS(...) _NARG_(__VA_ARGS__, _RSEQ())
 #define _NARGS(...) _SEQ(__VA_ARGS__)
 #define _SEQ(_1, _2, _3, _4, _5, _6, _7, _8, _9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_39,_40,_41,_42,_43,_44,_45,_46,_47,_48,_49,_50,_51,_52,_53,_54,_55,_56,_57,_58,_59,_60,_61,_62,_63,_64,_65,_66,_67,_68,_69,_70,_71,_72,_73,_74,_75,_76,_77,_78,_79,_80,_81,_82,_83,_84,_85,_86,_87,_88,_89,_90,_91,_92,_93,_94,_95,_96,_97,_98,_99,_100,_101,_102,_103,_104,_105,_106,_107,_108,_109,_110,_111,_112,_113,_114,_115,_116,_117,_118,_119,_120,_121,_122,_123,_124,_125,_126,_127,N,...) N
 #define _RSEQ() 127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
@@ -738,7 +781,7 @@ __BLA_TYPES
 
 #define ___Vec(NAME, N) NAME##N
 #define __Vec(NAME, N) ___Vec(NAME, N)
-#define _Vec(FUNC, ...) __Vec(FUNC, N_ARGS(__VA_ARGS__)) (__VA_ARGS__)
+#define _Vec(FUNC, ...) __Vec(FUNC, COUNT_ARGS(__VA_ARGS__)) (__VA_ARGS__)
 #define Vec(...) _Vec(Vec, __VA_ARGS__)
 #ifdef __cplusplus
 #define Vec2(x, y) vec2(x, y)
@@ -752,7 +795,7 @@ __BLA_TYPES
 #define Quat(x, y, z, w) (quat){x, y, z, w}
 #endif
 
-#ifndef MAP_LIST_UD
+#ifndef MAP
 #define EVAL0(...) __VA_ARGS__
 #define EVAL1(...) EVAL0(EVAL0(EVAL0(__VA_ARGS__)))
 #define EVAL2(...) EVAL1(EVAL1(EVAL1(__VA_ARGS__)))
@@ -818,7 +861,7 @@ quat quat_from_euler(float pitch, float yaw, float roll);
 vec3 quat_to_euler(quat q);
 int quat_cmp(quat p, quat q);
 
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 vec3 vec3_transform(vec3 v, mat4 mat);
 vec3 vec3_unproject(vec3 source, mat4 projection, mat4 view);
 float mat4_determinant(mat4 mat);
@@ -860,18 +903,18 @@ float ease(enum easing_fn func, enum easing_t type, float t, float b, float c, f
 #ifdef __cplusplus
 }
 #endif
-#endif // BLA_HEADER
+#endif // PAUL_MATH_HEADER
 
-#ifdef BLA_IMPLEMENTATION
-#ifndef BLA_FLOAT_CMP_EXACT
+#if defined(PAUL_MATH_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
+#ifndef PAUL_MATH_FLOAT_CMP_EXACT
 #define FLT_CMP(A, B) \
-    (fabs((A) - (B)) <= _EPSILON * fmax(1.f, fmax(fabs(A), fabs(B))))
+    (fabs((A) - (B)) <= PAUL_MATH_FLOAT_EPSILON * fmax(1.f, fmax(fabs(A), fabs(B))))
 #else
 #define FLT_CMP(A, B) \
     ((A) == (B))
 #endif
 
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 #define X(N)                                                \
     mat##N Mat##N(void)                                     \
     {                                                       \
@@ -931,7 +974,7 @@ float ease(enum easing_fn func, enum easing_t type, float t, float b, float c, f
         if (column >= N)                                    \
             return result;                                  \
         for (int i = 0; i < N; i++)                         \
-            result[i] = mat[i][column];                     \
+            result[i] = mat[column][i];                     \
         return result;                                      \
     }                                                       \
     vec##N mat##N##_row(mat##N mat, unsigned int row)       \
@@ -940,12 +983,12 @@ float ease(enum easing_fn func, enum easing_t type, float t, float b, float c, f
         if (row >= N)                                       \
             return result;                                  \
         for (int i = 0; i < N; i++)                         \
-            result[i] = mat[row][i];                        \
+            result[i] = mat[i][row];                        \
         return result;                                      \
     }
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
-#endif // BLA_NO_MATRICES
+#endif // PAUL_MATH_NO_MATRICES
 
 #define X(N)                                                  \
     vec##N vec##N##_zero(void)                                \
@@ -1012,17 +1055,17 @@ __BLA_TYPES
     {                                                         \
         return a + t * (b - a);                               \
     }
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
 
-#ifndef BLA_NO_PRINT
+#ifndef PAUL_MATH_NO_PRINT
 #ifdef __cplusplus
-#define X(SZ) template<> void bla_print<vec##SZ>(const vec##SZ& data) { vec##N##_print(data); } 
-__BLA_TYPES
+#define X(SZ) template<> void bla_print<vec##SZ>(const vec##SZ& data) { vec##N##_print(data); }
+__PAUL_MATH_TYPES
 #undef X
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 #define X(SZ) template<> void bla_print<mat##SZ>(const mat##SZ& data) { mat##SZ##_print(data); }
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
 #endif
 #else
@@ -1031,12 +1074,12 @@ __BLA_TYPES
     {                               \
         printf("{ ");               \
         for (int i = 0; i < N; i++) \
-            printf("%f ", vec[i]);  \
+            printf("%.6f ", vec[i]);  \
         puts("}");                  \
     }
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
-#ifndef BLA_NO_MATRICES
+#ifndef PAUL_MATH_NO_MATRICES
 #define X(N)                                \
     void mat##N##_print(mat##N mat)         \
     {                                       \
@@ -1044,15 +1087,15 @@ __BLA_TYPES
         {                                   \
             printf("| ");                   \
             for (int y = 0; y < N; y++)     \
-                printf("%.2f ", mat[y][x]); \
+                printf("%.6f ", mat[x][y]); \
             printf("|\n");                  \
         }                                   \
     }
-__BLA_TYPES
+__PAUL_MATH_TYPES
 #undef X
-#endif // BLA_NO_MATRICES
+#endif // PAUL_MATH_NO_MATRICES
 #endif // __cplusplus
-#endif // BLA_NO_PRINT
+#endif // PAUL_MATH_NO_PRINT
 
 float vec2_angle(vec2 v1, vec2 v2) {
     return atan2(v2.y, v2.x) - atan2(v1.y, v1.x);
@@ -1180,6 +1223,7 @@ quat quat_to_from_vec3(vec3 from, vec3 to) {
     return vec4_normalize(Quat(cross.x, cross.y, cross.z, 1.f + vec3_dot(from, to)));
 }
 
+#ifndef PAUL_MATH_NO_MATRICES
 quat quat_from_mat4(mat4 mat) {
     float fourWSquaredMinus1 = mat[0][0] + mat[1][1] + mat[2][2];
     float fourXSquaredMinus1 = mat[0][0] - mat[1][1] - mat[2][2];
@@ -1213,32 +1257,33 @@ quat quat_from_mat4(mat4 mat) {
                 biggestVal
             };
             break;
-        case 1:
-            return (quat) {
+        case 1: // X is biggest
+            return (quat){
                 biggestVal,
-                (mat[1][0] + mat[0][1]) * mult,
+                (mat[2][1] - mat[1][2]) * mult,
                 (mat[0][2] + mat[2][0]) * mult,
-                (mat[2][1] - mat[1][2]) * mult
+                (mat[1][0] + mat[0][1]) * mult
             };
-        case 2:
-            return (quat) {
-                biggestVal,
+        case 2: // Y is biggest
+            return (quat){
                 (mat[1][0] + mat[0][1]) * mult,
-                (mat[0][2] + mat[2][0]) * mult,
-                (mat[2][1] - mat[1][2]) * mult
+                biggestVal,
+                (mat[2][1] - mat[1][2]) * mult,
+                (mat[0][2] + mat[2][0]) * mult
             };
-        case 3:
-            return (quat) {
-                biggestVal,
-                (mat[1][0] + mat[0][1]) * mult,
+        case 3: // Z is biggest
+            return (quat){
                 (mat[0][2] + mat[2][0]) * mult,
-                (mat[2][1] - mat[1][2]) * mult
+                (mat[2][1] - mat[1][2]) * mult,
+                biggestVal,
+                (mat[1][0] + mat[0][1]) * mult
             };
         default:
             return quat_zero();
     }
 }
 
+#ifndef
 vec3 vec3_unproject(vec3 source, mat4 projection, mat4 view) {
     quat p = quat_transform(Quat(source.x, source.y, source.z, 1.f), mat4_invert(view * projection));
     return Vec3(p.x / p.w,
@@ -1246,7 +1291,6 @@ vec3 vec3_unproject(vec3 source, mat4 projection, mat4 view) {
                 p.z / p.w);
 }
 
-#ifndef BLA_NO_MATRICES
 vec3 vec3_transform(vec3 v, mat4 mat) {
     return Vec3(mat[0][0] * v.x + mat[0][1] * v.y + mat[0][2] * v.z + mat[0][3],
                 mat[1][0] * v.x + mat[1][1] * v.y + mat[1][2] * v.z + mat[1][3],
@@ -1293,6 +1337,7 @@ quat quat_from_axis_angle(vec3 axis, float angle) {
                 axis.z * sinres,
                 cosres);
 }
+#endif // PAUL_MATH_NO_MATRICES
 
 void quat_to_axis_angle(quat q, vec3 *outAxis, float *outAngle) {
     if (fabs(q.w) > 1.f)
@@ -1300,7 +1345,7 @@ void quat_to_axis_angle(quat q, vec3 *outAxis, float *outAngle) {
     float resAngle = 2.f * acos(q.w);
     float den = sqrt(1.f - q.w * q.w);
     vec3 qxyz = Vec3(q.x, q.y, q.z);
-    vec3 resAxis = den > _EPSILON ? qxyz / den : Vec3(1.f, 0.f, 0.f);
+    vec3 resAxis = den > PAUL_MATH_FLOAT_EPSILON ? qxyz / den : Vec3(1.f, 0.f, 0.f);
     *outAxis = resAxis;
     *outAngle = resAngle;
 }
@@ -1394,7 +1439,7 @@ mat4 mat4_translate(vec3 v) {
 }
 
 mat4 mat4_rotate(vec3 axis, float angle) {
-    vec3 a = vec3_length_sqr(axis);
+    vec3 a = vec3_normalize(axis);
     float s = sin(angle);
     float c = cos(angle);
     float t = 1.f - c;
@@ -1438,7 +1483,7 @@ mat4 frustum(float left, float right, float bottom, float top, float near, float
 }
 
 mat4 perspective(float fovY, float aspect, float nearPlane, float farPlane) {
-    float top = nearPlane * tan(fovY * .5f);
+    float top = nearPlane * tan(fovY * 0.5f);
     float bottom = -top;
     float right = top * aspect;
     float left = -right;
@@ -1447,13 +1492,13 @@ mat4 perspective(float fovY, float aspect, float nearPlane, float farPlane) {
     float fn = farPlane - nearPlane;
 
     mat4 result = Mat4();
-    result[0][0] = (nearPlane * 2.f) / rl;
-    result[1][1] = (nearPlane * 2.f) / tb;
-    result[0][2] = (right + left) / rl;
-    result[1][2] = (top + bottom) / tb;
+    result[0][0] = (nearPlane * 2.0f) / rl;
+    result[1][1] = (nearPlane * 2.0f) / tb;
     result[2][2] = -(farPlane + nearPlane) / fn;
-    result[3][2] = -1.f;
-    result[2][3] = -(farPlane * nearPlane * 2.f) / fn;
+    result[3][2] = -1.0f;
+    result[2][3] = -(farPlane * nearPlane * 2.0f) / fn;
+    result[3][3] = 0.0f;  // Explicit for clarity
+
     return result;
 }
 
@@ -1463,13 +1508,13 @@ mat4 ortho(float left, float right, float bottom, float top, float nearPlane, fl
     float fn = farPlane - nearPlane;
 
     mat4 result = Mat4();
-    result[0][0] = 2.f / rl;
-    result[1][1] = 2.f / tb;
-    result[2][2] = -2.f / fn;
-    result[0][3] = -(left + right) / rl;
+    result[0][0] = 2.0f / rl;
+    result[1][1] = 2.0f / tb;
+    result[2][2] = -2.0f / fn;
+    result[0][3] = -(right + left) / rl;
     result[1][3] = -(top + bottom) / tb;
     result[2][3] = -(farPlane + nearPlane) / fn;
-    result[3][3] = 1.f;
+    result[3][3] = 1.0f;
     return result;
 }
 
@@ -1780,4 +1825,4 @@ float ease(enum easing_fn fn, enum easing_t type, float t, float b, float c, flo
             };
     }
 }
-#endif // BLA_IMPLEMENTATION
+#endif // PAUL_MATH_IMPLEMENTATION
