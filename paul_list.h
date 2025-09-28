@@ -275,24 +275,24 @@ extern "C" {
 #endif
 
 always_inline static inline void __list_growf(void **arr, int increment, int itemsize) {
-    int m = *arr ? 2 * __list_m(*arr) + increment : increment + 1;
-    void *p = (void*)realloc(*arr ? __list_raw(*arr) : 0, itemsize * m + sizeof(int) * 2);
+    int m = *arr ? 2 * __list_m__(*arr) + increment : increment + 1;
+    void *p = (void*)realloc(*arr ? __list_raw__(*arr) : 0, itemsize * m + sizeof(int) * 2);
     assert(p);
     if (p) {
         if (!*arr)
             ((int *)p)[1] = 0;
         *arr = (void*)((int*)p + 2);
-        __list_m(*arr) = m;
+        __list_m__(*arr) = m;
     }
 }
 
 always_inline static inline void __list_shrinkf(void **arr, int itemsize) {
-    int m = *arr ? __list_m(*arr) / 2 : 0;
-    void *p = (void*)realloc(*arr ? __list_raw(*arr) : 0, itemsize * m + sizeof(int) * 2);
+    int m = *arr ? __list_m__(*arr) / 2 : 0;
+    void *p = (void*)realloc(*arr ? __list_raw__(*arr) : 0, itemsize * m + sizeof(int) * 2);
     assert(p);
     if (p) {
         *arr = (void*)((int*)p + 2);
-        __list_m(*arr) = m;
+        __list_m__(*arr) = m;
     }
 }
 

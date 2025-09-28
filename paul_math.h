@@ -130,7 +130,7 @@ static inline template<typename T> to_radians(T degrees) {
 #else
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) ((a) > (b) ? (a) : (b))
-#define clamp     (value, minval, maxval) \
+#define clamp(value, minval, maxval) \
     ((value) < (minval) ? (minval) : ((value) > (maxval) ? (maxval) : (value)))
 
 #define to_degrees(radians) ((radians) * (180.f / _PI))
@@ -139,6 +139,7 @@ static inline template<typename T> to_radians(T degrees) {
 #define remap(x, in_min, in_max, out_min, out_max) \
     ((out_min) + ((x) - (in_min)) * ((out_max) - (out_min)) / ((in_max) - (in_min)))
 #endif // PAUL_NO_TYPEOF
+#endif
 
 #define bytes(n)         (n)
 #define kilobytes(n)     (n << 10)
@@ -160,8 +161,8 @@ static inline template<typename T> to_radians(T degrees) {
 #define weeks(n)         ((uint64_t)n * 604800000LL)
 
 #define __PAUL_MATH_TYPES \
-    X(2)            \
-    X(3)            \
+    X(2)                  \
+    X(3)                  \
     X(4)
 
 #ifdef __cplusplus
@@ -593,7 +594,7 @@ public:
     typedef float vec##SZ vector(SZ);
 __PAUL_MATH_TYPES
 #undef X
-#define X(N) \
+#define X(SZ) \
     typedef int vec##N##i vector(SZ);
 __PAUL_MATH_TYPES
 #undef X
@@ -708,7 +709,7 @@ public:
 #define _MATRIX(X, Y) __attribute__((matrix_type((X), (Y))))
 #define _MATRIX1(X) _MATRIX(X, X)
 #define _MATRIX2(X, Y) _MATRIX(X, Y)
-#define matrix(...) _WRAPPER(_MATRIX, __VA_ARGS__))
+#define matrix(...) _WRAPPER(_MATRIX, __VA_ARGS__)
 #define X(N) \
     typedef float mat##N##N matrix(N);
 __PAUL_MATH_TYPES

@@ -20,6 +20,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -36,6 +37,15 @@ extern "C" {
 #endif
 #endif
 
+/*!
+ @typedef entity_t
+ @field id The entity ID
+ @field version The version number
+ @field alive Whether the entity is alive
+ @field type The entity type
+ @field value The combined 64-bit value
+ @discussion Entity union representing ECS entities
+ */
 typedef union entity {
     struct {
         uint32_t id;
@@ -46,44 +56,203 @@ typedef union entity {
     uint64_t value;
 } entity_t;
 
+/*!
+ @const ecs_nil
+ @discussion Nil entity ID value
+ */
 extern const uint64_t ecs_nil;
+/*!
+ @const ecs_nil_entity
+ @discussion Nil entity value
+ */
 extern const entity_t ecs_nil_entity;
 
+/*!
+ @typedef world_t
+ @discussion ECS world structure
+ */
 typedef struct world world_t;
+
 #ifndef PAUL_NO_BLOCKS
 typedef void(^system_t)(entity_t);
 typedef int(^filter_system_t)(entity_t);
 #else
+/*!
+ @typedef system_t
+ @param entity The entity to process
+ @discussion System function type
+ */
 typedef void(*system_t)(entity_t);
+/*!
+ @typedef filter_system_t
+ @param entity The entity to filter
+ @return Returns non-zero if the entity matches the filter
+ @discussion Filter system function type
+ */
 typedef int(*filter_system_t)(entity_t);
 #endif
 
+/*!
+ @enum ECS entity types
+ @constant ECS_ENTITY Entity type
+ @constant ECS_COMPONENT Component type
+ @constant ECS_SYSTEM System type
+ */
 enum {
     ECS_ENTITY,
     ECS_COMPONENT,
     ECS_SYSTEM
 };
 
+/*!
+ @function ecs_world
+ @return Returns a new ECS world
+ @abstract Create a new ECS world
+ */
 world_t* ecs_world(void);
+/*!
+ @function ecs_world_destroy
+ @param world Pointer to the world to destroy
+ @abstract Destroy an ECS world
+ */
 void ecs_world_destroy(world_t **world);
 
+/*!
+ @function ecs_spawn
+ @param world The ECS world
+ @return Returns a new entity
+ @abstract Create a new entity
+ */
 entity_t ecs_spawn(world_t *world);
+/*!
+ @function ecs_component
+ @param world The ECS world
+ @param size_of_component Size of the component data
+ @return Returns a new component entity
+ @abstract Create a new component
+ */
 entity_t ecs_component(world_t *world, size_t size_of_component);
+/*!
+ @function ecs_system
+ @param world The ECS world
+ @param fn The system function
+ @param component_count Number of component types
+ @param ... Component types the system operates on
+ @return Returns a new system entity
+ @abstract Create a new system
+ */
 entity_t ecs_system(world_t *world, system_t fn, int component_count, ...);
+/*!
+ @function ecs_delete
+ @param world The ECS world
+ @param e The entity to delete
+ @abstract Delete an entity
+ */
 void ecs_delete(world_t *world, entity_t e);
 
+/*!
+ @function entity_isvalid
+ @param world The ECS world
+ @param e The entity to check
+ @return Returns non-zero if the entity is valid
+ @abstract Check if an entity is valid
+ */
 int entity_isvalid(world_t *world, entity_t e);
+/*!
+ @function entity_isa
+ @param world The ECS world
+ @param e The entity to check
+ @param type The type to check against
+ @return Returns non-zero if the entity is of the given type
+ @abstract Check if an entity is of a specific type
+ */
 int entity_isa(world_t *world, entity_t e, int type);
+/*!
+ @function entity_cmp
+ @param a First entity
+ @param b Second entity
+ @return Returns non-zero if entities are equal
+ @abstract Compare two entities
+ */
 int entity_cmp(entity_t a, entity_t b);
+/*!
+ @function entity_isnil
+ @param e The entity to check
+ @return Returns non-zero if the entity is nil
+ @abstract Check if an entity is nil
+ */
 int entity_isnil(entity_t e);
+/*!
+ @function entity_give
+ @param world The ECS world
+ @param e The entity
+ @param c The component
+ @return Returns a pointer to the component data
+ @abstract Give a component to an entity
+ */
 void* entity_give(world_t *world, entity_t e, entity_t c);
+/*!
+ @function entity_remove
+ @param world The ECS world
+ @param e The entity
+ @param c The component
+ @abstract Remove a component from an entity
+ */
 void entity_remove(world_t *world, entity_t e, entity_t c);
+/*!
+ @function entity_has
+ @param world The ECS world
+ @param e The entity
+ @param c The component
+ @return Returns non-zero if the entity has the component
+ @abstract Check if an entity has a component
+ */
 int entity_has(world_t *world, entity_t e, entity_t c);
+/*!
+ @function entity_get
+ @param world The ECS world
+ @param e The entity
+ @param c The component
+ @return Returns a pointer to the component data or NULL
+ @abstract Get component data from an entity
+ */
 void* entity_get(world_t *world, entity_t e, entity_t c);
+/*!
+ @function entity_set
+ @param world The ECS world
+ @param e The entity
+ @param c The component
+ @param data The data to set
+ @abstract Set component data for an entity
+ */
 void entity_set(world_t *world, entity_t e, entity_t c, void *data);
 
+/*!
+ @function ecs_step
+ @param world The ECS world
+ @abstract Execute all systems in the world
+ */
 void ecs_step(world_t *world);
+/*!
+ @function ecs_find
+ @param world The ECS world
+ @param filter Optional filter function
+ @param result_count Pointer to store the number of results
+ @param component_count Number of component types
+ @param ... Component types to match
+ @return Returns an array of matching entities
+ @abstract Find entities matching component requirements
+ */
 entity_t* ecs_find(world_t *world, filter_system_t filter, int *result_count, int component_count, ...);
+/*!
+ @function ecs_query
+ @param world The ECS world
+ @param fn The function to call for each matching entity
+ @param filter Optional filter function
+ @param component_count Number of component types
+ @param ... Component types to match
+ @abstract Query entities and execute a function on each
+ */
 void ecs_query(world_t *world, system_t fn, filter_system_t filter, int component_count, ...);
 
 #ifdef __cplusplus

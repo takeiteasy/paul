@@ -1,0 +1,3 @@
+tests/stubs linguist-vendored
+*.h linguist-language=C
+*.c linguist-language=C

@@ -45,7 +45,23 @@ extern "C" {
 #ifndef __has_include
 #define __has_include(x) _FORCE_INCLUDE
 #endif
+// NOTE: do NOT close the header guard here - the guard stays open until
+// the end of this file. The stray #endif above caused the header to be
+// prematurely terminated which led to incompatible linkage declarations.
 
+#if defined(__cplusplus)
+/* When compiling as C++, prefer <atomic> but provide simple non-atomic
+ * fallbacks so the header can be included in C++ translation units for
+ * build-only stubs. These fallbacks are intentionally non-atomic and
+ * only intended for compilation testing, not for production use. */
+#include <atomic>
+typedef bool atomic_bool;
+typedef size_t atomic_size_t;
+#define atomic_load(p) (*(p))
+#define atomic_fetch_add(p, v) ((*(p)) += (v))
+#define atomic_fetch_sub(p, v) ((*(p)) -= (v))
+#define atomic_store(p, v) ((*(p)) = (v))
+#else
 #if __STDC_VERSION__ >= 201112L && __has_include(<stdatomic.h>)
 #include <stdatomic.h>
 #else
@@ -56,7 +72,8 @@ extern "C" {
 #error paul_threads requires stdatomic.h or c89atomics.h
 #endif
 #endif
-// TODO: Wrapper macros for c89atomics here
+/* TODO: Wrapper macros for c89atomics here */
+#endif
 #endif
 
 #if !defined(__cplusplus) && (__STDC_VERSION__ < 201112L || _MSV_VER < 1800)
@@ -79,6 +96,9 @@ extern "C" {
 #endif
 #if defined(PAUL_THREADS_USE_NATIVE_CV) && (_WIN32_WINNT < 0x0600)
 #error Native conditional variables requires _WIN32_WINNT>=0x0600
+#endif
+#endif
+#endif
 
 #ifdef PAUL_THREADS_USE_NATIVE_CALL_ONCE
 #define ONCE_FLAG_INIT INIT_ONCE_STATIC_INIT
@@ -147,8 +167,8 @@ int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *attr);
 int pthread_cond_destroy(pthread_cond_t *cond);
 int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
 int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime);
-int pthread_cond_signal(thread_cond_t *cond);
-int pthread_cond_broadcast(thread_cond_t *cond);
+int pthread_cond_signal(pthread_cond_t *cond);
+int pthread_cond_broadcast(pthread_cond_t *cond);
 
 int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *attr);
 int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
@@ -168,7 +188,6 @@ int pthread_setspecific(pthread_key_t key, const void *value);
 #include <pthread.h>
 #endif
 
-#define ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #ifdef INIT_ONCE_STATIC_INIT
 #define TSS_DTOR_ITERATIONS PTHREAD_DESTRUCTOR_ITERATIONS
 #else
@@ -205,13 +224,13 @@ int cnd_broadcast(cnd_t *cond);
 void cnd_destroy(cnd_t *cond);
 int cnd_init(cnd_t *cond);
 int cnd_signal(cnd_t *cond);
-int cnd_timedwait(cnd_t *cond, mtx_t *mtx, const xtime *xt);
+int cnd_timedwait(cnd_t *cond, mtx_t *mtx, const struct timespec *xt);
 int cnd_wait(cnd_t *cond, mtx_t *mtx);
 
 void mtx_destroy(mtx_t *mtx);
 int mtx_init(mtx_t *mtx, int type);
 int mtx_lock(mtx_t *mtx);
-int mtx_timedlock(mtx_t *mtx, const xtime *xt);
+int mtx_timedlock(mtx_t *mtx, const struct timespec *xt);
 int mtx_trylock(mtx_t *mtx);
 int mtx_unlock(mtx_t *mtx);
 
@@ -221,27 +240,53 @@ int thrd_detach(thrd_t thr);
 int thrd_equal(thrd_t thr0, thrd_t thr1);
 void thrd_exit(int res);
 int thrd_join(thrd_t thr, int *res);
-void thrd_sleep(const timespec *xt);
+void thrd_sleep(const struct timespec *xt);
 void thrd_yield(void);
 
 int tss_create(tss_t *key, tss_dtor_t dtor);
 void tss_delete(tss_t key);
 void *tss_get(tss_t key);
 int tss_set(tss_t key, void *val);
-#endif
 
+/* Only define struct timespec if the platform hasn't already provided it. */
+#if !defined(_STRUCT_TIMESPEC) && !defined(__timespec_defined) && !defined(_TIMESPEC_DEFINED) && !defined(_TIMESPEC)
 struct timespec {
     long tv_sec;
     long tv_nsec;
 };
+#endif
 
-struct timespec thrd_timeout(unsigned int milliseconds);
+/*!
+ @function thrd_timeout_ms
+ @param milliseconds The number of milliseconds to add to the current time
+ @return Returns a timespec representing the absolute time now + milliseconds
+ @abstract Return an absolute timespec representing now + milliseconds
+ @discussion Named "thrd_timeout_ms" to avoid colliding with the enum identifier "thrd_timeout" used for return codes.
+ */
+struct timespec thrd_timeout_ms(unsigned int milliseconds);
 
+/*!
+ @typedef thrd_queue_node_t
+ @field data Pointer to the data stored in the node
+ @field next Pointer to the next node in the queue
+ @discussion Node structure for the thread-safe queue
+ */
 typedef struct thrd_queue_node {
     void *data;
     struct thrd_queue_node *next;
 } thrd_queue_node_t;
 
+/*!
+ @typedef thrd_queue_t
+ @field head Pointer to the head of the queue
+ @field tail Pointer to the tail of the queue
+ @field mutex Mutex for thread safety
+ @field not_empty Condition variable for waiting on empty queue
+ @field size Current number of items in the queue
+ @field max_size Maximum size of the queue
+ @field shutdown Flag indicating if the queue is shutting down
+ @discussion Thread-safe queue structure
+ */
 typedef struct thrd_queue {
     thrd_queue_node_t *head;
     thrd_queue_node_t *tail;
@@ -252,15 +297,121 @@ typedef struct thrd_queue {
     bool shutdown;
 } thrd_queue_t;
 
+/*!
+ @function thrd_queue_init
+ @param queue Pointer to the queue to initialize
+ @param max_size Maximum size of the queue
+ @return Returns thrd_success on success, thrd_error on failure
+ @abstract Initialize a thread-safe queue
+ */
 int thrd_queue_init(thrd_queue_t *queue, size_t max_size);
+/*!
+ @function thrd_queue_destroy
+ @param queue Pointer to the queue to destroy
+ @abstract Destroy a thread-safe queue
+ */
 void thrd_queue_destroy(thrd_queue_t *queue);
+/*!
+ @function thrd_queue_enqueue
+ @param queue Pointer to the queue
+ @param data Pointer to the data to enqueue
+ @return Returns thrd_success on success, thrd_error on failure, thrd_busy if queue is full
+ @abstract Enqueue data into the thread-safe queue
+ */
 int thrd_queue_enqueue(thrd_queue_t *queue, void *data);
+/*!
+ @function thrd_queue_dequeue
+ @param queue Pointer to the queue
+ @param data Pointer to a pointer to receive the dequeued data
+ @return Returns thrd_success on success, thrd_error on failure
+ @abstract Dequeue data from the thread-safe queue, blocking if empty
+ */
 int thrd_queue_dequeue(thrd_queue_t *queue, void **data);
+/*!
+ @function thrd_queue_try_dequeue
+ @param queue Pointer to the queue
+ @param data Pointer to a pointer to receive the dequeued data
+ @return Returns thrd_success on success, thrd_busy if empty, thrd_error on failure
+ @abstract Try to dequeue data from the thread-safe queue without blocking
+ */
 int thrd_queue_try_dequeue(thrd_queue_t *queue, void **data);
+/*!
+ @function thrd_queue_size
+ @param queue Pointer to the queue
+ @return Returns the current number of items in the queue
+ @abstract Get the size of the thread-safe queue
+ */
 size_t thrd_queue_size(thrd_queue_t *queue);
+/*!
+ @function thrd_queue_empty
+ @param queue Pointer to the queue
+ @return Returns true if the queue is empty, false otherwise
+ @abstract Check if the thread-safe queue is empty
+ */
 bool thrd_queue_empty(thrd_queue_t *queue);
+/*!
+ @function thrd_queue_shutdown
+ @param queue Pointer to the queue
+ @abstract Shutdown the thread-safe queue
+ */
 void thrd_queue_shutdown(thrd_queue_t *queue);
 
+/*!
+ @typedef job_t
+ @field function Pointer to the function to execute
+ @field arg Argument to pass to the function
+ @field cleanup Optional cleanup function
+ @discussion Job structure for thread pool tasks
+ */
+typedef struct job {
+    void (*function)(void *arg);
+    void *arg;
+    void (*cleanup)(void *arg); // Optional cleanup function
+} job_t;
+
+/*!
+ @typedef job_node_t
+ @field job The job contained in this node
+ @field next Pointer to the next node
+ @discussion Node structure for the job queue
+ */
+typedef struct job_node {
+    job_t job;
+    struct job_node *next;
+} job_node_t;
+
+/*!
+ @typedef job_queue_t
+ @field head Pointer to the head of the job queue
+ @field tail Pointer to the tail of the job queue
+ @field mutex Mutex for thread safety
+ @field not_empty Condition variable for waiting on empty queue
+ @field size Current number of jobs in the queue
+ @field max_size Maximum size of the queue
+ @field shutdown Flag indicating if the queue is shutting down
+ @discussion Job queue structure for thread pool
+ */
+typedef struct job_queue {
+    job_node_t *head;
+    job_node_t *tail;
+    mtx_t mutex;
+    cnd_t not_empty;
+    size_t size;
+    size_t max_size;
+    bool shutdown;
+} job_queue_t;
+
+/*!
+ @typedef thrd_pool_t
+ @field threads Array of worker threads
+ @field num_threads Number of worker threads
+ @field job_queue The job queue
+ @field shutdown Atomic flag indicating if the pool is shutting down
+ @field active_threads Atomic count of active threads
+ @field pool_mutex Mutex for pool operations
+ @field all_threads_idle Condition variable for waiting on all threads idle
+ @discussion Thread pool structure
+ */
 typedef struct {
     thrd_t *threads;
     size_t num_threads;
@@ -271,12 +422,56 @@ typedef struct {
     cnd_t all_threads_idle;
 } thrd_pool_t;
 
+/*!
+ @function thrd_pool_create
+ @param num_threads Number of worker threads
+ @param max_queue_size Maximum size of the job queue
+ @return Returns a pointer to the created thread pool, or NULL on failure
+ @abstract Create a thread pool
+ */
 thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size);
+/*!
+ @function thrd_pool_submit
+ @param pool Pointer to the thread pool
+ @param function Pointer to the function to execute
+ @param arg Argument to pass to the function
+ @param cleanup Optional cleanup function
+ @return Returns thrd_success on success, thrd_error on failure
+ @abstract Submit a job to the thread pool
+ */
 int thrd_pool_submit(thrd_pool_t *pool, void (*function)(void*), void *arg, void (*cleanup)(void*));
+/*!
+ @function thrd_pool_wait
+ @param pool Pointer to the thread pool
+ @abstract Wait for all jobs in the thread pool to complete
+ */
 void thrd_pool_wait(thrd_pool_t *pool);
+/*!
+ @function thrd_pool_destroy
+ @param pool Pointer to the thread pool
+ @abstract Destroy the thread pool
+ */
 void thrd_pool_destroy(thrd_pool_t *pool);
+/*!
+ @function thrd_pool_get_thread_count
+ @param pool Pointer to the thread pool
+ @return Returns the number of threads in the pool
+ @abstract Get the number of threads in the thread pool
+ */
 size_t thrd_pool_get_thread_count(thrd_pool_t *pool);
+/*!
+ @function thrd_pool_get_active_count
+ @param pool Pointer to the thread pool
+ @return Returns the number of active threads
+ @abstract Get the number of active threads in the thread pool
+ */
 size_t thrd_pool_get_active_count(thrd_pool_t *pool);
+/*!
+ @function thrd_pool_get_queue_size
+ @param pool Pointer to the thread pool
+ @return Returns the size of the job queue
+ @abstract Get the size of the job queue in the thread pool
+ */
 size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
 
 #ifdef __cplusplus
@@ -609,7 +804,7 @@ int pthread_setspecific(pthread_key_t key, const void *value) {
 #include <sched.h>
 #endif // !_PAUL_THREADS_PLATFORM_WINDOWS
 
-#if !defined(__CYGWIN__) || defined(__APPLE__)
+#if !defined(__CYGWIN__) && !defined(__APPLE__)
 #define EMULATED_THREADS_USE_NATIVE_TIMEDLOCK
 #endif
 
@@ -660,7 +855,7 @@ int cnd_signal(cnd_t *cond) {
     return thrd_success;
 }
 
-int cnd_timedwait(cnd_t *cond, mtx_t *mtx, const timespec *xt) {
+int cnd_timedwait(cnd_t *cond, mtx_t *mtx, const struct timespec *xt) {
     struct timespec abs_time;
     int rt;
     if (!cond || !mtx || !xt)
@@ -712,9 +907,9 @@ int mtx_lock(mtx_t *mtx) {
     return thrd_success;
 }
 
-int mtx_timedlock(mtx_t *mtx, const timespec *xt) {
+int mtx_timedlock(mtx_t *mtx, const struct timespec *xt) {
     if (!mtx || !xt)
-        return thrd_error; {
+        return thrd_error;
 #ifdef EMULATED_THREADS_USE_NATIVE_TIMEDLOCK
     struct timespec ts;
     int rt;
@@ -793,7 +988,7 @@ int thrd_join(thrd_t thr, int *res) {
     return thrd_success;
 }
 
-void thrd_sleep(const timespec *xt) {
+void thrd_sleep(const struct timespec *xt) {
     assert(xt);
 #ifdef _PAUL_THREADS_PLATFORM_WINDOWS
     Sleep(timespec2ms(xt));
@@ -801,7 +996,7 @@ void thrd_sleep(const timespec *xt) {
     struct timespec req;
     req.tv_sec = xt->tv_sec;
     req.tv_nsec = xt->tv_nsec;
-    nanosleep(&req, NULL);
+    nanosleep((const struct timespec*)&req, NULL);
 #endif
 }
 
@@ -899,7 +1094,7 @@ int thrd_queue_enqueue(thrd_queue_t *queue, void *data) {
 
     if (queue->tail)
         queue->tail->next = new_node;
-    } else
+    else
         queue->head = new_node;
 
     queue->tail = new_node;
@@ -980,9 +1175,9 @@ void thrd_queue_shutdown(thrd_queue_t *queue) {
     queue->shutdown = true;
     mtx_unlock(&queue->mutex);
     cnd_broadcast(&queue->not_empty);
-}
+}
 
-typedef struct {
+typedef struct job {
     void (*function)(void *arg);
     void *arg;
     void (*cleanup)(void *arg); // Optional cleanup function
@@ -993,7 +1188,7 @@ typedef struct job_node {
     struct job_node *next;
 } job_node_t;
 
-typedef struct {
+typedef struct job_queue {
     job_node_t *head;
     job_node_t *tail;
     mtx_t mutex;
@@ -1146,7 +1341,7 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size) {
     if (!pool)
         return NULL;
 
-    pool->threads = (thrd_pool_t*)malloc(sizeof(thrd_t) * num_threads);
+    pool->threads = (thrd_t*)malloc(sizeof(thrd_t) * num_threads);
     if (!pool->threads) {
         free(pool);
         return NULL;

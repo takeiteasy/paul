@@ -874,6 +874,28 @@ bool image_draw_circle(image_t img, int xc, int yc, int r, color_t color, int fi
 bool image_draw_rectangle(image_t img, int x, int y, int w, int h, color_t color, int fill);
 bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, int y2, color_t color, int fill);
 
+// Data format enumeration for image_load function
+typedef enum {
+    IMAGE_FORMAT_RGBA,          // 4 bytes per pixel: R, G, B, A
+    IMAGE_FORMAT_RGB,           // 3 bytes per pixel: R, G, B (alpha = 255)
+    IMAGE_FORMAT_BGRA,          // 4 bytes per pixel: B, G, R, A
+    IMAGE_FORMAT_BGR,           // 3 bytes per pixel: B, G, R (alpha = 255)
+    IMAGE_FORMAT_ARGB,          // 4 bytes per pixel: A, R, G, B
+    IMAGE_FORMAT_ABGR,          // 4 bytes per pixel: A, B, G, R
+    IMAGE_FORMAT_GRAY,          // 1 byte per pixel: grayscale (alpha = 255)
+    IMAGE_FORMAT_GRAY_ALPHA,    // 2 bytes per pixel: grayscale, alpha
+    IMAGE_FORMAT_RGB565,        // 2 bytes per pixel: 5-bit R, 6-bit G, 5-bit B (alpha = 255)
+    IMAGE_FORMAT_RGB555,        // 2 bytes per pixel: 5-bit R, 5-bit G, 5-bit B (alpha = 255)
+    IMAGE_FORMAT_ARGB1555       // 2 bytes per pixel: 1-bit A, 5-bit R, 5-bit G, 5-bit B
+} image_format_t;
+
+// Load image from raw pixel data with specified format
+// Example usage:
+//   uint8_t rgb_data[] = {255, 0, 0, 0, 255, 0, 0, 0, 255}; // Red, Green, Blue pixels
+//   image_t img = image_load(rgb_data, 3, 1, IMAGE_FORMAT_RGB);
+//   // Creates a 3x1 image with red, green, blue pixels
+image_t image_load(const void* data, int width, int height, image_format_t format);
+
 #ifdef __cplusplus
 }
 #endif
@@ -2912,7 +2934,7 @@ image_t image_empty(unsigned int w, unsigned int h, color_t color) {
 }
 
 static uint32_t* _raw(image_t img) {
-    return img ? NULL : (uint32_t *)(img)-2;
+    return img ? (uint32_t*)(img) - 2 : NULL;
 }
 
 void image_destroy(image_t img) {
@@ -3412,15 +3434,24 @@ bool image_draw_triangle(image_t img, int x0, int y0, int x1, int y1, int x2, in
 }
 
 color_t image_dominant_color(const image_t img) {
+    if (!img)
+        return _black;
+    
+    int w, h;
+    image_size(img, &w, &h);
+    int count = w * h;
+    if (count <= 0)
+        return _black;
+    
     int max_count = 0;
     int dominant_index = -1;
     // Simple O(n²) approach - for better performance with large arrays,
     // consider using a hash table or sorting approach
     for (int i = 0; i < count; i++) {
         int current_count = 0;
-        // Count occurrences of pixels[i]
+        // Count occurrences of img[i]
         for (int j = 0; j < count; j++)
-            if (pixels[i].rgba == pixels[j].rgba)
+            if (img[i].rgba == img[j].rgba)
                 current_count++;
         if (current_count > max_count) {
             max_count = current_count;
@@ -3431,27 +3462,27 @@ color_t image_dominant_color(const image_t img) {
 }
 
 int* image_histogram(const image_t img) {
-    color_t *histogram = (color_t*)malloc(0);
-    int unique_count = 0;
-    for (int i = 0; i < count; i++) {
-        int found_index = -1;
-        for (int j = 0; j < unique_count; j++) {
-            if (histogram[j].rgba == pixels[i].rgba) {
-                found_index = j;
-                break;
-            }
-        }
-        if (found_index == -1) {
-            histogram = (color_t*)realloc(histogram, (unique_count + 1) * sizeof(color_t));
-            histogram[unique_count] = pixels[i];
-            unique_count++;
-        } else
-            histogram[found_index]++;
-    }
-    if (unique_count == 0) {
-        free(histogram);
+    if (!img)
         return NULL;
+    
+    int w, h;
+    image_size(img, &w, &h);
+    int count = w * h;
+    if (count <= 0)
+        return NULL;
+    
+    // Create a simple histogram array for each possible RGB value
+    // This is a simplified version - a real histogram might be more complex
+    int* histogram = (int*)calloc(256 * 3, sizeof(int)); // R, G, B histograms
+    if (!histogram)
+        return NULL;
+    
+    for (int i = 0; i < count; i++) {
+        histogram[img[i].r]++;                    // Red histogram
+        histogram[256 + img[i].g]++;              // Green histogram  
+        histogram[512 + img[i].b]++;              // Blue histogram
     }
+    
     return histogram;
 }
 
@@ -3459,15 +3490,24 @@ color_t* image_palette(const image_t img, int count) {
     if (!img || count <= 0)
         return NULL;
 
+    int w, h;
+    image_size(img, &w, &h);
+    size_t img_size = w * h;
+    if (img_size <= 0)
+        return NULL;
+    
     color_t *palette = (color_t*)malloc(count * sizeof(color_t));
-    size_t img_size = image_width(img) * image_height(img);
+    if (!palette)
+        return NULL;
+    
     if (count > img_size) {
         for (int i = 0; i < count; i++)
             palette[i] = i >= img_size ? _black : img[i];
         return palette;
-    } else
+    } else {
         for (int i = 0; i < count; i++)
-            palette[i] = pixels[i * img_size / count];
+            palette[i] = img[i * img_size / count];
+    }
 
     // K-means iterations
     for (int iter = 0; iter < 10; iter++) {
@@ -3483,10 +3523,10 @@ color_t* image_palette(const image_t img, int count) {
         // Assign each pixel to nearest palette color
         for (int p = 0; p < img_size; p++) {
             int closest_idx = 0;
-            float min_distance = color_distance(pixels[p], palette[0]);
+            float min_distance = color_distance(img[p], palette[0]);
 
             for (int i = 1; i < count; i++) {
-                float distance = color_distance(pixels[p], palette[i]);
+                float distance = color_distance(img[p], palette[i]);
                 if (distance < min_distance) {
                     min_distance = distance;
                     closest_idx = i;
@@ -3494,10 +3534,10 @@ color_t* image_palette(const image_t img, int count) {
             }
 
             // Add pixel to cluster
-            cluster_r[closest_idx] += pixels[p].r;
-            cluster_g[closest_idx] += pixels[p].g;
-            cluster_b[closest_idx] += pixels[p].b;
-            cluster_a[closest_idx] += pixels[p].a;
+            cluster_r[closest_idx] += img[p].r;
+            cluster_g[closest_idx] += img[p].g;
+            cluster_b[closest_idx] += img[p].b;
+            cluster_a[closest_idx] += img[p].a;
             cluster_count[closest_idx]++;
         }
 
@@ -3527,5 +3567,133 @@ color_t* image_palette(const image_t img, int count) {
     }
 
     return palette;
+}
+
+// Load image from raw pixel data with specified format
+image_t image_load(const void* data, int width, int height, image_format_t format) {
+    if (!data || width <= 0 || height <= 0)
+        return NULL;
+    
+    image_t img = image_make(width, height);
+    if (!img)
+        return NULL;
+    
+    const uint8_t* src = (const uint8_t*)data;
+    
+    for (int y = 0; y < height; y++) 
+        for (int x = 0; x < width; x++) {
+            color_t pixel = {0, 0, 0, 255}; // Default: black with full alpha
+            switch (format) {
+                case IMAGE_FORMAT_RGBA:
+                    pixel.r = *src++;
+                    pixel.g = *src++;
+                    pixel.b = *src++;
+                    pixel.a = *src++;
+                    break;
+                case IMAGE_FORMAT_RGB:
+                    pixel.r = *src++;
+                    pixel.g = *src++;
+                    pixel.b = *src++;
+                    pixel.a = 255;
+                    break;
+                case IMAGE_FORMAT_BGRA:
+                    pixel.b = *src++;
+                    pixel.g = *src++;
+                    pixel.r = *src++;
+                    pixel.a = *src++;
+                    break;
+                case IMAGE_FORMAT_BGR:
+                    pixel.b = *src++;
+                    pixel.g = *src++;
+                    pixel.r = *src++;
+                    pixel.a = 255;
+                    break;
+                case IMAGE_FORMAT_ARGB:
+                    pixel.a = *src++;
+                    pixel.r = *src++;
+                    pixel.g = *src++;
+                    pixel.b = *src++;
+                    break;
+                case IMAGE_FORMAT_ABGR:
+                    pixel.a = *src++;
+                    pixel.b = *src++;
+                    pixel.g = *src++;
+                    pixel.r = *src++;
+                    break;
+                case IMAGE_FORMAT_GRAY: {
+                    uint8_t gray = *src++;
+                    pixel.r = gray;
+                    pixel.g = gray;
+                    pixel.b = gray;
+                    pixel.a = 255;
+                    break;
+                }
+                case IMAGE_FORMAT_GRAY_ALPHA: {
+                    uint8_t gray = *src++;
+                    pixel.r = gray;
+                    pixel.g = gray;
+                    pixel.b = gray;
+                    pixel.a = *src++;
+                    break;
+                }
+                case IMAGE_FORMAT_RGB565: {
+                    uint16_t rgb565 = *(const uint16_t*)src;
+                    src += 2;
+                    
+                    // Extract 5-6-5 components
+                    uint8_t r5 = (rgb565 >> 11) & 0x1F;
+                    uint8_t g6 = (rgb565 >> 5) & 0x3F;
+                    uint8_t b5 = rgb565 & 0x1F;
+                    
+                    // Scale to 8-bit
+                    pixel.r = (r5 << 3) | (r5 >> 2);
+                    pixel.g = (g6 << 2) | (g6 >> 4);
+                    pixel.b = (b5 << 3) | (b5 >> 2);
+                    pixel.a = 255;
+                    break;
+                }
+                case IMAGE_FORMAT_RGB555: {
+                    uint16_t rgb555 = *(const uint16_t*)src;
+                    src += 2;
+                    
+                    // Extract 5-5-5 components
+                    uint8_t r5 = (rgb555 >> 10) & 0x1F;
+                    uint8_t g5 = (rgb555 >> 5) & 0x1F;
+                    uint8_t b5 = rgb555 & 0x1F;
+                    
+                    // Scale to 8-bit
+                    pixel.r = (r5 << 3) | (r5 >> 2);
+                    pixel.g = (g5 << 3) | (g5 >> 2);
+                    pixel.b = (b5 << 3) | (b5 >> 2);
+                    pixel.a = 255;
+                    break;
+                }
+                case IMAGE_FORMAT_ARGB1555: {
+                    uint16_t argb1555 = *(const uint16_t*)src;
+                    src += 2;
+                    
+                    // Extract 1-5-5-5 components
+                    uint8_t a1 = (argb1555 >> 15) & 0x1;
+                    uint8_t r5 = (argb1555 >> 10) & 0x1F;
+                    uint8_t g5 = (argb1555 >> 5) & 0x1F;
+                    uint8_t b5 = argb1555 & 0x1F;
+                    
+                    // Scale to 8-bit
+                    pixel.r = (r5 << 3) | (r5 >> 2);
+                    pixel.g = (g5 << 3) | (g5 >> 2);
+                    pixel.b = (b5 << 3) | (b5 >> 2);
+                    pixel.a = a1 ? 255 : 0;
+                    break;
+                }
+                default:
+                    // Unknown format, fill with black
+                    pixel.r = pixel.g = pixel.b = 0;
+                    pixel.a = 255;
+                    break;
+            }
+            image_pset(img, x, y, pixel);
+        }
+    
+    return img;
 }
 #endif

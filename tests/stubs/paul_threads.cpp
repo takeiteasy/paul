@@ -1,0 +1,4 @@
+#define PAUL_THREADS_IMPLEMENTATION
+#include "../../paul_threads.h"
+
+int main() { return 0; }
