@@ -19,7 +19,7 @@
  @header paul_random.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
- @abstract Random number generation and noise functions for C/C++.
+ @brief Random number generation and noise functions for C/C++.
  @discussion
     Implementation is included when PAUL_RANDOM_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
  */
@@ -42,7 +42,7 @@ extern "C" {
 
 /*!
  @typedef rng_t
- @abstract Random number generator state structure.
+ @brief Random number generator state structure.
  @field s State array for the PRNG.
  @field i Current index in the state array.
  @field c Counter for refill cycles.
@@ -54,16 +54,16 @@ typedef struct rng {
 } rng_t;
 
 /*!
- @function rng_init
- @abstract Initializes the random number generator with a seed.
+ @function rnd_seed
+ @brief Initializes the random number generator with a seed.
  @param rng Pointer to the rng_t structure to initialize.
  @param seed The seed value for the generator.
  */
-void rng_init(rng_t *rng, uint64_t seed);
+void rnd_seed(rng_t *rng, uint64_t seed);
 
 /*!
  @function rnd_randi
- @abstract Generates a random 64-bit unsigned integer.
+ @brief Generates a random 64-bit unsigned integer.
  @param rng Pointer to the initialized rng_t structure.
  @return A random uint64_t value.
  */
@@ -71,7 +71,7 @@ uint64_t rnd_randi(rng_t *rng);
 
 /*!
  @function rnd_randf
- @abstract Generates a random float between 0.0 and 1.0.
+ @brief Generates a random float between 0.0 and 1.0.
  @param rng Pointer to the initialized rng_t structure.
  @return A random float value in [0.0, 1.0).
  */
@@ -79,7 +79,7 @@ float rnd_randf(rng_t *rng);
 
 /*!
  @function rnd_randi_range
- @abstract Generates a random integer within a specified range.
+ @brief Generates a random integer within a specified range.
  @param rng Pointer to the initialized rng_t structure.
  @param min The minimum value (inclusive).
  @param max The maximum value (inclusive).
@@ -89,17 +89,135 @@ int rnd_randi_range(rng_t *rng, int min, int max);
 
 /*!
  @function rnd_randf_range
- @abstract Generates a random float within a specified range.
+ @brief Generates a random float within a specified range.
  @param rng Pointer to the initialized rng_t structure.
  @param min The minimum value (inclusive).
  @param max The maximum value (inclusive).
  @return A random float value between min and max.
  */
 float rnd_randf_range(rng_t *rng, float min, float max);
+/* Generic callback types for list-agnostic operations */
+typedef double (*rnd_weight_fn_t)(size_t idx, void *user_data);
+typedef void (*rnd_swap_fn_t)(size_t a, size_t b, void *user_data);
+
+/*!
+ @function rnd_reseed_from_entropy
+ @brief Reseed the RNG from OS-provided entropy.
+ @param rng Pointer to the rng_t to reseed.
+ @return Non-zero on success, zero on failure.
+ */
+int rnd_reseed_from_entropy(rng_t *rng);
+
+/*!
+ @function rnd_randf_signed
+ @brief Generates a uniformly-distributed float in [-1.0, 1.0).
+ @param rng Pointer to the initialized rng_t structure.
+ @return A random float in [-1, 1).
+ */
+float rnd_randf_signed(rng_t *rng);
+
+/*!
+ @function rnd_randi_range64
+ @brief Generates a uniform 64-bit integer in the inclusive range [min, max].
+ @param rng Pointer to the initialized rng_t structure.
+ @param min Minimum value (inclusive).
+ @param max Maximum value (inclusive).
+ @return A random uint64_t in [min, max]. If min >= max returns min.
+ */
+uint64_t rnd_randi_range64(rng_t *rng, uint64_t min, uint64_t max);
+
+/*!
+ @function rnd_normal
+ @brief Generates a normally-distributed random value using Box–Muller.
+ @param rng Pointer to the initialized rng_t structure.
+ @param mean Desired mean of the distribution.
+ @param stddev Desired standard deviation of the distribution.
+ @return A random float approximately distributed N(mean, stddev^2).
+ */
+float rnd_normal(rng_t *rng, float mean, float stddev);
+
+/*!
+ @function rnd_exponential
+ @brief Samples the exponential distribution with rate parameter lambda.
+ @param rng Pointer to the initialized rng_t structure.
+ @param lambda Rate parameter (lambda > 0).
+ @return A random float sampled from Exp(lambda).
+ */
+float rnd_exponential(rng_t *rng, float lambda);
+
+/*!
+ @function rnd_weighted_choice
+ @brief Choose an index from an abstract list using a user-supplied weight callback.
+ @param rng Pointer to the initialized rng_t structure.
+ @param n Number of items to choose from.
+ @param weight_fn Callback returning a non-negative weight for a given index.
+ @param user_data User data passed to weight_fn.
+ @return Chosen index in [0,n-1] or -1 on error (e.g., zero total weight).
+ */
+int rnd_weighted_choice(rng_t *rng, size_t n, rnd_weight_fn_t weight_fn, void *user_data);
+
+/*!
+ @function rnd_weighted_choice_array
+ @brief Choose an index from a contiguous float weight array.
+ @param rng Pointer to the initialized rng_t structure.
+ @param weights Array of non-negative weights (length n).
+ @param n Number of weights.
+ @return Chosen index in [0,n-1] or -1 on error.
+ */
+int rnd_weighted_choice_array(rng_t *rng, const float *weights, size_t n);
+
+/*!
+ @function rnd_shuffle_cb
+ @brief In-place Fisher–Yates shuffle for an abstract container using a swap callback.
+ @param rng Pointer to the initialized rng_t structure.
+ @param element_count Number of elements in the container.
+ @param swap_fn Callback to swap two indices in the container.
+ @param user_data User data passed to swap_fn.
+ */
+void rnd_shuffle_cb(rng_t *rng, size_t element_count, rnd_swap_fn_t swap_fn, void *user_data);
+
+/*!
+ @function rnd_shuffle
+ @brief In-place Fisher–Yates shuffle for a contiguous array.
+ @param rng Pointer to the initialized rng_t structure.
+ @param array Pointer to the array buffer.
+ @param element_count Number of elements in the array.
+ @param element_size Size in bytes of each element.
+ */
+void rnd_shuffle(rng_t *rng, void *array, size_t element_count, size_t element_size);
+
+/*!
+ @function rnd_permutation
+ @brief Fill a buffer with a random permutation of [0..n-1].
+ @param rng Pointer to the initialized rng_t structure.
+ @param out_perm Pointer to a buffer of uint32_t with length >= n.
+ @param n Number of elements in the permutation.
+ */
+void rnd_permutation(rng_t *rng, uint32_t *out_perm, size_t n);
+
+/*!
+ @function smoothstepf
+ @brief Smooth Hermite interpolation between 0 and 1.
+ @param edge0 Lower edge.
+ @param edge1 Upper edge.
+ @param t Input value.
+ @return Interpolated value in [0,1].
+ */
+float smoothstepf(float edge0, float edge1, float t);
+
+/*!
+ @function smootherstepf
+ @brief Higher-order smooth interpolation (smoothstep with zero derivatives at edges).
+ @param edge0 Lower edge.
+ @param edge1 Upper edge.
+ @param t Input value.
+ @return Interpolated value in [0,1].
+ */
+float smootherstepf(float edge0, float edge1, float t);
 
 /*!
  @function cellular_automata
- @abstract Generates a cellular automata pattern.
+ @brief Generates a cellular automata pattern.
  @param rng Pointer to the initialized rng_t structure.
  @param width Width of the grid.
  @param height Height of the grid.
@@ -117,7 +235,7 @@ void cellular_automata(rng_t *rng,
 
 /*!
  @typedef noise_fn_t
- @abstract Function pointer type for noise functions.
+ @brief Function pointer type for noise functions.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -127,7 +245,7 @@ typedef float(*noise_fn_t)(float, float, float);
 
 /*!
  @function perlin_noise
- @abstract Computes Perlin noise at the given coordinates.
+ @brief Computes Perlin noise at the given coordinates.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -137,7 +255,7 @@ float perlin_noise(float x, float y, float z);
 
 /*!
  @function simplex_noise
- @abstract Computes Simplex noise at the given coordinates.
+ @brief Computes Simplex noise at the given coordinates.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -147,7 +265,7 @@ float simplex_noise(float x, float y, float z);
 
 /*!
  @function worley_noise
- @abstract Computes Worley (cellular) noise at the given coordinates.
+ @brief Computes Worley (cellular) noise at the given coordinates.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -157,7 +275,7 @@ float worley_noise(float x, float y, float z);
 
 /*!
  @function value_noise
- @abstract Computes value noise at the given coordinates.
+ @brief Computes value noise at the given coordinates.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -167,7 +285,7 @@ float value_noise(float x, float y, float z);
 
 /*!
  @function white_noise
- @abstract Computes white noise at the given coordinates.
+ @brief Computes white noise at the given coordinates.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -177,7 +295,7 @@ float white_noise(float x, float y, float z);
 
 /*!
  @function fbm
- @abstract Computes fractal Brownian motion noise.
+ @brief Computes fractal Brownian motion noise.
  @param x X coordinate.
  @param y Y coordinate.
  @param z Z coordinate.
@@ -193,7 +311,7 @@ float fbm(float x, float y, float z,
 
 /*!
  @function fbm2D
- @abstract Generates a 2D fractal Brownian motion noise map.
+ @brief Generates a 2D fractal Brownian motion noise map.
  @param width Width of the output map.
  @param height Height of the output map.
  @param z Z coordinate (fixed for 2D slice).
@@ -213,7 +331,7 @@ void fbm2D(unsigned int width, unsigned int height, float z,
 
 /*!
  @function fbm3D
- @abstract Generates a 3D fractal Brownian motion noise volume.
+ @brief Generates a 3D fractal Brownian motion noise volume.
  @param width Width of the output volume.
  @param height Height of the output volume.
  @param depth Depth of the output volume.
@@ -232,9 +350,71 @@ void fbm3D(unsigned int width, unsigned int height, unsigned int depth,
            float scale, float lacunarity, float gain, int octaves,
            noise_fn_t noise_fn, uint8_t* dst);
 
+           /*!
+ @function turbulence
+ @brief Turbulence-style noise (sum of absolute-valued octaves) built from a base noise function.
+ @param x X coordinate.
+ @param y Y coordinate.
+ @param z Z coordinate.
+ @param lacunarity Frequency multiplier.
+ @param gain Amplitude multiplier.
+ @param octaves Number of octaves.
+ @param noise_fn Base noise function pointer.
+ @return Turbulence noise value.
+ */
+float turbulence(float x, float y, float z, float lacunarity, float gain, int octaves, noise_fn_t noise_fn);
+
+/*!
+ @function ridged_multifractal
+ @brief Ridged multifractal noise built from a base noise function.
+ @param x X coordinate.
+ @param y Y coordinate.
+ @param z Z coordinate.
+ @param lacunarity Frequency multiplier.
+ @param gain Amplitude multiplier.
+ @param octaves Number of octaves.
+ @param noise_fn Base noise function pointer.
+ @return Ridged multifractal value.
+ */
+float ridged_multifractal(float x, float y, float z, float lacunarity, float gain, int octaves, noise_fn_t noise_fn);
+
+/*!
+ @function noise_tileable2D
+ @brief Produce tileable 2D noise by mapping coordinates onto a torus.
+ @param x X coordinate.
+ @param y Y coordinate.
+ @param width Tile width.
+ @param height Tile height.
+ @param noise_fn Base noise function pointer.
+ @return Tileable noise value.
+ */
+float noise_tileable2D(float x, float y, float width, float height, noise_fn_t noise_fn);
+
+/*!
+ @function noise_curl3D
+ @brief Numerically compute the curl of a vector field derived from noise samples.
+ @param x X coordinate.
+ @param y Y coordinate.
+ @param z Z coordinate.
+ @param eps Small epsilon for finite differences.
+ @param noise_fn Base noise function pointer.
+ @param out_x Pointer to receive X component of curl.
+ @param out_y Pointer to receive Y component of curl.
+ @param out_z Pointer to receive Z component of curl.
+ */
+void noise_curl3D(float x, float y, float z, float eps, noise_fn_t noise_fn, float *out_x, float *out_y, float *out_z);
+
+/*!
+ @function normalize_to_unit_range
+ @brief Normalize an array of floats in-place to the [0,1] range.
+ @param data Pointer to the float array.
+ @param n Number of elements in the array.
+ */
+void normalize_to_unit_range(float *data, size_t n);
+
 /*!
  @typedef poisson_point_t
- @abstract Structure representing a 2D point for Poisson disc sampling.
+ @brief Structure representing a 2D point for Poisson disc sampling.
  @field x X coordinate of the point.
  @field y Y coordinate of the point.
  */
@@ -245,7 +425,7 @@ typedef struct poisson_point {
 
 /*!
  @typedef poisson_list_t
- @abstract Structure for storing a list of Poisson disc sampling points.
+ @brief Structure for storing a list of Poisson disc sampling points.
  @field points Array of points.
  @field count Number of points in the list.
  @field capacity Capacity of the points array.
@@ -258,7 +438,7 @@ typedef struct poisson_list {
 
 /*!
  @typedef poisson_check_callback_t
- @abstract Callback function type for checking if a point is valid.
+ @brief Callback function type for checking if a point is valid.
  @param x X coordinate of the point.
  @param y Y coordinate of the point.
  @param user_data User-provided data.
@@ -268,7 +448,7 @@ typedef int (*poisson_check_callback_t)(float x, float y, void *user_data);
 
 /*!
  @typedef poisson_callback_t
- @abstract Callback function type for processing each generated point.
+ @brief Callback function type for processing each generated point.
  @param x X coordinate of the point.
  @param y Y coordinate of the point.
  @param user_data User-provided data.
@@ -277,7 +457,7 @@ typedef void (*poisson_callback_t)(float x, float y, void *user_data);
 
 /*!
  @function poisson_disc_sample_list
- @abstract Generates Poisson disc sampling points and returns them in a list.
+ @brief Generates Poisson disc sampling points and returns them in a list.
  @param width Width of the sampling area.
  @param height Height of the sampling area.
  @param min_dist Minimum distance between points.
@@ -292,14 +472,14 @@ poisson_list_t *poisson_disc_sample_list(float width, float height, float min_di
 
 /*!
  @function poisson_disc_free_list
- @abstract Frees a Poisson disc sampling point list.
+ @brief Frees a Poisson disc sampling point list.
  @param list The list to free.
  */
 void poisson_disc_free_list(poisson_list_t *list);
 
 /*!
  @function poisson_disc_sample_foreach
- @abstract Generates Poisson disc sampling points and calls a callback for each.
+ @brief Generates Poisson disc sampling points and calls a callback for each.
  @param width Width of the sampling area.
  @param height Height of the sampling area.
  @param min_dist Minimum distance between points.
@@ -320,6 +500,9 @@ void poisson_disc_sample_foreach(float width, float height, float min_dist,
 #endif // PAUL_RANDOM_HEAD
 
 #if defined(PAUL_RANDOM_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
+#ifdef __cplusplus
+extern "C" {
+#endif
 #define _PRNG_LAG1 (UINT16_C(24))
 #define _PRNG_LAG2 (UINT16_C(55))
 #define _PRNG_RAND_SMASK (_PRNG_RAND_SSIZE-1)
@@ -347,10 +530,10 @@ void rnd_seed(rng_t *rng, uint64_t seed) {
         rng->s[i] = i*(UINT64_C(2147483647)) + seed;
     // Run forward 10,000 numbers
     for(i=0; i<10000; i++)
-        (void)rng_randi(rng);
+        (void)rnd_randi(rng);
 }
 
-uint64_t rng_randi(rng_t *rng) {
+uint64_t rnd_randi(rng_t *rng) {
     uint_fast16_t i = 0;
     uint_fast16_t r, new_rands=0;
 
@@ -372,16 +555,16 @@ uint64_t rng_randi(rng_t *rng) {
     return rng->s[i&_PRNG_RAND_SMASK];
 }
 
-float rng_randf(rng_t *rng) {
-    return (float)rng_randi(rng) / (float)PRNG_RAND_MAX;
+float rnd_randf(rng_t *rng) {
+    return (float)rnd_randi(rng) / (float)PRNG_RAND_MAX;
 }
 
 int rnd_randi_range(rng_t *rng, int min, int max) {
-    return _REMAP(rng_randi(rng), 0, PRNG_RAND_MAX, min, max);
+    return _REMAP(rnd_randi(rng), 0, PRNG_RAND_MAX, min, max);
 }
 
 float rnd_randf_range(rng_t *rng, float min, float max) {
-    return _REMAP(rng_randf(rng), 0.f, 1.f, min, max);
+    return _REMAP(rnd_randf(rng), 0.f, 1.f, min, max);
 }
 
 void cellular_automata(rng_t *rng, unsigned int width, unsigned int height, unsigned int fill_chance, unsigned int smooth_iterations, unsigned int survive, unsigned int starve, uint8_t* result) {
@@ -390,7 +573,7 @@ void cellular_automata(rng_t *rng, unsigned int width, unsigned int height, unsi
     fill_chance = _CLAMP(fill_chance, 1, 99);
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
-            result[y * width + x] = (rng_randf(rng) * 99) + 1 < fill_chance;
+            result[y * width + x] = (rnd_randf(rng) * 99) + 1 < fill_chance;
     // Run cellular-automata on grid n times
     for (int i = 0; i < _MAX(smooth_iterations, 1); i++)
         for (int x = 0; x < width; x++)
@@ -950,4 +1133,228 @@ void poisson_disc_sample_foreach(float width, float height, float min_dist,
     poisson_disc_sample_internal(width, height, min_dist, max_attempts,
                                  check_fn, check_data, point_fn, point_data);
 }
+
+/* -------------------- Additional implementations -------------------- */
+
+float rnd_randf_signed(rng_t *rng) {
+    return rnd_randf(rng) * 2.0f - 1.0f;
+}
+
+uint64_t rnd_randi_range64(rng_t *rng, uint64_t min, uint64_t max) {
+    if (min >= max) return min;
+    uint64_t span = max - min + 1;
+    /* Use 128-bit intermediate if available, otherwise use double scaling */
+#if defined(__SIZEOF_INT128__)
+    __uint128_t wide = (__uint128_t)rnd_randi(rng) * (__uint128_t)span;
+    return (uint64_t)(wide / (__uint128_t)(PRNG_RAND_MAX) + min);
+#else
+    double t = (double)rnd_randi(rng) / (double)PRNG_RAND_MAX;
+    return (uint64_t)(min + (uint64_t)(t * (double)span));
+#endif
+}
+
+float rnd_normal(rng_t *rng, float mean, float stddev) {
+    /* Box-Muller transform: produce two normals, return one. Use rnd_randf in (0,1] */
+    float u, v, s;
+    do {
+        u = rnd_randf(rng);
+        v = rnd_randf(rng);
+        /* ensure u is not 0.0 to avoid logf(-inf) */
+    } while (u <= 1e-7f);
+
+    float mag = sqrtf(-2.0f * logf(u));
+    float z0 = mag * cosf(2.0f * (float)M_PI * v);
+    return mean + z0 * stddev;
+}
+
+int rnd_weighted_choice(rng_t *rng, size_t n, rnd_weight_fn_t weight_fn, void *user_data) {
+    if (!weight_fn || n == 0) return -1;
+    double total = 0.0;
+    for (size_t i = 0; i < n; i++) {
+        double w = weight_fn(i, user_data);
+        if (w < 0.0) w = 0.0; /* ignore negative weights */
+        total += w;
+    }
+    if (total <= 0.0) return -1;
+    double r = ((double)rnd_randi(rng) / (double)PRNG_RAND_MAX) * total;
+    double acc = 0.0;
+    for (size_t i = 0; i < n; i++) {
+        double w = weight_fn(i, user_data);
+        if (w < 0.0) w = 0.0;
+        acc += w;
+        if (r < acc) return (int)i;
+    }
+    return (int)(n - 1);
+}
+
+void rnd_shuffle_cb(rng_t *rng, size_t element_count, rnd_swap_fn_t swap_fn, void *user_data) {
+    if (!swap_fn) return;
+    for (size_t i = element_count; i > 1; i--) {
+        uint64_t j = rnd_randi_range64(rng, 0, i - 1);
+        if (j != (i - 1))
+            swap_fn((size_t)j, i - 1, user_data);
+    }
+}
+
+void rnd_permutation(rng_t *rng, uint32_t *out_perm, size_t n) {
+    if (!out_perm) return;
+    for (size_t i = 0; i < n; i++) out_perm[i] = (uint32_t)i;
+    /* Use rnd_shuffle with a lightweight swap that manipulates the buffer directly */
+    for (size_t i = n; i > 1; i--) {
+        uint64_t j = rnd_randi_range64(rng, 0, i - 1);
+        if (j != (i - 1)) {
+            uint32_t tmp = out_perm[j];
+            out_perm[j] = out_perm[i - 1];
+            out_perm[i - 1] = tmp;
+        }
+    }
+}
+
+int rnd_reseed_from_entropy(rng_t *rng) {
+    if (!rng) return 0;
+#if defined(__APPLE__)
+    /* Use arc4random on macOS for entropy */
+    uint64_t seed = ((uint64_t)arc4random() << 32) ^ (uint64_t)arc4random();
+    rnd_seed(rng, seed);
+    return 1;
+#else
+    FILE *f = fopen("/dev/urandom", "rb");
+    if (!f) return 0;
+    uint64_t seed = 0;
+    size_t r = fread(&seed, 1, sizeof(seed), f);
+    fclose(f);
+    if (r != sizeof(seed)) return 0;
+    rnd_seed(rng, seed);
+    return 1;
+#endif
+}
+
+float rnd_exponential(rng_t *rng, float lambda) {
+    if (lambda <= 0.0f) return 0.0f;
+    float u;
+    do { u = rnd_randf(rng); } while (u <= 1e-7f);
+    return -logf(u) / lambda;
+}
+
+int rnd_weighted_choice_array(rng_t *rng, const float *weights, size_t n) {
+    if (!weights || n == 0) return -1;
+    double total = 0.0;
+    for (size_t i = 0; i < n; i++) {
+        double w = (double)weights[i];
+        if (w < 0.0) w = 0.0;
+        total += w;
+    }
+    if (total <= 0.0) return -1;
+    double r = ((double)rnd_randi(rng) / (double)PRNG_RAND_MAX) * total;
+    double acc = 0.0;
+    for (size_t i = 0; i < n; i++) {
+        double w = (double)weights[i]; if (w < 0.0) w = 0.0;
+        acc += w;
+        if (r < acc) return (int)i;
+    }
+    return (int)(n - 1);
+}
+
+void rnd_shuffle(rng_t *rng, void *array, size_t element_count, size_t element_size) {
+    if (!array || element_count == 0 || element_size == 0) return;
+    uint8_t *buf = (uint8_t*)array;
+    uint8_t *tmp = (uint8_t*)malloc(element_size);
+    if (!tmp) return;
+    for (size_t i = element_count; i > 1; i--) {
+        uint64_t j = rnd_randi_range64(rng, 0, i - 1);
+        if (j != (i - 1)) {
+            uint8_t *a = buf + (size_t)j * element_size;
+            uint8_t *b = buf + (i - 1) * element_size;
+            memcpy(tmp, a, element_size);
+            memcpy(a, b, element_size);
+            memcpy(b, tmp, element_size);
+        }
+    }
+    free(tmp);
+}
+
+float smoothstepf(float edge0, float edge1, float t) {
+    if (edge0 == edge1) return 0.0f;
+    float x = _CLAMP((t - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+    return x * x * (3.0f - 2.0f * x);
+}
+
+float smootherstepf(float edge0, float edge1, float t) {
+    if (edge0 == edge1) return 0.0f;
+    float x = _CLAMP((t - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+    return x * x * x * (x * (x * 6.0f - 15.0f) + 10.0f);
+}
+
+float turbulence(float x, float y, float z, float lacunarity, float gain, int octaves, noise_fn_t noise_fn) {
+    float sum = 0.0f;
+    float freq = 1.0f;
+    float amp = 1.0f;
+    for (int i = 0; i < octaves; i++) {
+        float v = noise_fn(x * freq, y * freq, z * freq);
+        sum += fabsf(v) * amp;
+        freq *= lacunarity;
+        amp *= gain;
+    }
+    return sum;
+}
+
+float ridged_multifractal(float x, float y, float z, float lacunarity, float gain, int octaves, noise_fn_t noise_fn) {
+    float sum = 0.0f;
+    float freq = 1.0f;
+    float amp = 1.0f;
+    for (int i = 0; i < octaves; i++) {
+        float v = noise_fn(x * freq, y * freq, z * freq);
+        v = 1.0f - fabsf(v);
+        v *= v;
+        sum += v * amp;
+        freq *= lacunarity;
+        amp *= gain;
+    }
+    return sum;
+}
+
+float noise_tileable2D(float x, float y, float width, float height, noise_fn_t noise_fn) {
+    /* Map x,y into angles and sample a torus to make it tileable */
+    float nx = cosf((x / width) * 2.0f * (float)M_PI) * width / (2.0f * (float)M_PI);
+    float ny = sinf((x / width) * 2.0f * (float)M_PI) * width / (2.0f * (float)M_PI);
+    float nz = cosf((y / height) * 2.0f * (float)M_PI) * height / (2.0f * (float)M_PI);
+    float nw = sinf((y / height) * 2.0f * (float)M_PI) * height / (2.0f * (float)M_PI);
+    /* Use 4D decorrelation simulated by sampling different z values */
+    return fbm(nx, ny, nz, 1.0f, 0.5f, 1, noise_fn);
+}
+
+void noise_curl3D(float x, float y, float z, float eps, noise_fn_t noise_fn, float *out_x, float *out_y, float *out_z) {
+    if (!out_x || !out_y || !out_z) return;
+    float dx = (noise_fn(x + eps, y, z) - noise_fn(x - eps, y, z)) / (2.0f * eps);
+    float dy = (noise_fn(x, y + eps, z) - noise_fn(x, y - eps, z)) / (2.0f * eps);
+    float dz = (noise_fn(x, y, z + eps) - noise_fn(x, y, z - eps)) / (2.0f * eps);
+    /* For scalar noise_fn we build a pseudo-vector field by sampling offsets */
+    float nx = noise_fn(x, y + 0.123f, z) - noise_fn(x, y - 0.123f, z);
+    float ny = noise_fn(x + 0.123f, y, z) - noise_fn(x - 0.123f, y, z);
+    float nz = noise_fn(x, y, z + 0.123f) - noise_fn(x, y, z - 0.123f);
+    /* Compute curl of (nx, ny, nz) numerically */
+    float cx = ( (noise_fn(x, y, z + eps) - noise_fn(x, y, z - eps)) / (2.0f * eps) ) - dy;
+    float cy = dx - ( (noise_fn(x + eps, y, z) - noise_fn(x - eps, y, z)) / (2.0f * eps) );
+    float cz = dy - dx;
+    *out_x = cx; *out_y = cy; *out_z = cz;
+}
+
+void normalize_to_unit_range(float *data, size_t n) {
+    if (!data || n == 0) return;
+    float minv = FLT_MAX, maxv = -FLT_MAX;
+    for (size_t i = 0; i < n; i++) {
+        if (data[i] < minv) minv = data[i];
+        if (data[i] > maxv) maxv = data[i];
+    }
+    if (minv == maxv) {
+        for (size_t i = 0; i < n; i++) data[i] = 0.0f;
+        return;
+    }
+    float range = maxv - minv;
+    for (size_t i = 0; i < n; i++) data[i] = (data[i] - minv) / range;
+}
+
+#ifdef __cplusplus
+}
+#endif
 #endif

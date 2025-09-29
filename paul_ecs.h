@@ -15,6 +15,15 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
+/*!
+ @header paul_ecs.h
+ @copyright George Watson GPLv3
+ @updated 2025-09-29
+ @brief Entity Component System (ECS) library for C/C++.
+ @discussion
+    Implementation is included when PAUL_ECS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+*/
+
 #ifndef PAUL_ECS_HEAD
 #define PAUL_ECS_HEAD
 #ifdef __cplusplus
@@ -107,13 +116,13 @@ enum {
 /*!
  @function ecs_world
  @return Returns a new ECS world
- @abstract Create a new ECS world
+ @brief Create a new ECS world
  */
 world_t* ecs_world(void);
 /*!
  @function ecs_world_destroy
  @param world Pointer to the world to destroy
- @abstract Destroy an ECS world
+ @brief Destroy an ECS world
  */
 void ecs_world_destroy(world_t **world);
 
@@ -121,7 +130,7 @@ void ecs_world_destroy(world_t **world);
  @function ecs_spawn
  @param world The ECS world
  @return Returns a new entity
- @abstract Create a new entity
+ @brief Create a new entity
  */
 entity_t ecs_spawn(world_t *world);
 /*!
@@ -129,7 +138,7 @@ entity_t ecs_spawn(world_t *world);
  @param world The ECS world
  @param size_of_component Size of the component data
  @return Returns a new component entity
- @abstract Create a new component
+ @brief Create a new component
  */
 entity_t ecs_component(world_t *world, size_t size_of_component);
 /*!
@@ -139,14 +148,14 @@ entity_t ecs_component(world_t *world, size_t size_of_component);
  @param component_count Number of component types
  @param ... Component types the system operates on
  @return Returns a new system entity
- @abstract Create a new system
+ @brief Create a new system
  */
 entity_t ecs_system(world_t *world, system_t fn, int component_count, ...);
 /*!
  @function ecs_delete
  @param world The ECS world
  @param e The entity to delete
- @abstract Delete an entity
+ @brief Delete an entity
  */
 void ecs_delete(world_t *world, entity_t e);
 
@@ -155,7 +164,7 @@ void ecs_delete(world_t *world, entity_t e);
  @param world The ECS world
  @param e The entity to check
  @return Returns non-zero if the entity is valid
- @abstract Check if an entity is valid
+ @brief Check if an entity is valid
  */
 int entity_isvalid(world_t *world, entity_t e);
 /*!
@@ -164,7 +173,7 @@ int entity_isvalid(world_t *world, entity_t e);
  @param e The entity to check
  @param type The type to check against
  @return Returns non-zero if the entity is of the given type
- @abstract Check if an entity is of a specific type
+ @brief Check if an entity is of a specific type
  */
 int entity_isa(world_t *world, entity_t e, int type);
 /*!
@@ -172,14 +181,14 @@ int entity_isa(world_t *world, entity_t e, int type);
  @param a First entity
  @param b Second entity
  @return Returns non-zero if entities are equal
- @abstract Compare two entities
+ @brief Compare two entities
  */
 int entity_cmp(entity_t a, entity_t b);
 /*!
  @function entity_isnil
  @param e The entity to check
  @return Returns non-zero if the entity is nil
- @abstract Check if an entity is nil
+ @brief Check if an entity is nil
  */
 int entity_isnil(entity_t e);
 /*!
@@ -188,7 +197,7 @@ int entity_isnil(entity_t e);
  @param e The entity
  @param c The component
  @return Returns a pointer to the component data
- @abstract Give a component to an entity
+ @brief Give a component to an entity
  */
 void* entity_give(world_t *world, entity_t e, entity_t c);
 /*!
@@ -196,7 +205,7 @@ void* entity_give(world_t *world, entity_t e, entity_t c);
  @param world The ECS world
  @param e The entity
  @param c The component
- @abstract Remove a component from an entity
+ @brief Remove a component from an entity
  */
 void entity_remove(world_t *world, entity_t e, entity_t c);
 /*!
@@ -205,7 +214,7 @@ void entity_remove(world_t *world, entity_t e, entity_t c);
  @param e The entity
  @param c The component
  @return Returns non-zero if the entity has the component
- @abstract Check if an entity has a component
+ @brief Check if an entity has a component
  */
 int entity_has(world_t *world, entity_t e, entity_t c);
 /*!
@@ -214,7 +223,7 @@ int entity_has(world_t *world, entity_t e, entity_t c);
  @param e The entity
  @param c The component
  @return Returns a pointer to the component data or NULL
- @abstract Get component data from an entity
+ @brief Get component data from an entity
  */
 void* entity_get(world_t *world, entity_t e, entity_t c);
 /*!
@@ -223,14 +232,14 @@ void* entity_get(world_t *world, entity_t e, entity_t c);
  @param e The entity
  @param c The component
  @param data The data to set
- @abstract Set component data for an entity
+ @brief Set component data for an entity
  */
 void entity_set(world_t *world, entity_t e, entity_t c, void *data);
 
 /*!
  @function ecs_step
  @param world The ECS world
- @abstract Execute all systems in the world
+ @brief Execute all systems in the world
  */
 void ecs_step(world_t *world);
 /*!
@@ -241,7 +250,7 @@ void ecs_step(world_t *world);
  @param component_count Number of component types
  @param ... Component types to match
  @return Returns an array of matching entities
- @abstract Find entities matching component requirements
+ @brief Find entities matching component requirements
  */
 entity_t* ecs_find(world_t *world, filter_system_t filter, int *result_count, int component_count, ...);
 /*!
@@ -251,7 +260,7 @@ entity_t* ecs_find(world_t *world, filter_system_t filter, int *result_count, in
  @param filter Optional filter function
  @param component_count Number of component types
  @param ... Component types to match
- @abstract Query entities and execute a function on each
+ @brief Query entities and execute a function on each
  */
 void ecs_query(world_t *world, system_t fn, filter_system_t filter, int component_count, ...);
 

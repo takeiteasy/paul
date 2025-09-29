@@ -19,10 +19,9 @@
  @header paul_bitmap.h
  @copyright George Watson GPLv3
  @updated 2025-09-29
- @abstract Bitmap manipulation library for C/C++.
+ @brief Bitmap manipulation library for C/C++.
  @discussion
     Implementation is included when PAUL_BITMAP_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
-    PAUL_BITMAP_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
 */
 
 #ifndef PAUL_BITMAP_HEADER
@@ -36,7 +35,7 @@ extern "C" {
 #include <stdbool.h>
 
 /*! @typedef color_t
-    @abstract Represents a color with red, green, blue, and alpha components.
+    @brief Represents a color with red, green, blue, and alpha components.
     @field r Red component (0-255)
     @field g Green component (0-255)
     @field b Blue component (0-255)
@@ -61,7 +60,7 @@ typedef union color_t {
 #endif
 
 /*! @constsection Color Constants
-    @abstract Predefined color constants for common web colors.
+    @brief Predefined color constants for common web colors.
     @discussion When NO_COLOR_CONSTANTS is not defined, this header provides a comprehensive set of predefined color constants. Each color is defined in multiple formats:
     - COLOR_NAME: RGBA byte values {r, g, b, a}
     - COLOR_NAME_FLT: Floating-point RGBA values {r, g, b, a}
@@ -658,13 +657,13 @@ static _CONSTEXPR color_t color_yellow_green = COLOR_YELLOW_GREEN;
 #endif
 
 /*! @typedef color_rgba_t
-    @abstract Alias for color_t representing RGBA colors.
+    @brief Alias for color_t representing RGBA colors.
     @discussion This typedef provides an alternative name for the color_t type, emphasizing its RGBA nature. It is functionally identical to color_t.
  */
 typedef color_t color_rgba_t;
 
 /*! @typedef color_rgbaf_t
-    @abstract Structure representing RGBA colors with floating-point components.
+    @brief Structure representing RGBA colors with floating-point components.
     @discussion This structure holds RGBA color values as floating-point numbers in the range [0.0, 1.0]. The alpha channel represents opacity, where 0.0 is fully transparent and 1.0 is fully opaque.
     @field r Red component (0.0 to 1.0)
     @field g Green component (0.0 to 1.0)
@@ -676,7 +675,7 @@ typedef struct color_rgbaf_t {
 } color_rgbaf_t;
 
 /*! @typedef color_hsva_t
-    @abstract Structure representing HSVA (Hue, Saturation, Value, Alpha) colors.
+    @brief Structure representing HSVA (Hue, Saturation, Value, Alpha) colors.
     @discussion This structure holds HSVA color values where hue is in the range [0.0, 1.0] representing 0-360 degrees, saturation and value are in the range [0.0, 1.0], and alpha represents opacity from 0.0 (transparent) to 1.0 (opaque).
     @field h Hue component (0.0 to 1.0, representing 0-360 degrees)
     @field s Saturation component (0.0 to 1.0)
@@ -688,7 +687,7 @@ typedef struct color_hsva_t {
 } color_hsva_t;
 
 /*! @typedef color_hsla_t
-    @abstract Structure representing HSLA (Hue, Saturation, Lightness, Alpha) colors.
+    @brief Structure representing HSLA (Hue, Saturation, Lightness, Alpha) colors.
     @discussion This structure holds HSLA color values where hue is in the range [0.0, 1.0] representing 0-360 degrees, saturation and lightness are in the range [0.0, 1.0], and alpha represents opacity from 0.0 (transparent) to 1.0 (opaque).
     @field h Hue component (0.0 to 1.0, representing 0-360 degrees)
     @field s Saturation component (0.0 to 1.0)
@@ -701,7 +700,7 @@ typedef struct color_hsla_t {
 
 /**
  * @typedef color_lab_t
- * @abstract Represents a color in CIE L*a*b* color space.
+ * @brief Represents a color in CIE L*a*b* color space.
  * @discussion The CIE L*a*b* color space is a device-independent color model designed to approximate human vision. It separates lightness from color information and is perceptually uniform.
  * @field l Lightness component (0.0 to 100.0, but can exceed these bounds)
  * @field a Green-red axis component (typically -128.0 to 127.0, but can exceed these bounds)
@@ -714,7 +713,7 @@ typedef struct color_lab_t {
 
 /**
  * @typedef color_xyz_t
- * @abstract Represents a color in CIE XYZ color space.
+ * @brief Represents a color in CIE XYZ color space.
  * @discussion The CIE XYZ color space is a device-independent color model based on the human visual system's response to red, green, and blue stimuli. It serves as the foundation for other color spaces and is designed to encompass all colors visible to the human eye.
  * @field x X component (red response, typically 0.0 to 1.0, but can exceed these bounds)
  * @field y Y component (luminance/green response, typically 0.0 to 1.0, but can exceed these bounds)
@@ -727,7 +726,7 @@ typedef struct color_xyz_t {
 
 /**
  * @typedef color_yuv_t
- * @abstract Represents a color in YUV color space.
+ * @brief Represents a color in YUV color space.
  * @discussion The YUV color space separates luminance (Y) from chrominance (U and V) components. It is commonly used in video systems and digital broadcasting, with BT.601 standard coefficients used for the conversion.
  * @field y Luminance component (brightness, typically 0.0 to 1.0)
  * @field u Chrominance U component (blue-luminance difference, typically -0.5 to 0.5)
@@ -740,7 +739,7 @@ typedef struct color_yuv_t {
 
 /**
  * @typedef color_cmyk_t
- * @abstract Represents a color in CMYK color space.
+ * @brief Represents a color in CMYK color space.
  * @discussion The CMYK color space is primarily used in printing processes, where colors are created by subtracting varying amounts of cyan, magenta, yellow, and black inks from white light. The 'K' in CMYK stands for black (key) to avoid confusion with blue. This color space is device-dependent and commonly used in professional printing workflows.
  * @field c Cyan component (0.0 to 1.0)
  * @field m Magenta component (0.0 to 1.0)
@@ -754,7 +753,7 @@ typedef struct color_cmyk_t {
 
 /**
  * @typedef color_rgb_t565
- * @abstract Represents a color in RGB565 format with alpha.
+ * @brief Represents a color in RGB565 format with alpha.
  * @discussion RGB565 is a 16-bit color format commonly used in displays, embedded systems, and graphics hardware. It allocates 5 bits for red, 6 bits for green, and 5 bits for blue components, providing 65,536 possible colors. This format is efficient for memory usage while maintaining reasonable color fidelity, particularly for green hues which are more perceptually important.
  * @field rgb565 Packed 16-bit RGB565 color value (5-bit R, 6-bit G, 5-bit B)
  * @field a Alpha transparency component (0-255)
@@ -766,14 +765,14 @@ typedef struct color_rgb_t565 {
 
 /**
  * @typedef color_int_t
- * @abstract A 32-bit unsigned integer type for representing colors.
+ * @brief A 32-bit unsigned integer type for representing colors.
  * @discussion This type is used for color values stored as packed 32-bit integers, typically in RGBA format where each component occupies 8 bits. It provides a convenient alias for uint32_t when working with color data in integer form, making code more readable and self-documenting.
  */
 typedef uint32_t color_int_t;
 
 /**
  * @function rgba
- * @abstract Creates a color from RGBA components.
+ * @brief Creates a color from RGBA components.
  * @param r Red component (0-255).
  * @param g Green component (0-255).
  * @param b Blue component (0-255).
@@ -785,7 +784,7 @@ color_t rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 /**
  * @function rgb
- * @abstract Creates an opaque color from RGB components.
+ * @brief Creates an opaque color from RGB components.
  * @param r Red component (0-255).
  * @param g Green component (0-255).
  * @param b Blue component (0-255).
@@ -796,7 +795,7 @@ color_t rgb(uint8_t r, uint8_t g, uint8_t b);
 
 /**
  * @function rgbaf
- * @abstract Creates a color from floating-point RGBA components.
+ * @brief Creates a color from floating-point RGBA components.
  * @param r Red component (0.0-1.0).
  * @param g Green component (0.0-1.0).
  * @param b Blue component (0.0-1.0).
@@ -808,7 +807,7 @@ color_t rgbaf(float r, float g, float b, float a);
 
 /**
  * @function rgbf
- * @abstract Creates an opaque color from floating-point RGB components.
+ * @brief Creates an opaque color from floating-point RGB components.
  * @param r Red component (0.0-1.0).
  * @param g Green component (0.0-1.0).
  * @param b Blue component (0.0-1.0).
@@ -819,7 +818,7 @@ color_t rgbf(float r, float g, float b);
 
 /**
  * @function hsva
- * @abstract Creates a color from HSVA components.
+ * @brief Creates a color from HSVA components.
  * @param h Hue component (0.0-1.0, where 0.0 = red, 0.333 = green, 0.667 = blue).
  * @param s Saturation component (0.0-1.0, where 0.0 = grayscale, 1.0 = fully saturated).
  * @param v Value/brightness component (0.0-1.0, where 0.0 = black, 1.0 = full brightness).
@@ -831,7 +830,7 @@ color_t hsva(float h, float s, float v, float a);
 
 /**
  * @function hsv
- * @abstract Creates an opaque color from HSV components.
+ * @brief Creates an opaque color from HSV components.
  * @param h Hue component (0.0-1.0, where 0.0 = red, 0.333 = green, 0.667 = blue).
  * @param s Saturation component (0.0-1.0, where 0.0 = grayscale, 1.0 = fully saturated).
  * @param v Value/brightness component (0.0-1.0, where 0.0 = black, 1.0 = full brightness).
@@ -842,7 +841,7 @@ color_t hsv(float h, float s, float v);
 
 /**
  * @function hsla
- * @abstract Creates a color from HSLA components.
+ * @brief Creates a color from HSLA components.
  * @param h Hue component (0.0-1.0, where 0.0 = red, 0.333 = green, 0.667 = blue).
  * @param s Saturation component (0.0-1.0, where 0.0 = grayscale, 1.0 = fully saturated).
  * @param l Lightness component (0.0-1.0, where 0.0 = black, 0.5 = normal, 1.0 = white).
@@ -854,7 +853,7 @@ color_t hsla(float h, float s, float l, float a);
 
 /**
  * @function hsl
- * @abstract Creates an opaque color from HSL components.
+ * @brief Creates an opaque color from HSL components.
  * @param h Hue component (0.0-1.0, where 0.0 = red, 0.333 = green, 0.667 = blue).
  * @param s Saturation component (0.0-1.0, where 0.0 = grayscale, 1.0 = fully saturated).
  * @param l Lightness component (0.0-1.0, where 0.0 = black, 0.5 = normal, 1.0 = white).
@@ -865,7 +864,7 @@ color_t hsl(float h, float s, float l);
 
 /**
  * @function lab
- * @abstract Creates a color from CIELAB components.
+ * @brief Creates a color from CIELAB components.
  * @param l Lightness component (0.0-100.0).
  * @param a Green-red axis component (-128.0 to 128.0).
  * @param b Blue-yellow axis component (-128.0 to 128.0).
@@ -877,7 +876,7 @@ color_t lab(float l, float a, float b, float alpha);
 
 /**
  * @function xyz
- * @abstract Creates a color from CIEXYZ components.
+ * @brief Creates a color from CIEXYZ components.
  * @param x X tristimulus value (0.0-1.0+).
  * @param y Y tristimulus value (0.0-1.0+).
  * @param z Z tristimulus value (0.0-1.0+).
@@ -889,7 +888,7 @@ color_t xyz(float x, float y, float z, float a);
 
 /**
  * @function yuv
- * @abstract Creates a color from YUV components.
+ * @brief Creates a color from YUV components.
  * @param y Luma/brightness component (0.0-1.0).
  * @param u Blue-luma difference component (-0.5 to 0.5).
  * @param v Red-luma difference component (-0.5 to 0.5).
@@ -901,7 +900,7 @@ color_t yuv(float y, float u, float v, float a);
 
 /**
  * @function cmyk
- * @abstract Creates a color from CMYK components.
+ * @brief Creates a color from CMYK components.
  * @param c Cyan component (0.0-1.0).
  * @param m Magenta component (0.0-1.0).
  * @param y Yellow component (0.0-1.0).
@@ -914,7 +913,7 @@ color_t cmyk(float c, float m, float y, float k, float a);
 
 /**
  * @function rgb_565
- * @abstract Creates a color from a 16-bit RGB565 value.
+ * @brief Creates a color from a 16-bit RGB565 value.
  * @param rgb565 16-bit RGB565 packed color value.
  * @param a Alpha component (0-255).
  * @return A color_t value representing the specified RGB565 color.
@@ -924,7 +923,7 @@ color_t rgb_565(uint16_t rgb565, uint8_t a);
 
 /**
  * @function rgba_to_rgbaf
- * @abstract Converts an RGBA color to floating-point RGBA format.
+ * @brief Converts an RGBA color to floating-point RGBA format.
  * @param rgba The input RGBA color.
  * @return A color_rgbaf_t structure with normalized floating-point components (0.0-1.0).
  * @discussion This function converts 8-bit RGBA components to normalized floating-point values, which is useful for color calculations that require higher precision.
@@ -933,7 +932,7 @@ color_rgbaf_t rgba_to_rgbaf(color_t rgba);
 
 /**
  * @function rgbaf_to_rgba
- * @abstract Converts floating-point RGBA to 8-bit RGBA format.
+ * @brief Converts floating-point RGBA to 8-bit RGBA format.
  * @param rgbaf The input floating-point RGBA color.
  * @return A color_t value with clamped 8-bit components.
  * @discussion This function converts normalized floating-point RGBA components to 8-bit integers, clamping values to the valid 0-255 range.
@@ -942,7 +941,7 @@ color_t rgbaf_to_rgba(color_rgbaf_t rgbaf);
 
 /**
  * @function rgba_to_hsva
- * @abstract Converts an RGBA color to HSVA color space.
+ * @brief Converts an RGBA color to HSVA color space.
  * @param rgba The input RGBA color.
  * @return A color_hsva_t structure with hue (0.0-1.0), saturation (0.0-1.0), value (0.0-1.0), and alpha (0.0-1.0).
  * @discussion This function converts RGBA to HSV color space, where hue represents the color angle, saturation represents color purity, and value represents brightness.
@@ -951,7 +950,7 @@ color_hsva_t rgba_to_hsva(color_t rgba);
 
 /**
  * @function hsva_to_rgba
- * @abstract Converts HSVA color space to RGBA.
+ * @brief Converts HSVA color space to RGBA.
  * @param hsva The input HSVA color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts HSV color space back to RGBA, applying the standard HSV to RGB conversion algorithm.
@@ -960,7 +959,7 @@ color_t hsva_to_rgba(color_hsva_t hsva);
 
 /**
  * @function rgbaf_to_hsva
- * @abstract Converts floating-point RGBA to HSVA color space.
+ * @brief Converts floating-point RGBA to HSVA color space.
  * @param rgbaf The input floating-point RGBA color.
  * @return A color_hsva_t structure with HSV components.
  * @discussion This function converts normalized RGBA to HSV color space, providing higher precision than the 8-bit version.
@@ -969,7 +968,7 @@ color_hsva_t rgbaf_to_hsva(color_rgbaf_t rgbaf);
 
 /**
  * @function hsva_to_rgbaf
- * @abstract Converts HSVA color space to floating-point RGBA.
+ * @brief Converts HSVA color space to floating-point RGBA.
  * @param hsva The input HSVA color.
  * @return A color_rgbaf_t structure with normalized RGBA components.
  * @discussion This function converts HSV color space to normalized RGBA, providing higher precision than the 8-bit version.
@@ -978,7 +977,7 @@ color_rgbaf_t hsva_to_rgbaf(color_hsva_t hsva);
 
 /**
  * @function rgba_to_hsla
- * @abstract Converts an RGBA color to HSLA color space.
+ * @brief Converts an RGBA color to HSLA color space.
  * @param rgba The input RGBA color.
  * @return A color_hsla_t structure with hue (0.0-1.0), saturation (0.0-1.0), lightness (0.0-1.0), and alpha (0.0-1.0).
  * @discussion This function converts RGBA to HSL color space, where lightness represents the perceived brightness and saturation represents color purity.
@@ -987,7 +986,7 @@ color_hsla_t rgba_to_hsla(color_t rgba);
 
 /**
  * @function hsla_to_rgba
- * @abstract Converts HSLA color space to RGBA.
+ * @brief Converts HSLA color space to RGBA.
  * @param hsla The input HSLA color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts HSL color space back to RGBA using the standard HSL to RGB conversion algorithm.
@@ -996,7 +995,7 @@ color_t hsla_to_rgba(color_hsla_t hsla);
 
 /**
  * @function rgbaf_to_hsla
- * @abstract Converts floating-point RGBA to HSLA color space.
+ * @brief Converts floating-point RGBA to HSLA color space.
  * @param rgbaf The input floating-point RGBA color.
  * @return A color_hsla_t structure with HSL components.
  * @discussion This function converts normalized RGBA to HSL color space, providing higher precision than the 8-bit version.
@@ -1005,7 +1004,7 @@ color_hsla_t rgbaf_to_hsla(color_rgbaf_t rgbaf);
 
 /**
  * @function hsla_to_rgbaf
- * @abstract Converts HSLA color space to floating-point RGBA.
+ * @brief Converts HSLA color space to floating-point RGBA.
  * @param hsla The input HSLA color.
  * @return A color_rgbaf_t structure with normalized RGBA components.
  * @discussion This function converts HSL color space to normalized RGBA, providing higher precision than the 8-bit version.
@@ -1014,7 +1013,7 @@ color_rgbaf_t hsla_to_rgbaf(color_hsla_t hsla);
 
 /**
  * @function rgba_to_lab
- * @abstract Converts an RGBA color to CIELAB color space.
+ * @brief Converts an RGBA color to CIELAB color space.
  * @param rgba The input RGBA color.
  * @return A color_lab_t structure with L* (0-100), a* (-128 to 128), b* (-128 to 128), and alpha (0.0-1.0).
  * @discussion This function converts RGBA to CIELAB color space using the D65 white point. CIELAB is designed to be perceptually uniform, making it ideal for color difference calculations.
@@ -1023,7 +1022,7 @@ color_lab_t rgba_to_lab(color_t rgba);
 
 /**
  * @function lab_to_rgba
- * @abstract Converts CIELAB color space to RGBA.
+ * @brief Converts CIELAB color space to RGBA.
  * @param lab The input CIELAB color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts CIELAB color space back to RGBA using the D65 white point and sRGB color space.
@@ -1032,7 +1031,7 @@ color_t lab_to_rgba(color_lab_t lab);
 
 /**
  * @function rgba_to_xyz
- * @abstract Converts an RGBA color to CIEXYZ color space.
+ * @brief Converts an RGBA color to CIEXYZ color space.
  * @param rgba The input RGBA color.
  * @return A color_xyz_t structure with X, Y, Z tristimulus values and alpha.
  * @discussion This function converts RGBA to CIEXYZ color space using the D65 white point. XYZ represents absolute color measurements in the CIE 1931 color space.
@@ -1041,7 +1040,7 @@ color_xyz_t rgba_to_xyz(color_t rgba);
 
 /**
  * @function xyz_to_rgba
- * @abstract Converts CIEXYZ color space to RGBA.
+ * @brief Converts CIEXYZ color space to RGBA.
  * @param xyz The input CIEXYZ color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts CIEXYZ color space back to RGBA using the D65 white point and sRGB color space.
@@ -1050,7 +1049,7 @@ color_t xyz_to_rgba(color_xyz_t xyz);
 
 /**
  * @function lab_to_xyz
- * @abstract Converts CIELAB to CIEXYZ color space.
+ * @brief Converts CIELAB to CIEXYZ color space.
  * @param lab The input CIELAB color.
  * @return A color_xyz_t structure with XYZ tristimulus values.
  * @discussion This function converts CIELAB to CIEXYZ using the D65 white point reference.
@@ -1059,7 +1058,7 @@ color_xyz_t lab_to_xyz(color_lab_t lab);
 
 /**
  * @function xyz_to_lab
- * @abstract Converts CIEXYZ to CIELAB color space.
+ * @brief Converts CIEXYZ to CIELAB color space.
  * @param xyz The input CIEXYZ color.
  * @return A color_lab_t structure with LAB components.
  * @discussion This function converts CIEXYZ to CIELAB using the D65 white point reference.
@@ -1068,7 +1067,7 @@ color_lab_t xyz_to_lab(color_xyz_t xyz);
 
 /**
  * @function rgba_to_yuv
- * @abstract Converts an RGBA color to YUV color space.
+ * @brief Converts an RGBA color to YUV color space.
  * @param rgba The input RGBA color.
  * @return A color_yuv_t structure with Y (luma), U (blue-luma difference), V (red-luma difference), and alpha.
  * @discussion This function converts RGBA to YUV color space using the BT.601 standard. YUV separates luminance from chrominance information, commonly used in video encoding.
@@ -1077,7 +1076,7 @@ color_yuv_t rgba_to_yuv(color_t rgba);
 
 /**
  * @function yuv_to_rgba
- * @abstract Converts YUV color space to RGBA.
+ * @brief Converts YUV color space to RGBA.
  * @param yuv The input YUV color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts YUV color space back to RGBA using the BT.601 standard.
@@ -1086,7 +1085,7 @@ color_t yuv_to_rgba(color_yuv_t yuv);
 
 /**
  * @function rgba_to_cmyk
- * @abstract Converts an RGBA color to CMYK color space.
+ * @brief Converts an RGBA color to CMYK color space.
  * @param rgba The input RGBA color.
  * @return A color_cmyk_t structure with C (cyan), M (magenta), Y (yellow), K (black), and alpha.
  * @discussion This function converts RGBA to CMYK color space. CMYK is the standard color model used in printing, representing the amount of each ink needed.
@@ -1095,7 +1094,7 @@ color_cmyk_t rgba_to_cmyk(color_t rgba);
 
 /**
  * @function cmyk_to_rgba
- * @abstract Converts CMYK color space to RGBA.
+ * @brief Converts CMYK color space to RGBA.
  * @param cmyk The input CMYK color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts CMYK color space back to RGBA.
@@ -1104,7 +1103,7 @@ color_t cmyk_to_rgba(color_cmyk_t cmyk);
 
 /**
  * @function rgba_to_rgb565
- * @abstract Converts an RGBA color to RGB565 format.
+ * @brief Converts an RGBA color to RGB565 format.
  * @param rgba The input RGBA color.
  * @return A color_rgb_t565 structure with packed RGB565 value and alpha.
  * @discussion This function converts RGBA to RGB565 format, which uses 5 bits for red, 6 bits for green, and 5 bits for blue. This format is commonly used in embedded systems and older displays.
@@ -1113,7 +1112,7 @@ color_rgb_t565 rgba_to_rgb565(color_t rgba);
 
 /**
  * @function rgb565_to_rgba
- * @abstract Converts RGB565 format to RGBA.
+ * @brief Converts RGB565 format to RGBA.
  * @param rgb565 The input RGB565 color.
  * @return A color_t value representing the equivalent RGBA color.
  * @discussion This function converts RGB565 format back to RGBA, expanding the 5-6-5 bit components back to 8-bit values.
@@ -1122,7 +1121,7 @@ color_t rgb565_to_rgba(color_rgb_t565 rgb565);
 
 /**
  * @function color_cmp
- * @abstract Compares two colors for exact equality.
+ * @brief Compares two colors for exact equality.
  * @param a First color to compare.
  * @param b Second color to compare.
  * @return true if all RGBA components are identical, false otherwise.
@@ -1132,7 +1131,7 @@ bool color_cmp(color_t a, color_t b);
 
 /**
  * @function color_distance_lab
- * @abstract Calculates the Euclidean distance between two colors in CIELAB color space.
+ * @brief Calculates the Euclidean distance between two colors in CIELAB color space.
  * @param a First color in CIELAB space.
  * @param b Second color in CIELAB space.
  * @return The Euclidean distance in LAB space (Delta E CIE76).
@@ -1142,7 +1141,7 @@ float color_distance_lab(color_lab_t a, color_lab_t b);
 
 /**
  * @function color_distance
- * @abstract Calculates the Euclidean distance between two colors in RGB space.
+ * @brief Calculates the Euclidean distance between two colors in RGB space.
  * @param a First color.
  * @param b Second color.
  * @return The Euclidean distance in RGB space.
@@ -1152,7 +1151,7 @@ float color_distance(color_t a, color_t b);
 
 /**
  * @function color_lerp
- * @abstract Linearly interpolates between two colors.
+ * @brief Linearly interpolates between two colors.
  * @param a Starting color.
  * @param b Ending color.
  * @param t Interpolation factor (0.0 = a, 1.0 = b).
@@ -1164,7 +1163,7 @@ color_t color_lerp(color_t a, color_t b, float t);
 // Luminance and brightness
 /**
  * @function color_luminance
- * @abstract Calculates the perceptual luminance of a color.
+ * @brief Calculates the perceptual luminance of a color.
  * @param color The input color.
  * @return The luminance value (0.0-1.0) using sRGB perceptual coefficients.
  * @discussion This function computes the perceived brightness of a color using the standard sRGB luminance formula. This is different from simple averaging and accounts for human visual perception where green appears brighter than red or blue.
@@ -1173,7 +1172,7 @@ float color_luminance(color_t color);
 
 /**
  * @function color_relative_luminance
- * @abstract Calculates the relative luminance for WCAG accessibility compliance.
+ * @brief Calculates the relative luminance for WCAG accessibility compliance.
  * @param color The input color.
  * @return The relative luminance value (0.0-1.0) with gamma correction applied.
  * @discussion This function computes relative luminance according to WCAG guidelines, applying gamma correction to sRGB values. This is used for calculating contrast ratios between colors for accessibility compliance.
@@ -1182,7 +1181,7 @@ float color_relative_luminance(color_t color);
 
 /**
  * @function color_brightness
- * @abstract Calculates the simple average brightness of a color.
+ * @brief Calculates the simple average brightness of a color.
  * @param color The input color.
  * @return The average brightness value (0.0-1.0).
  * @discussion This function computes brightness as the simple average of RGB components. This is a basic metric that doesn't account for perceptual differences between color channels.
@@ -1191,7 +1190,7 @@ float color_brightness(color_t color);
 
 /**
  * @function color_is_dark
- * @abstract Determines if a color is considered dark.
+ * @brief Determines if a color is considered dark.
  * @param color The input color.
  * @return 1 if the color is dark (luminance < 0.5), 0 if light.
  * @discussion This function uses perceptual luminance to determine if a color appears dark. Colors with luminance below 0.5 are considered dark.
@@ -1201,7 +1200,7 @@ int color_is_dark(color_t color);
 // Color properties
 /**
  * @function color_saturation
- * @abstract Gets the saturation level of a color.
+ * @brief Gets the saturation level of a color.
  * @param color The input color.
  * @return The saturation value (0.0-1.0) in HSV color space.
  * @discussion This function converts the color to HSV space and returns the saturation component, which represents color purity or intensity.
@@ -1210,7 +1209,7 @@ float color_saturation(color_t color);
 
 /**
  * @function color_hue
- * @abstract Gets the hue of a color in degrees.
+ * @brief Gets the hue of a color in degrees.
  * @param color The input color.
  * @return The hue angle in degrees (0.0-360.0).
  * @discussion This function converts the color to HSV space and returns the hue as an angle in degrees, where 0° is red, 120° is green, and 240° is blue.
@@ -1219,7 +1218,7 @@ float color_hue(color_t color);
 
 /**
  * @function color_grayscale
- * @abstract Converts a color to grayscale.
+ * @brief Converts a color to grayscale.
  * @param color The input color.
  * @return A grayscale version of the input color.
  * @discussion This function converts the color to grayscale using perceptual luminance coefficients, preserving the alpha channel.
@@ -1228,7 +1227,7 @@ color_t color_grayscale(color_t color);
 
 /**
  * @function color_invert
- * @abstract Inverts the RGB channels of a color.
+ * @brief Inverts the RGB channels of a color.
  * @param color The input color.
  * @return The color with inverted RGB values.
  * @discussion This function inverts each RGB channel (255 - value) while preserving the alpha channel. This creates the photographic negative of the color.
@@ -1237,7 +1236,7 @@ color_t color_invert(color_t color);
 
 /**
  * @function color_complement
- * @abstract Gets the complementary color (opposite hue).
+ * @brief Gets the complementary color (opposite hue).
  * @param color The input color.
  * @return The complementary color.
  * @discussion This function shifts the hue by 180° in HSV color space to find the complementary color, which provides maximum contrast.
@@ -1247,7 +1246,7 @@ color_t color_complement(color_t color);
 // Additional analysis functions
 /**
  * @function color_dominant_channel
- * @abstract Determines the dominant color channel.
+ * @brief Determines the dominant color channel.
  * @param color The input color.
  * @return 0 for red-dominant, 1 for green-dominant, 2 for blue-dominant.
  * @discussion This function compares RGB channel values to determine which color channel has the highest intensity.
@@ -1256,7 +1255,7 @@ int color_dominant_channel(color_t color);
 
 /**
  * @function color_is_grayscale
- * @abstract Checks if a color is effectively grayscale.
+ * @brief Checks if a color is effectively grayscale.
  * @param color The input color.
  * @return 1 if the color is grayscale, 0 otherwise.
  * @discussion This function checks if all RGB channels are within 2 units of each other, indicating the color has no significant hue.
@@ -1265,7 +1264,7 @@ int color_is_grayscale(color_t color);
 
 /**
  * @function color_temperature_estimate
- * @abstract Estimates the color temperature in Kelvin.
+ * @brief Estimates the color temperature in Kelvin.
  * @param color The input color.
  * @return Estimated color temperature (1000K-10000K).
  * @discussion This function provides a rough approximation of color temperature based on the blue-to-red ratio, where higher blue content indicates cooler (higher) temperatures.
@@ -1274,7 +1273,7 @@ float color_temperature_estimate(color_t color);
 
 /**
  * @function color_is_warm
- * @abstract Determines if a color is warm (reddish/yellowish).
+ * @brief Determines if a color is warm (reddish/yellowish).
  * @param color The input color.
  * @return 1 if warm, 0 if cool.
  * @discussion This function considers a color warm if red dominates and the red+green sum is significantly higher than blue.
@@ -1283,7 +1282,7 @@ int color_is_warm(color_t color);
 
 /**
  * @function color_is_cool
- * @abstract Determines if a color is cool (bluish/greenish).
+ * @brief Determines if a color is cool (bluish/greenish).
  * @param color The input color.
  * @return 1 if cool, 0 if warm.
  * @discussion This function considers a color cool if blue dominates and the blue+green sum is significantly higher than red.
@@ -1292,7 +1291,7 @@ int color_is_cool(color_t color);
 
 /**
  * @function color_purity
- * @abstract Calculates the color purity (saturation).
+ * @brief Calculates the color purity (saturation).
  * @param color The input color.
  * @return Color purity value (0.0-1.0).
  * @discussion This function measures how far the color is from the grayscale axis in RGB space, indicating color intensity or vividness.
@@ -1301,7 +1300,7 @@ float color_purity(color_t color);
 
 /**
  * @function color_energy
- * @abstract Calculates the total energy of a color.
+ * @brief Calculates the total energy of a color.
  * @param color The input color.
  * @return Color energy value (0.0-1.0).
  * @discussion This function computes the average of all RGB channels, representing the overall intensity of the color.
@@ -1311,7 +1310,7 @@ float color_energy(color_t color);
 // Brightness and contrast
 /**
  * @function color_adjust_brightness
- * @abstract Adjusts the brightness of a color.
+ * @brief Adjusts the brightness of a color.
  * @param color The input color.
  * @param amount Brightness adjustment amount (-1.0 to 1.0, where 0 = no change).
  * @return The color with adjusted brightness.
@@ -1321,7 +1320,7 @@ color_t color_adjust_brightness(color_t color, float amount);
 
 /**
  * @function color_adjust_contrast
- * @abstract Adjusts the contrast of a color.
+ * @brief Adjusts the contrast of a color.
  * @param color The input color.
  * @param amount Contrast adjustment amount (-1.0 to 1.0, where 0 = no change).
  * @return The color with adjusted contrast.
@@ -1331,7 +1330,7 @@ color_t color_adjust_contrast(color_t color, float amount);
 
 /**
  * @function color_adjust_gamma
- * @abstract Applies gamma correction to a color.
+ * @brief Applies gamma correction to a color.
  * @param color The input color.
  * @param gamma Gamma correction value (must be > 0).
  * @return The color with gamma correction applied.
@@ -1342,7 +1341,7 @@ color_t color_adjust_gamma(color_t color, float gamma);
 // Saturation and hue
 /**
  * @function color_saturate
- * @abstract Increases the saturation of a color.
+ * @brief Increases the saturation of a color.
  * @param color The input color.
  * @param amount Saturation multiplier (0.0 to 2.0+, where 1.0 = no change).
  * @return The color with increased saturation.
@@ -1352,7 +1351,7 @@ color_t color_saturate(color_t color, float amount);
 
 /**
  * @function color_desaturate
- * @abstract Decreases the saturation of a color.
+ * @brief Decreases the saturation of a color.
  * @param color The input color.
  * @param amount Saturation reduction factor (0.0 to 1.0, where 0.0 = grayscale, 1.0 = no change).
  * @return The color with reduced saturation.
@@ -1362,7 +1361,7 @@ color_t color_desaturate(color_t color, float amount);
 
 /**
  * @function color_hue_shift
- * @abstract Shifts the hue of a color by a specified number of degrees.
+ * @brief Shifts the hue of a color by a specified number of degrees.
  * @param color The input color.
  * @param degrees Degrees to shift the hue (-360 to 360).
  * @return The color with shifted hue.
@@ -1373,7 +1372,7 @@ color_t color_hue_shift(color_t color, float degrees);
 // Temperature and tint
 /**
  * @function color_adjust_temperature
- * @abstract Adjusts the color temperature of a color.
+ * @brief Adjusts the color temperature of a color.
  * @param color The input color.
  * @param kelvin Color temperature in Kelvin (1000-40000K, 6500K = daylight).
  * @return The color with adjusted temperature.
@@ -1383,7 +1382,7 @@ color_t color_adjust_temperature(color_t color, float kelvin);
 
 /**
  * @function color_tint
- * @abstract Applies a tint adjustment to a color.
+ * @brief Applies a tint adjustment to a color.
  * @param color The input color.
  * @param amount Tint amount (-1.0 to 1.0).
  * @return The color with applied tint.
@@ -1394,7 +1393,7 @@ color_t color_tint(color_t color, float amount);
 // Additional adjustments
 /**
  * @function color_adjust_exposure
- * @abstract Adjusts the exposure of a color in stops.
+ * @brief Adjusts the exposure of a color in stops.
  * @param color The input color.
  * @param stops Exposure adjustment in stops (-3.0 to 3.0, where 0 = no change).
  * @return The color with adjusted exposure.
@@ -1404,7 +1403,7 @@ color_t color_adjust_exposure(color_t color, float stops);
 
 /**
  * @function color_adjust_highlights
- * @abstract Adjusts highlight areas of a color.
+ * @brief Adjusts highlight areas of a color.
  * @param color The input color.
  * @param amount Highlight adjustment amount (-1.0 to 1.0).
  * @return The color with adjusted highlights.
@@ -1414,7 +1413,7 @@ color_t color_adjust_highlights(color_t color, float amount);
 
 /**
  * @function color_adjust_shadows
- * @abstract Adjusts shadow areas of a color.
+ * @brief Adjusts shadow areas of a color.
  * @param color The input color.
  * @param amount Shadow adjustment amount (-1.0 to 1.0).
  * @return The color with adjusted shadows.
@@ -1424,7 +1423,7 @@ color_t color_adjust_shadows(color_t color, float amount);
 
 /**
  * @function color_adjust_whites
- * @abstract Adjusts very bright areas of a color.
+ * @brief Adjusts very bright areas of a color.
  * @param color The input color.
  * @param amount White adjustment amount (-1.0 to 1.0).
  * @return The color with adjusted whites.
@@ -1434,7 +1433,7 @@ color_t color_adjust_whites(color_t color, float amount);
 
 /**
  * @function color_adjust_blacks
- * @abstract Adjusts very dark areas of a color.
+ * @brief Adjusts very dark areas of a color.
  * @param color The input color.
  * @param amount Black adjustment amount (-1.0 to 1.0).
  * @return The color with adjusted blacks.
@@ -1444,7 +1443,7 @@ color_t color_adjust_blacks(color_t color, float amount);
 
 /**
  * @function color_adjust_clarity
- * @abstract Enhances local contrast (clarity/structure).
+ * @brief Enhances local contrast (clarity/structure).
  * @param color The input color.
  * @param amount Clarity adjustment amount (-1.0 to 1.0).
  * @return The color with enhanced clarity.
@@ -1454,7 +1453,7 @@ color_t color_adjust_clarity(color_t color, float amount);
 
 /**
  * @function color_adjust_vibrance
- * @abstract Applies smart saturation adjustment.
+ * @brief Applies smart saturation adjustment.
  * @param color The input color.
  * @param amount Vibrance adjustment amount (-1.0 to 1.0).
  * @return The color with adjusted vibrance.
@@ -1465,7 +1464,7 @@ color_t color_adjust_vibrance(color_t color, float amount);
 // Blending modes
 /**
  * @function color_multiply
- * @abstract Multiplies two colors together.
+ * @brief Multiplies two colors together.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1475,7 +1474,7 @@ color_t color_multiply(color_t a, color_t b);
 
 /**
  * @function color_screen
- * @abstract Screens two colors together.
+ * @brief Screens two colors together.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1485,7 +1484,7 @@ color_t color_screen(color_t a, color_t b);
 
 /**
  * @function color_overlay
- * @abstract Applies overlay blending mode.
+ * @brief Applies overlay blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1495,7 +1494,7 @@ color_t color_overlay(color_t a, color_t b);
 
 /**
  * @function color_soft_light
- * @abstract Applies soft light blending mode.
+ * @brief Applies soft light blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1505,7 +1504,7 @@ color_t color_soft_light(color_t a, color_t b);
 
 /**
  * @function color_hard_light
- * @abstract Applies hard light blending mode.
+ * @brief Applies hard light blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1515,7 +1514,7 @@ color_t color_hard_light(color_t a, color_t b);
 
 /**
  * @function color_color_dodge
- * @abstract Applies color dodge blending mode.
+ * @brief Applies color dodge blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1525,7 +1524,7 @@ color_t color_color_dodge(color_t a, color_t b);
 
 /**
  * @function color_color_burn
- * @abstract Applies color burn blending mode.
+ * @brief Applies color burn blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1535,7 +1534,7 @@ color_t color_color_burn(color_t a, color_t b);
 
 /**
  * @function color_darken
- * @abstract Selects the darker of two colors for each channel.
+ * @brief Selects the darker of two colors for each channel.
  * @param a First color.
  * @param b Second color.
  * @return Color with minimum values from each channel.
@@ -1545,7 +1544,7 @@ color_t color_darken(color_t a, color_t b);
 
 /**
  * @function color_lighten
- * @abstract Selects the lighter of two colors for each channel.
+ * @brief Selects the lighter of two colors for each channel.
  * @param a First color.
  * @param b Second color.
  * @return Color with maximum values from each channel.
@@ -1555,7 +1554,7 @@ color_t color_lighten(color_t a, color_t b);
 
 /**
  * @function color_difference
- * @abstract Calculates the absolute difference between two colors.
+ * @brief Calculates the absolute difference between two colors.
  * @param a First color.
  * @param b Second color.
  * @return Color representing the absolute difference.
@@ -1565,7 +1564,7 @@ color_t color_difference(color_t a, color_t b);
 
 /**
  * @function color_exclusion
- * @abstract Applies exclusion blending mode.
+ * @brief Applies exclusion blending mode.
  * @param a First color (base layer).
  * @param b Second color (blend layer).
  * @return The blended color result.
@@ -1576,7 +1575,7 @@ color_t color_exclusion(color_t a, color_t b);
 // Alpha blending
 /**
  * @function color_alpha_blend
- * @abstract Performs standard alpha blending (Porter-Duff "over" operation).
+ * @brief Performs standard alpha blending (Porter-Duff "over" operation).
  * @param fg Foreground color (source).
  * @param bg Background color (destination).
  * @return The alpha-blended result.
@@ -1586,7 +1585,7 @@ color_t color_alpha_blend(color_t fg, color_t bg);
 
 /**
  * @function color_premultiply_alpha
- * @abstract Premultiplies RGB channels by alpha.
+ * @brief Premultiplies RGB channels by alpha.
  * @param color The input color.
  * @return Color with RGB channels premultiplied by alpha.
  * @discussion This function multiplies each RGB channel by the alpha value, preparing the color for use in blending operations that expect premultiplied alpha.
@@ -1595,7 +1594,7 @@ color_t color_premultiply_alpha(color_t color);
 
 /**
  * @function color_unpremultiply_alpha
- * @abstract Unpremultiplies RGB channels by alpha.
+ * @brief Unpremultiplies RGB channels by alpha.
  * @param color The input color.
  * @return Color with RGB channels unpremultiplied by alpha.
  * @discussion This function divides each RGB channel by the alpha value, converting from premultiplied alpha format back to straight alpha format.
@@ -1605,7 +1604,7 @@ color_t color_unpremultiply_alpha(color_t color);
 // Color harmony
 /**
  * @function color_analogous
- * @abstract Generates analogous colors (adjacent hues on the color wheel).
+ * @brief Generates analogous colors (adjacent hues on the color wheel).
  * @param base The base color to generate variations from.
  * @param colors Pointer to array where generated colors will be stored.
  * @param count Number of analogous colors to generate.
@@ -1615,7 +1614,7 @@ void color_analogous(color_t base, color_t* colors, int count);                 
 
 /**
  * @function color_triadic
- * @abstract Generates triadic colors (120° apart on the color wheel).
+ * @brief Generates triadic colors (120° apart on the color wheel).
  * @param base The base color to generate variations from.
  * @param color1 Pointer to store the first triadic color.
  * @param color2 Pointer to store the second triadic color.
@@ -1625,7 +1624,7 @@ void color_triadic(color_t base, color_t* color1, color_t* color2);             
 
 /**
  * @function color_tetradic
- * @abstract Generates tetradic colors (rectangle scheme on the color wheel).
+ * @brief Generates tetradic colors (rectangle scheme on the color wheel).
  * @param base The base color to generate variations from.
  * @param color1 Pointer to store the first tetradic color.
  * @param color2 Pointer to store the second tetradic color.
@@ -1636,7 +1635,7 @@ void color_tetradic(color_t base, color_t* color1, color_t* color2, color_t* col
 
 /**
  * @function color_split_complementary
- * @abstract Generates split-complementary colors.
+ * @brief Generates split-complementary colors.
  * @param base The base color to generate variations from.
  * @param color1 Pointer to store the first split-complementary color.
  * @param color2 Pointer to store the second split-complementary color.
@@ -1646,7 +1645,7 @@ void color_split_complementary(color_t base, color_t* color1, color_t* color2); 
 
 /**
  * @function color_monochromatic
- * @abstract Generates monochromatic colors (same hue, varying saturation/value).
+ * @brief Generates monochromatic colors (same hue, varying saturation/value).
  * @param base The base color to generate variations from.
  * @param colors Pointer to array where generated colors will be stored.
  * @param count Number of monochromatic colors to generate.
@@ -1657,7 +1656,7 @@ void color_monochromatic(color_t base, color_t* colors, int count);             
 // Gradient generation
 /**
  * @function color_gradient
- * @abstract Generates a linear gradient between two colors.
+ * @brief Generates a linear gradient between two colors.
  * @param start The starting color of the gradient.
  * @param end The ending color of the gradient.
  * @param colors Pointer to array where gradient colors will be stored.
@@ -1669,7 +1668,7 @@ void color_gradient(color_t start, color_t end, color_t* colors, int count); // 
 // Color space conversions with custom white points
 /**
  * @function rgba_to_xyz_custom
- * @abstract Converts an RGBA color to CIEXYZ color space using a custom white point.
+ * @brief Converts an RGBA color to CIEXYZ color space using a custom white point.
  * @param rgba The input RGBA color.
  * @param wx The X component of the custom white point.
  * @param wy The Y component of the custom white point.
@@ -1681,7 +1680,7 @@ color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz);
 
 /**
  * @function rgba_to_lab_custom
- * @abstract Converts an RGBA color to CIELAB color space using a custom white point.
+ * @brief Converts an RGBA color to CIELAB color space using a custom white point.
  * @param rgba The input RGBA color.
  * @param wx The X component of the custom white point.
  * @param wy The Y component of the custom white point.
@@ -1694,7 +1693,7 @@ color_lab_t rgba_to_lab_custom(color_t rgba, float wx, float wy, float wz);
 // Delta E calculations (color difference)
 /**
  * @function color_delta_e_76
- * @abstract Calculates the color difference using the CIE76 formula (Delta E CIE76).
+ * @brief Calculates the color difference using the CIE76 formula (Delta E CIE76).
  * @param a First color in CIELAB space.
  * @param b Second color in CIELAB space.
  * @return The Euclidean distance in CIELAB space (Delta E CIE76).
@@ -1704,7 +1703,7 @@ float color_delta_e_76(color_lab_t a, color_lab_t b);     // CIE76 formula
 
 /**
  * @function color_delta_e_94
- * @abstract Calculates the color difference using the CIE94 formula (Delta E CIE94).
+ * @brief Calculates the color difference using the CIE94 formula (Delta E CIE94).
  * @param a First color in CIELAB space.
  * @param b Second color in CIELAB space.
  * @return The color difference value using CIE94 weighting (Delta E CIE94).
@@ -1714,7 +1713,7 @@ float color_delta_e_94(color_lab_t a, color_lab_t b);     // CIE94 formula
 
 /**
  * @function color_delta_e_2000
- * @abstract Calculates the color difference using the CIEDE2000 formula (Delta E CIEDE2000).
+ * @brief Calculates the color difference using the CIEDE2000 formula (Delta E CIEDE2000).
  * @param a First color in CIELAB space.
  * @param b Second color in CIELAB space.
  * @return The color difference value using CIEDE2000 weighting (Delta E CIEDE2000).
@@ -1725,7 +1724,7 @@ float color_delta_e_2000(color_lab_t a, color_lab_t b);   // CIEDE2000 formula
 // Levels adjustment
 /**
  * @function color_levels
- * @abstract Applies levels adjustment to a color (black point, white point, gamma).
+ * @brief Applies levels adjustment to a color (black point, white point, gamma).
  * @param color The input color to adjust.
  * @param black_point The black point value (0.0-1.0, where 0 = no change).
  * @param white_point The white point value (0.0-1.0, where 1 = no change).
@@ -1737,7 +1736,7 @@ color_t color_levels(color_t color, float black_point, float white_point, float 
 
 /**
  * @function color_curves
- * @abstract Applies curves adjustment to a color using lookup tables.
+ * @brief Applies curves adjustment to a color using lookup tables.
  * @param color The input color to adjust.
  * @param curve_r Pointer to a 256-element array defining the red channel curve (0.0-1.0 values).
  * @param curve_g Pointer to a 256-element array defining the green channel curve (0.0-1.0 values).
@@ -1750,7 +1749,7 @@ color_t color_curves(color_t color, float* curve_r, float* curve_g, float* curve
 // Color balance
 /**
  * @function color_shadow_highlight
- * @abstract Adjusts shadow and highlight regions of a color.
+ * @brief Adjusts shadow and highlight regions of a color.
  * @param color The input color to adjust.
  * @param shadow Shadow adjustment amount (-1.0 to 1.0).
  * @param highlight Highlight adjustment amount (-1.0 to 1.0).
@@ -1761,7 +1760,7 @@ color_t color_shadow_highlight(color_t color, float shadow, float highlight);
 
 /**
  * @function color_color_balance
- * @abstract Applies color balance adjustment to a color.
+ * @brief Applies color balance adjustment to a color.
  * @param color The input color to adjust.
  * @param cyan_red Cyan/red balance adjustment (-1.0 to 1.0).
  * @param magenta_green Magenta/green balance adjustment (-1.0 to 1.0).
@@ -1774,7 +1773,7 @@ color_t color_color_balance(color_t color, float cyan_red, float magenta_green, 
 // Vibrance and saturation
 /**
  * @function color_vibrance
- * @abstract Applies vibrance adjustment (smart saturation) to a color.
+ * @brief Applies vibrance adjustment (smart saturation) to a color.
  * @param color The input color to adjust.
  * @param amount Vibrance adjustment amount (-1.0 to 1.0).
  * @return The color with vibrance adjustment applied.
@@ -1784,7 +1783,7 @@ color_t color_vibrance(color_t color, float amount);      // Smart saturation
 
 /**
  * @function color_selective_color
- * @abstract Applies selective color adjustment to specific color ranges.
+ * @brief Applies selective color adjustment to specific color ranges.
  * @param color The input color to adjust.
  * @param channel The color channel to adjust (0=reds, 1=yellows, 2=greens, 3=cyans, 4=blues, 5=magentas).
  * @param cyan Cyan adjustment amount (-1.0 to 1.0).
@@ -1799,7 +1798,7 @@ color_t color_selective_color(color_t color, int channel, float cyan, float mage
 // Quantization
 /**
  * @function color_quantize
- * @abstract Quantizes a color to reduce the number of bits per channel.
+ * @brief Quantizes a color to reduce the number of bits per channel.
  * @param color The input color to quantize.
  * @param bits_per_channel The number of bits to use per channel (1-8).
  * @return The quantized color.
@@ -1809,7 +1808,7 @@ color_t color_quantize(color_t color, int bits_per_channel);
 
 /**
  * @function color_posterize
- * @abstract Applies posterization effect by reducing the number of tonal levels.
+ * @brief Applies posterization effect by reducing the number of tonal levels.
  * @param color The input color to posterize.
  * @param levels The number of tonal levels per channel (2-256).
  * @return The posterized color.
@@ -1820,7 +1819,7 @@ color_t color_posterize(color_t color, int levels);
 // Dithering
 /**
  * @function color_dither_floyd_steinberg
- * @abstract Applies Floyd-Steinberg dithering to quantize a color against a palette.
+ * @brief Applies Floyd-Steinberg dithering to quantize a color against a palette.
  * @param color The input color to dither.
  * @param palette Pointer to an array of available colors.
  * @param palette_size The number of colors in the palette.
@@ -1833,7 +1832,7 @@ color_t color_dither_floyd_steinberg(color_t color, color_t* palette, int palett
 
 /**
  * @function color_dither_ordered
- * @abstract Applies ordered dithering to quantize a color against a palette.
+ * @brief Applies ordered dithering to quantize a color against a palette.
  * @param color The input color to dither.
  * @param palette Pointer to an array of available colors.
  * @param palette_size The number of colors in the palette.
@@ -1847,7 +1846,7 @@ color_t color_dither_ordered(color_t color, color_t* palette, int palette_size, 
 // Color blindness simulation
 /**
  * @function color_protanopia
- * @abstract Simulates protanopia (red-blind) color vision deficiency.
+ * @brief Simulates protanopia (red-blind) color vision deficiency.
  * @param color The input color to simulate.
  * @return The color as seen by someone with protanopia.
  * @discussion This function simulates red-blind color vision by applying the appropriate color transformation matrix. Protanopia affects the red color channel, making reds appear darker and causing confusion between red and green hues.
@@ -1856,7 +1855,7 @@ color_t color_protanopia(color_t color);      // Red-blind
 
 /**
  * @function color_deuteranopia
- * @abstract Simulates deuteranopia (green-blind) color vision deficiency.
+ * @brief Simulates deuteranopia (green-blind) color vision deficiency.
  * @param color The input color to simulate.
  * @return The color as seen by someone with deuteranopia.
  * @discussion This function simulates green-blind color vision by applying the appropriate color transformation matrix. Deuteranopia affects the green color channel and is the most common form of color blindness.
@@ -1865,7 +1864,7 @@ color_t color_deuteranopia(color_t color);    // Green-blind
 
 /**
  * @function color_tritanopia
- * @abstract Simulates tritanopia (blue-blind) color vision deficiency.
+ * @brief Simulates tritanopia (blue-blind) color vision deficiency.
  * @param color The input color to simulate.
  * @return The color as seen by someone with tritanopia.
  * @discussion This function simulates blue-blind color vision by applying the appropriate color transformation matrix. Tritanopia affects the blue color channel and is relatively rare.
@@ -1874,7 +1873,7 @@ color_t color_tritanopia(color_t color);      // Blue-blind
 
 /**
  * @function color_achromatopsia
- * @abstract Simulates achromatopsia (complete color blindness).
+ * @brief Simulates achromatopsia (complete color blindness).
  * @param color The input color to simulate.
  * @return The color as seen by someone with achromatopsia.
  * @discussion This function simulates complete color blindness by converting the color to grayscale using luminance coefficients. Achromatopsia results in monochromatic vision with only brightness information.
@@ -1884,7 +1883,7 @@ color_t color_achromatopsia(color_t color);   // Complete color blindness
 // Accessibility
 /**
  * @function color_contrast_ratio
- * @abstract Calculates the WCAG contrast ratio between two colors.
+ * @brief Calculates the WCAG contrast ratio between two colors.
  * @param a First color.
  * @param b Second color.
  * @return The contrast ratio (1.0 to 21.0+).
@@ -1894,7 +1893,7 @@ float color_contrast_ratio(color_t a, color_t b);          // WCAG contrast rati
 
 /**
  * @function color_wcag_aa_compliant
- * @abstract Checks if two colors meet WCAG AA contrast requirements.
+ * @brief Checks if two colors meet WCAG AA contrast requirements.
  * @param fg Foreground color.
  * @param bg Background color.
  * @return 1 if compliant with WCAG AA standards, 0 otherwise.
@@ -1904,7 +1903,7 @@ int color_wcag_aa_compliant(color_t fg, color_t bg);       // AA compliance
 
 /**
  * @function color_wcag_aaa_compliant
- * @abstract Checks if two colors meet WCAG AAA contrast requirements.
+ * @brief Checks if two colors meet WCAG AAA contrast requirements.
  * @param fg Foreground color.
  * @param bg Background color.
  * @return 1 if compliant with WCAG AAA standards, 0 otherwise.
@@ -1915,7 +1914,7 @@ int color_wcag_aaa_compliant(color_t fg, color_t bg);      // AAA compliance
 // Color matching
 /**
  * @function color_match_closest
- * @abstract Finds the closest color in a palette to the target color.
+ * @brief Finds the closest color in a palette to the target color.
  * @param target The target color to match.
  * @param palette Pointer to an array of colors to search.
  * @param palette_size The number of colors in the palette.
@@ -1927,7 +1926,7 @@ color_t color_match_closest(color_t target, color_t* palette, int palette_size);
 // Color comparison
 /**
  * @function color_similarity
- * @abstract Calculates the similarity between two colors (0.0-1.0).
+ * @brief Calculates the similarity between two colors (0.0-1.0).
  * @param a First color to compare.
  * @param b Second color to compare.
  * @return Similarity value where 1.0 means identical, 0.0 means completely different.
@@ -1937,7 +1936,7 @@ float color_similarity(color_t a, color_t b);
 
 /**
  * @function color_is_similar
- * @abstract Checks if two colors are similar within a threshold.
+ * @brief Checks if two colors are similar within a threshold.
  * @param a First color to compare.
  * @param b Second color to compare.
  * @param threshold Similarity threshold (0.0-1.0, where 1.0 = identical).
@@ -1949,7 +1948,7 @@ int color_is_similar(color_t a, color_t b, float threshold);
 // Color grading
 /**
  * @function color_lift_gamma_gain
- * @abstract Applies lift-gamma-gain color grading to a color.
+ * @brief Applies lift-gamma-gain color grading to a color.
  * @discussion This function implements the classic lift-gamma-gain color grading technique commonly used in film and video post-production. Lift affects shadows and blacks, gamma affects midtones, and gain affects highlights and whites. Each parameter is a color_rgbaf_t struct where values represent the adjustment strength for each RGB channel.
  * @param color The input color to grade.
  * @param lift Color adjustment for shadows/blacks (additive effect in dark areas).
@@ -1961,7 +1960,7 @@ color_t color_lift_gamma_gain(color_t color, color_rgbaf_t lift, color_rgbaf_t g
 
 /**
  * @function color_shadow_midtone_highlight
- * @abstract Applies shadow-midtone-highlight color grading using luminance-based weighting.
+ * @brief Applies shadow-midtone-highlight color grading using luminance-based weighting.
  * @discussion This function provides an alternative color grading approach that uses the image's luminance to determine how much each correction affects different tonal ranges. Shadows are weighted toward dark areas, midtones follow a bell curve, and highlights are weighted toward bright areas.
  * @param color The input color to grade.
  * @param shadow Color adjustment applied primarily to shadow/dark areas.
@@ -1974,7 +1973,7 @@ color_t color_shadow_midtone_highlight(color_t color, color_rgbaf_t shadow, colo
 // Color spaces for specific industries
 /**
  * @function color_rec709_to_rec2020
- * @abstract Converts Rec.709 (standard HD) color space to Rec.2020 (ultra HD/HDR).
+ * @brief Converts Rec.709 (standard HD) color space to Rec.2020 (ultra HD/HDR).
  * @discussion This function converts colors from the Rec.709 color space (used in standard HD television and video) to the Rec.2020 color space (used in ultra HD and HDR content). Rec.2020 has a wider color gamut and is designed for high dynamic range applications.
  * @param color The input color in Rec.709 color space.
  * @return The color converted to Rec.2020 color space.
@@ -1983,7 +1982,7 @@ color_t color_rec709_to_rec2020(color_t color);    // HDR conversion
 
 /**
  * @function color_prophoto_to_srgb
- * @abstract Converts ProPhoto RGB color space to sRGB.
+ * @brief Converts ProPhoto RGB color space to sRGB.
  * @discussion This function converts colors from the ProPhoto RGB color space (commonly used in professional photography due to its wide color gamut) to the standard sRGB color space used for most displays and web content.
  * @param color The input color in ProPhoto RGB color space.
  * @return The color converted to sRGB color space.
@@ -1992,7 +1991,7 @@ color_t color_prophoto_to_srgb(color_t color);     // Photography
 
 /**
  * @function color_adobe_rgb_to_srgb
- * @abstract Converts Adobe RGB color space to sRGB.
+ * @brief Converts Adobe RGB color space to sRGB.
  * @discussion This function converts colors from the Adobe RGB color space (designed for print workflows with a wider gamut than sRGB) to the standard sRGB color space used for most displays and web content.
  * @param color The input color in Adobe RGB color space.
  * @return The color converted to sRGB color space.
@@ -2002,7 +2001,7 @@ color_t color_adobe_rgb_to_srgb(color_t color);    // Print/web
 // Fast approximations
 /**
  * @function color_fast_grayscale
- * @abstract Converts a color to grayscale using fast integer-only arithmetic.
+ * @brief Converts a color to grayscale using fast integer-only arithmetic.
  * @discussion This function provides a high-performance grayscale conversion that avoids floating-point operations. It uses integer arithmetic to convert RGB values to grayscale while preserving the alpha channel.
  * @param color The input color to convert.
  * @return The grayscale version of the input color.
@@ -2011,7 +2010,7 @@ color_t color_fast_grayscale(color_t color);       // Integer-only grayscale
 
 /**
  * @function color_fast_sepia
- * @abstract Applies a sepia tone effect using fast integer arithmetic.
+ * @brief Applies a sepia tone effect using fast integer arithmetic.
  * @discussion This function creates a sepia-toned version of the input color using optimized integer calculations. Sepia toning gives images a warm, antique appearance reminiscent of old photographs.
  * @param color The input color to apply sepia toning to.
  * @return The sepia-toned version of the input color.
@@ -2020,7 +2019,7 @@ color_t color_fast_sepia(color_t color);           // Fast sepia tone
 
 /**
  * @function color_fast_invert
- * @abstract Inverts RGB channels using fast bitwise operations.
+ * @brief Inverts RGB channels using fast bitwise operations.
  * @discussion This function creates a photographic negative by inverting the RGB channels using bitwise operations. This is faster than arithmetic inversion and preserves the alpha channel.
  * @param color The input color to invert.
  * @return The inverted version of the input color.
@@ -2028,13 +2027,13 @@ color_t color_fast_sepia(color_t color);           // Fast sepia tone
 color_t color_fast_invert(color_t color);          // Bitwise invert
 
 /*! @typedef bitmap_t
-    @abstract Represents an RGBA color with 8 bits per channel.
+    @brief Represents an RGBA color with 8 bits per channel.
  */
 typedef color_t* bitmap_t;
 
 /**
  * @function bitmap_empty
- * @abstract Creates a new empty image filled with a specified color.
+ * @brief Creates a new empty image filled with a specified color.
  * @discussion Allocates memory for a new image of the specified width and height, initializing all pixels to the given color. The returned image must be freed with bitmap_destroy() when no longer needed.
  * @param w The width of the image in pixels.
  * @param h The height of the image in pixels.
@@ -2045,7 +2044,7 @@ bitmap_t bitmap_empty(unsigned int w, unsigned int h, color_t color);
 
 /**
  * @function bitmap_destroy
- * @abstract Frees the memory associated with an image.
+ * @brief Frees the memory associated with an image.
  * @discussion Releases all memory allocated for the image. The image pointer becomes invalid after this call and should not be used.
  * @param img The image to destroy.
  */
@@ -2053,7 +2052,7 @@ void bitmap_destroy(bitmap_t img);
 
 /**
  * @function bitmap_width
- * @abstract Gets the width of an image in pixels.
+ * @brief Gets the width of an image in pixels.
  * @discussion Returns the width dimension of the image.
  * @param img The image to query.
  * @return The width of the image in pixels.
@@ -2062,7 +2061,7 @@ int bitmap_width(const bitmap_t img);
 
 /**
  * @function bitmap_height
- * @abstract Gets the height of an image in pixels.
+ * @brief Gets the height of an image in pixels.
  * @discussion Returns the height dimension of the image.
  * @param img The image to query.
  * @return The height of the image in pixels.
@@ -2071,7 +2070,7 @@ int bitmap_height(const bitmap_t img);
 
 /**
  * @function bitmap_size
- * @abstract Gets both width and height of an image.
+ * @brief Gets both width and height of an image.
  * @discussion Retrieves the dimensions of the image, storing them in the provided pointers. This is more efficient than calling bitmap_width() and bitmap_height() separately.
  * @param img The image to query.
  * @param w Pointer to store the width (can be NULL if not needed).
@@ -2082,7 +2081,7 @@ bool bitmap_size(const bitmap_t img, int *w, int *h);
 
 /**
  * @function bitmap_pset
- * @abstract Sets the color of a pixel at the specified coordinates.
+ * @brief Sets the color of a pixel at the specified coordinates.
  * @discussion Changes the color of the pixel at position (x, y). Coordinates are zero-based, with (0,0) being the top-left corner. If coordinates are out of bounds, the operation fails.
  * @param img The image to modify.
  * @param x The x-coordinate of the pixel.
@@ -2094,7 +2093,7 @@ bool bitmap_pset(bitmap_t img, int x, int y, color_t color);
 
 /**
  * @function bitmap_pget
- * @abstract Gets the color of a pixel at the specified coordinates.
+ * @brief Gets the color of a pixel at the specified coordinates.
  * @discussion Retrieves the color of the pixel at position (x, y). Coordinates are zero-based, with (0,0) being the top-left corner. If coordinates are out of bounds, returns a default color.
  * @param img The image to query.
  * @param x The x-coordinate of the pixel.
@@ -2105,7 +2104,7 @@ color_t bitmap_pget(const bitmap_t img, int x, int y);
 
 /**
  * @function bitmap_fill
- * @abstract Fills the entire image with a solid color.
+ * @brief Fills the entire image with a solid color.
  * @discussion Sets all pixels in the image to the specified color, effectively clearing the image to a uniform color.
  * @param img The image to fill.
  * @param color The color to fill the image with.
@@ -2115,7 +2114,7 @@ bool bitmap_fill(bitmap_t img, color_t color);
 
 /**
  * @function bitmap_flood
- * @abstract Performs a flood fill starting from the specified coordinates.
+ * @brief Performs a flood fill starting from the specified coordinates.
  * @discussion Fills a contiguous region of pixels with the same color as the starting pixel with a new color. Uses 4-way connectivity (up, down, left, right).
  * @param img The image to modify.
  * @param x The x-coordinate of the starting pixel.
@@ -2127,7 +2126,7 @@ bool bitmap_flood(bitmap_t img, int x, int y, color_t color);
 
 /**
  * @function bitmap_paste
- * @abstract Pastes one image onto another at the specified position.
+ * @brief Pastes one image onto another at the specified position.
  * @discussion Copies all pixels from the source image onto the destination image starting at position (x, y). The source image is pasted over the destination without any alpha blending.
  * @param dst The destination image to paste onto.
  * @param src The source image to paste from.
@@ -2139,7 +2138,7 @@ bool bitmap_paste(bitmap_t dst, const bitmap_t src, int x, int y);
 
 /**
  * @function bitmap_clipped_paste
- * @abstract Pastes a rectangular region from one image to another.
+ * @brief Pastes a rectangular region from one image to another.
  * @discussion Copies a rectangular region (rx, ry, rw, rh) from the source image onto the destination image at position (x, y). Only the specified region of the source is copied.
  * @param dst The destination image to paste onto.
  * @param src The source image to paste from.
@@ -2155,7 +2154,7 @@ bool bitmap_clipped_paste(bitmap_t dst, const bitmap_t src, int x, int y, int rx
 
 /**
  * @function bitmap_resize
- * @abstract Resizes an image in-place to new dimensions.
+ * @brief Resizes an image in-place to new dimensions.
  * @discussion Changes the size of the image to the specified width and height. The original image data is lost and replaced with resized content. Uses nearest-neighbor interpolation.
  * @param src Pointer to the image to resize (will be modified).
  * @param nw The new width for the image.
@@ -2166,7 +2165,7 @@ bool bitmap_resize(bitmap_t *src, int nw, int nh);
 
 /**
  * @function bitmap_rotate
- * @abstract Rotates an image in-place by the specified angle.
+ * @brief Rotates an image in-place by the specified angle.
  * @discussion Rotates the image around its center by the given angle in degrees. Positive angles rotate clockwise. The image dimensions may change to accommodate the rotated content.
  * @param src Pointer to the image to rotate (will be modified).
  * @param angle The rotation angle in degrees.
@@ -2176,7 +2175,7 @@ bool bitmap_rotate(bitmap_t *src, float angle);
 
 /**
  * @function bitmap_clip
- * @abstract Clips a rectangular region from an image in-place.
+ * @brief Clips a rectangular region from an image in-place.
  * @discussion Extracts a rectangular region from the image, making it the new image content. The original image is replaced with just the clipped region.
  * @param src Pointer to the image to clip (will be modified).
  * @param rx The x-coordinate of the region to keep.
@@ -2189,7 +2188,7 @@ bool bitmap_clip(bitmap_t *src, int rx, int ry, int rw, int rh);
 
 /**
  * @function bitmap_dupe
- * @abstract Creates a duplicate copy of an image.
+ * @brief Creates a duplicate copy of an image.
  * @discussion Allocates a new image with the same dimensions and pixel data as the source image. The returned image is independent and must be freed with bitmap_destroy() when no longer needed.
  * @param src The source image to duplicate.
  * @return A new image that is a copy of the source, or NULL on allocation failure.
@@ -2198,7 +2197,7 @@ bitmap_t bitmap_dupe(bitmap_t src);
 
 /**
  * @function bitmap_resized
- * @abstract Creates a resized copy of an image.
+ * @brief Creates a resized copy of an image.
  * @discussion Allocates a new image with the specified dimensions and copies the source image content resized to fit. Uses nearest-neighbor interpolation. The original image remains unchanged.
  * @param src The source image to resize.
  * @param nw The width of the new image.
@@ -2209,7 +2208,7 @@ bitmap_t bitmap_resized(bitmap_t src, int nw, int nh);
 
 /**
  * @function bitmap_rotated
- * @abstract Creates a rotated copy of an image.
+ * @brief Creates a rotated copy of an image.
  * @discussion Allocates a new image and copies the source image content rotated by the specified angle. The original image remains unchanged.
  * @param src The source image to rotate.
  * @param angle The rotation angle in degrees.
@@ -2219,7 +2218,7 @@ bitmap_t bitmap_rotated(bitmap_t src, float angle);
 
 /**
  * @function bitmap_clipped
- * @abstract Creates a new image from a rectangular region of another image.
+ * @brief Creates a new image from a rectangular region of another image.
  * @discussion Allocates a new image containing only the specified rectangular region from the source image. The original image remains unchanged.
  * @param src The source image to clip from.
  * @param rx The x-coordinate of the region in the source image.
@@ -2232,7 +2231,7 @@ bitmap_t bitmap_clipped(bitmap_t src, int rx, int ry, int rw, int rh);
 
 /**
  * @function bitmap_dominant_color
- * @abstract Finds the most frequently occurring color in the image.
+ * @brief Finds the most frequently occurring color in the image.
  * @discussion Analyzes all pixels in the image and returns the color that appears most often. Useful for generating color palettes or determining the primary color of an image.
  * @param img The image to analyze.
  * @return The dominant color in the image.
@@ -2241,7 +2240,7 @@ color_t bitmap_dominant_color(const bitmap_t img);
 
 /**
  * @function bitmap_histogram
- * @abstract Generates a histogram of color frequencies in the image.
+ * @brief Generates a histogram of color frequencies in the image.
  * @discussion Creates an array representing the frequency distribution of colors in the image. The returned array must be freed by the caller when no longer needed.
  * @param img The image to analyze.
  * @return An array of integers representing color frequencies, or NULL on failure.
@@ -2250,7 +2249,7 @@ int* bitmap_histogram(const bitmap_t img);
 
 /**
  * @function bitmap_palette
- * @abstract Extracts a color palette from the image.
+ * @brief Extracts a color palette from the image.
  * @discussion Analyzes the image and extracts the specified number of most representative colors. The returned array contains the palette colors and must be freed by the caller.
  * @param img The image to analyze.
  * @param count The number of colors to extract for the palette.
@@ -2260,7 +2259,7 @@ color_t* bitmap_palette(const bitmap_t img, int count);
 
 /**
  * @function bitmap_draw_line
- * @abstract Draws a line between two points.
+ * @brief Draws a line between two points.
  * @discussion Draws a straight line from (x0, y0) to (x1, y1) using the specified color. Uses Bresenham's line algorithm for efficient rasterization.
  * @param img The image to draw on.
  * @param x0 The x-coordinate of the starting point.
@@ -2274,7 +2273,7 @@ bool bitmap_draw_line(bitmap_t img, int x0, int y0, int x1, int y1, color_t colo
 
 /**
  * @function bitmap_draw_circle
- * @abstract Draws a circle or filled circle.
+ * @brief Draws a circle or filled circle.
  * @discussion Draws a circle centered at (xc, yc) with radius r. If fill is non-zero, the circle is filled; otherwise only the outline is drawn.
  * @param img The image to draw on.
  * @param xc The x-coordinate of the circle center.
@@ -2288,7 +2287,7 @@ bool bitmap_draw_circle(bitmap_t img, int xc, int yc, int r, color_t color, int 
 
 /**
  * @function bitmap_draw_rectangle
- * @abstract Draws a rectangle or filled rectangle.
+ * @brief Draws a rectangle or filled rectangle.
  * @discussion Draws a rectangle with top-left corner at (x, y) and dimensions w by h. If fill is non-zero, the rectangle is filled; otherwise only the outline is drawn.
  * @param img The image to draw on.
  * @param x The x-coordinate of the top-left corner.
@@ -2303,7 +2302,7 @@ bool bitmap_draw_rectangle(bitmap_t img, int x, int y, int w, int h, color_t col
 
 /**
  * @function bitmap_draw_triangle
- * @abstract Draws a triangle or filled triangle.
+ * @brief Draws a triangle or filled triangle.
  * @discussion Draws a triangle defined by three vertices (x0,y0), (x1,y1), (x2,y2). If fill is non-zero, the triangle is filled; otherwise only the outline is drawn.
  * @param img The image to draw on.
  * @param x0 The x-coordinate of the first vertex.
@@ -2321,7 +2320,7 @@ bool bitmap_draw_triangle(bitmap_t img, int x0, int y0, int x1, int y1, int x2, 
 // Data format enumeration for bitmap_load function
 /**
  * @typedef bitmap_format_t
- * @abstract Enumeration of supported pixel data formats for image loading.
+ * @brief Enumeration of supported pixel data formats for image loading.
  * @discussion Defines the various pixel formats that can be used when loading image data from raw pixel arrays. Each format specifies the byte layout and channel count of the pixel data.
  * @field BITMAP_FORMAT_RGBA 4 bytes per pixel: R, G, B, A
  * @field BITMAP_FORMAT_RGB 3 bytes per pixel: R, G, B (alpha = 255)
@@ -2351,7 +2350,7 @@ typedef enum {
 
 /**
  * @function bitmap_load
- * @abstract Creates an image from raw pixel data in the specified format.
+ * @brief Creates an image from raw pixel data in the specified format.
  * @discussion Loads pixel data from a raw byte array and creates a new image. The data must be in the specified format and contain width * height * bytes_per_pixel bytes. The returned image must be freed with bitmap_destroy() when no longer needed.
  * @param data Pointer to the raw pixel data.
  * @param width The width of the image in pixels.

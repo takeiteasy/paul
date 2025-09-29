@@ -19,7 +19,7 @@
  @header paul_threads.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
- @abstract Cross-platform polyfill for pthreads + C11 threads for C/C++.
+ @brief Cross-platform polyfill for pthreads + C11 threads for C/C++.
  @discussion
     Implementation is included when PAUL_THREADS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
  */
@@ -267,7 +267,7 @@ struct timespec {
  @function thrd_timeout_ms
  @param milliseconds The number of milliseconds to add to the current time
  @return Returns a timespec representing the absolute time now + milliseconds
- @abstract Return an absolute timespec representing now + milliseconds
+ @brief Return an absolute timespec representing now + milliseconds
  @discussion Named "thrd_timeout_ms" to avoid colliding with the enum identifier "thrd_timeout" used for return codes.
  */
 struct timespec thrd_timeout_ms(unsigned int milliseconds);
@@ -309,13 +309,13 @@ typedef struct thrd_queue {
  @param queue Pointer to the queue to initialize
  @param max_size Maximum size of the queue
  @return Returns thrd_success on success, thrd_error on failure
- @abstract Initialize a thread-safe queue
+ @brief Initialize a thread-safe queue
  */
 int thrd_queue_init(thrd_queue_t *queue, size_t max_size);
 /*!
  @function thrd_queue_destroy
  @param queue Pointer to the queue to destroy
- @abstract Destroy a thread-safe queue
+ @brief Destroy a thread-safe queue
  */
 void thrd_queue_destroy(thrd_queue_t *queue);
 /*!
@@ -323,7 +323,7 @@ void thrd_queue_destroy(thrd_queue_t *queue);
  @param queue Pointer to the queue
  @param data Pointer to the data to enqueue
  @return Returns thrd_success on success, thrd_error on failure, thrd_busy if queue is full
- @abstract Enqueue data into the thread-safe queue
+ @brief Enqueue data into the thread-safe queue
  */
 int thrd_queue_enqueue(thrd_queue_t *queue, void *data);
 /*!
@@ -331,7 +331,7 @@ int thrd_queue_enqueue(thrd_queue_t *queue, void *data);
  @param queue Pointer to the queue
  @param data Pointer to a pointer to receive the dequeued data
  @return Returns thrd_success on success, thrd_error on failure
- @abstract Dequeue data from the thread-safe queue, blocking if empty
+ @brief Dequeue data from the thread-safe queue, blocking if empty
  */
 int thrd_queue_dequeue(thrd_queue_t *queue, void **data);
 /*!
@@ -339,27 +339,27 @@ int thrd_queue_dequeue(thrd_queue_t *queue, void **data);
  @param queue Pointer to the queue
  @param data Pointer to a pointer to receive the dequeued data
  @return Returns thrd_success on success, thrd_busy if empty, thrd_error on failure
- @abstract Try to dequeue data from the thread-safe queue without blocking
+ @brief Try to dequeue data from the thread-safe queue without blocking
  */
 int thrd_queue_try_dequeue(thrd_queue_t *queue, void **data);
 /*!
  @function thrd_queue_size
  @param queue Pointer to the queue
  @return Returns the current number of items in the queue
- @abstract Get the size of the thread-safe queue
+ @brief Get the size of the thread-safe queue
  */
 size_t thrd_queue_size(thrd_queue_t *queue);
 /*!
  @function thrd_queue_empty
  @param queue Pointer to the queue
  @return Returns true if the queue is empty, false otherwise
- @abstract Check if the thread-safe queue is empty
+ @brief Check if the thread-safe queue is empty
  */
 bool thrd_queue_empty(thrd_queue_t *queue);
 /*!
  @function thrd_queue_shutdown
  @param queue Pointer to the queue
- @abstract Shutdown the thread-safe queue
+ @brief Shutdown the thread-safe queue
  */
 void thrd_queue_shutdown(thrd_queue_t *queue);
 
@@ -434,7 +434,7 @@ typedef struct {
  @param num_threads Number of worker threads
  @param max_queue_size Maximum size of the job queue
  @return Returns a pointer to the created thread pool, or NULL on failure
- @abstract Create a thread pool
+ @brief Create a thread pool
  */
 thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size);
 /*!
@@ -444,40 +444,40 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size);
  @param arg Argument to pass to the function
  @param cleanup Optional cleanup function
  @return Returns thrd_success on success, thrd_error on failure
- @abstract Submit a job to the thread pool
+ @brief Submit a job to the thread pool
  */
 int thrd_pool_submit(thrd_pool_t *pool, void (*function)(void*), void *arg, void (*cleanup)(void*));
 /*!
  @function thrd_pool_wait
  @param pool Pointer to the thread pool
- @abstract Wait for all jobs in the thread pool to complete
+ @brief Wait for all jobs in the thread pool to complete
  */
 void thrd_pool_wait(thrd_pool_t *pool);
 /*!
  @function thrd_pool_destroy
  @param pool Pointer to the thread pool
- @abstract Destroy the thread pool
+ @brief Destroy the thread pool
  */
 void thrd_pool_destroy(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_thread_count
  @param pool Pointer to the thread pool
  @return Returns the number of threads in the pool
- @abstract Get the number of threads in the thread pool
+ @brief Get the number of threads in the thread pool
  */
 size_t thrd_pool_get_thread_count(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_active_count
  @param pool Pointer to the thread pool
  @return Returns the number of active threads
- @abstract Get the number of active threads in the thread pool
+ @brief Get the number of active threads in the thread pool
  */
 size_t thrd_pool_get_active_count(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_queue_size
  @param pool Pointer to the thread pool
  @return Returns the size of the job queue
- @abstract Get the size of the job queue in the thread pool
+ @brief Get the size of the job queue in the thread pool
  */
 size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
 

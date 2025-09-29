@@ -19,7 +19,7 @@
  @header paul_os.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
- @abstract Cross-platform file, path, and system utilities for C/C++.
+ @brief Cross-platform file, path, and system utilities for C/C++.
  @discussion
     Implementation is included when PAUL_OS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined. 
     On MacOS optional Cocoa support can be enabled by defining PAUL_OS_USE_COCOA and linking
@@ -187,7 +187,7 @@ extern const file_t io_in;
  @function io_print
  @param IO File stream to write to
  @param MSG Message to print
- @abstract Print a message to a file stream
+ @brief Print a message to a file stream
  */
 #define io_print(IO, MSG)             \
     do                                \
@@ -199,7 +199,7 @@ extern const file_t io_in;
  @function io_println
  @param IO File stream to write to
  @param MSG Message to print
- @abstract Print a message to a file stream with a newline
+ @brief Print a message to a file stream with a newline
  */
 #define io_println(IO, MSG)     \
     do                          \
@@ -210,25 +210,25 @@ extern const file_t io_in;
 /*!
  @function print
  @param MSG Message to print
- @abstract Print a message to standard out
+ @brief Print a message to standard out
  */
 #define print(MSG)       io_print(io_out, MSG)
 /*!
  @function println
  @param MSG Message to print
- @abstract Print a message to standard out with a newline
+ @brief Print a message to standard out with a newline
  */
 #define println(MSG)     io_println(io_out, MSG)
 /*!
  @function print_err
  @param MSG Message to print
- @abstract Print a message to standard error
+ @brief Print a message to standard error
  */
 #define print_err(MSG)   io_print(io_err, MSG)
 /*!
  @function println_err
  @param MSG Message to print
- @abstract Print a message to standard error with a newline
+ @brief Print a message to standard error with a newline
  */
 #define println_err(MSG) io_println(io_err, MSG)
 
@@ -263,14 +263,14 @@ enum file_seek_t {
  @param dst File steam destination
  @param path Path to file
  @param mode File steam access mode(s)
- @abstract Open file stream
+ @brief Open file stream
  */
 bool io_open(file_t *dst, const char* path, enum file_mode_t mode);
 /*!
  @function io_close
  @param file Pointer to file steam to close
  @return Returns true/false on success
- @abstract Close file stream
+ @brief Close file stream
  */
 bool io_close(file_t *file);
 /*!
@@ -279,7 +279,7 @@ bool io_close(file_t *file);
  @param buffer Buffer to read to
  @param size Size of the destination buffer
  @return Returns true/false on success
- @abstract Read n bytes from file stream
+ @brief Read n bytes from file stream
  @discussion Please ensure that size >= destination buffer size
  */
 size_t io_read(file_t file, void *buffer, size_t size);
@@ -289,7 +289,7 @@ size_t io_read(file_t file, void *buffer, size_t size);
  @param buffer Source buffer to write
  @param size Number of bytes to write
  @return Returns number of bytes read, -1 on error
- @abstract Write n bytes to file stream
+ @brief Write n bytes to file stream
  @discussion Please ensure that size is >= the source buffer size
  */
 size_t io_write(file_t file, const void *buffer, size_t size);
@@ -299,7 +299,7 @@ size_t io_write(file_t file, const void *buffer, size_t size);
  @param offset The number of bytes to seek
  @param whence The offset of the seek
  @return Returns true/false on success
- @abstract Seek file stream position
+ @brief Seek file stream position
  */
 bool io_seek(file_t file, long offset, enum file_seek_t whence);
 /*!
@@ -307,35 +307,35 @@ bool io_seek(file_t file, long offset, enum file_seek_t whence);
  @param file File stream to modify
  @param offset Number of bytes to seek
  @return Returns true/false on success
- @abstract Advance the file stream cursor by n bytes
+ @brief Advance the file stream cursor by n bytes
  */
 bool io_advance(file_t file, long offset);
 /*!
  @function io_tell
  @param file File stream to check
  @return Returns the current file stream position, -1 on error
- @abstract Get current position of file stream
+ @brief Get current position of file stream
  */
 size_t io_tell(file_t file);
 /*!
  @function io_eof
  @param file File stream to check
  @return Returns true is file is at the end
- @abstract Check if file is at the end
+ @brief Check if file is at the end
  */
 bool io_eof(file_t file);
 /*!
  @function io_flush
  @param file File stream to flush
  @return Returns true/false on success
- @abstract Flush file stream
+ @brief Flush file stream
  */
 bool io_flush(file_t file);
 /*!
  @function io_valid
  @param file File stream to check
  @return Check if a file stream is valid
- @abstract Check if a file stream is valid
+ @brief Check if a file stream is valid
  */
 bool io_valid(file_t file);
 /*!
@@ -344,7 +344,7 @@ bool io_valid(file_t file);
  @param buffer Destination buffer
  @param size Size of destination buffer
  @return Returns true/false on success
- @abstract Read until newline or end of file
+ @brief Read until newline or end of file
  */
 bool io_read_line(file_t file, char *buffer, size_t size);
 /*!
@@ -352,7 +352,7 @@ bool io_read_line(file_t file, char *buffer, size_t size);
  @param file File stream to write to
  @param str String to write
  @return Returns true/false on success
- @abstract Write a string to a file stream
+ @brief Write a string to a file stream
  */
 bool io_write_string(file_t file, const char *str);
 /*!
@@ -360,7 +360,7 @@ bool io_write_string(file_t file, const char *str);
  @param file File stream to modify
  @param size Offset bytes
  @return Returns true/false on success
- @abstract Truncate a file stream to a specific length
+ @brief Truncate a file stream to a specific length
  */
 bool io_truncate(file_t file, long size);
 
@@ -368,7 +368,7 @@ bool io_truncate(file_t file, long size);
  @function environment_variable
  @param name Variable name
  @return Returns enviroment variable string or NULL on failure
- @abstract Get an enviroment variable
+ @brief Get an enviroment variable
  @discussion Return value will need to be freed on success
  */
 char* environment_variable(const char *name); // !
@@ -396,7 +396,7 @@ typedef enum shell_error {
 
 /*!
  @typedef shell_stream_cb_t
- @abstract Callback type for streaming output
+ @brief Callback type for streaming output
  */
 typedef void (*shell_stream_cb_t)(const char *data, size_t len, void *userdata);
 
@@ -411,7 +411,7 @@ typedef void (*shell_stream_cb_t)(const char *data, size_t len, void *userdata);
  @field out_cb Callback for streaming stdout chunks
  @field err_cb Callback for streaming stderr chunks
  @field userdata User data pointer passed to callbacks
- @abstract I/O capture and streaming control structure
+ @brief I/O capture and streaming control structure
  @discussion 
     shell_io is used to control input/output capture and streaming for the shell function.
     It allows capturing stdout and stderr into buffers or streaming them via callbacks.
@@ -464,7 +464,7 @@ typedef struct shell_io {
  @param command Command to execute
  @param io Capture structure, NULL to ignore (no capture output)
  @return Returns the exit code of the command, negative on internal error
- @abstract Execute a shell command
+ @brief Execute a shell command
  @discussion Execute a shell command (bourne shell syntax, |, >, <, &&, ;)
  */
 int shell(const char *command, shell_io *io);
@@ -483,7 +483,7 @@ int shell_fmt(shell_io *io, const char *command, ...);
  @function file_exists
  @param path Path to file
  @return Returns true if file exists
- @abstract Check if a file exists
+ @brief Check if a file exists
  @discussion Checks if a path exists and is a file (directory will return false)
  */
 bool file_exists(const char *path);
@@ -491,7 +491,7 @@ bool file_exists(const char *path);
  @function file_delete
  @param path Path to file
  @return Returns true/false on success
- @abstract Delete a file from file system
+ @brief Delete a file from file system
  */
 bool file_delete(const char *path);
 /*!
@@ -500,7 +500,7 @@ bool file_delete(const char *path);
  @param new_path New path for file
  @param write_over Write over existing files when moving
  @return Returns true/false on success
- @abstract Move a file
+ @brief Move a file
  @discussion WIP
  */
 bool file_rename(const char *old_path, const char *new_path, bool write_over);
@@ -510,7 +510,7 @@ bool file_rename(const char *old_path, const char *new_path, bool write_over);
  @param dst_path Path to copy
  @param write_over Write over existing files when moving
  @return Returns true/false on success
- @abstract Copy a file
+ @brief Copy a file
  @discussion WIP
  */
 bool file_copy(const char *src_path, const char *dst_path, bool write_over);
@@ -518,7 +518,7 @@ bool file_copy(const char *src_path, const char *dst_path, bool write_over);
  @function file_size
  @param path Path to file
  @return Returns size of a file, -1 on error
- @abstract Get file size
+ @brief Get file size
  */
 int file_size(const char *path);
 /*!
@@ -526,7 +526,7 @@ int file_size(const char *path);
  @param path Path to file
  @param size Pointer to recieve file size
  @return Returns the contents of a file
- @abstract Read a file from disk
+ @brief Read a file from disk
  @discussion Return value will need to be freed on success
  */
 const char* file_read(const char *path, size_t *size);  // !
@@ -535,7 +535,7 @@ const char* file_read(const char *path, size_t *size);  // !
  @function directory_exists
  @param path Path to directory
  @return Returns true if file exists
- @abstract Check if a directory exists
+ @brief Check if a directory exists
  @discussion Checks if a path exists and is a directory (file will return false)
  */
 bool directory_exists(const char *path);
@@ -544,7 +544,7 @@ bool directory_exists(const char *path);
  @param path Path to directory
  @param recursive If this is true, will create any required parent directories
  @return Returns true/false on success
- @abstract Create a directory
+ @brief Create a directory
  @discussion WIP
  */
 bool directory_create(const char *path, bool recursive);
@@ -554,7 +554,7 @@ bool directory_create(const char *path, bool recursive);
  @param recursive If this is true, it will delete and child directories too
  @param and_files If this is ture, it will delete and files inside the directory
  @return Returns true/false on success
- @abstract Delete a directory
+ @brief Delete a directory
  @discussion WIP
  */
 bool directory_delete(const char *path, bool recursive, bool and_files);
@@ -564,7 +564,7 @@ bool directory_delete(const char *path, bool recursive, bool and_files);
  @param new_path Path to directory to move to
  @param write_over If this is true, write over any existing files when copying
  @return Returns true/false on success
- @abstract Move a directory
+ @brief Move a directory
  @discussion WIP
  */
 bool directory_rename(const char *old_path, const char *new_path, bool write_over);
@@ -575,14 +575,14 @@ bool directory_rename(const char *old_path, const char *new_path, bool write_ove
  @param write_over If this is true, write over any existing files when copying
  @param delete_src If this is true, delete the original directory and files after copy succeeds
  @return Returns true/false on success
- @abstract Copy a directory and contents
+ @brief Copy a directory and contents
  */
 bool directory_copy(const char *src_path, const char *dst_path, bool write_over, bool delete_src);
 /*!
  @function directory_size
  @param path Path to directory
  @return Returns size of directory contents, -1 on error
- @abstract Get the size of a directory
+ @brief Get the size of a directory
  */
 int directory_size(const char *path);
 /*!
@@ -590,7 +590,7 @@ int directory_size(const char *path);
  @param path Path to directory
  @param recursive If this is true, child directories will also be counted
  @return Returns number of items in directory, -1 on error
- @abstract Get the number of files/directories inside a directory
+ @brief Get the number of files/directories inside a directory
  */
 int directory_item_count(const char *path, bool recursive);
 /*!
@@ -598,7 +598,7 @@ int directory_item_count(const char *path, bool recursive);
  @param path Path to directory
  @param recursive If this is true, child directories will also be counted
  @return Returns number of files in directory, -1 on error
- @abstract Get the number of files inside a directory
+ @brief Get the number of files inside a directory
  @discussion This doesn't count directories
  */
 int directory_file_count(const char *path, bool recursive);
@@ -607,7 +607,7 @@ int directory_file_count(const char *path, bool recursive);
  @param pattern Glob pattern to match
  @param count Pointer to an integer to store the number of matches
  @return Returns an array of strings containing the matched file paths, or NULL on error
- @abstract Glob a directory for files matching a pattern
+ @brief Glob a directory for files matching a pattern
  @discussion The result must be freed by the caller.
              The count will be set to the number of matches.
              The array and its elements must be freed by the caller.
@@ -634,14 +634,14 @@ typedef struct dir {
  @param dir Pointer to dir_t structure
  @param is_dir Pointer to bool to store if the current item is a directory
  @return Returns the name of the next item in the directory, or NULL if there are no more items
- @abstract Iterate through a directory
+ @brief Iterate through a directory
  @discussion If you need to exit an iteration early, call directory_iter_end(dir)
  */
 const char* directory_iter(dir_t *dir, bool *is_dir);
 /*!
  @function directory_iter_end
  @param dir Pointer to dir_t structure
- @abstract End a directory iteration prematurely
+ @brief End a directory iteration prematurely
  @discussion This will close the directory iterator and free any resources used.
              Normally this will be done at the end of the iteration.
  */
@@ -669,7 +669,7 @@ typedef int(*walk_callback)(const char* path, const char* filename, void* userda
  @param callback Callback function to call for each match
  @param userdata User data pointer to pass to the callback
  @return Returns true/false on success
- @abstract Glob a pattern and call a callback for each match
+ @brief Glob a pattern and call a callback for each match
  */
 bool path_glob(const char *pattern, glob_callback callback, void *userdata);
 /*!
@@ -679,7 +679,7 @@ bool path_glob(const char *pattern, glob_callback callback, void *userdata);
  @param callback Callback function to call for each file/directory
  @param userdata User data pointer to pass to the callback
  @return Returns true/false on success
- @abstract Walk a directory and call a callback for each file/directory
+ @brief Walk a directory and call a callback for each file/directory
  */
 bool path_walk(const char *path, bool recursive, walk_callback callback, void *userdata);
 
@@ -708,7 +708,7 @@ typedef int(^walk_block)(const char* path, const char* filename, void* userdata)
  @param callback Block to call for each match
  @param userdata User data pointer to pass to the block
  @return Returns true/false on success
- @abstract Glob a pattern and call a block for each match
+ @brief Glob a pattern and call a block for each match
  @discussion Blocks are a clang/gcc extension. -fblocks must be enabled to use this.
  */
 bool path_glob_block(const char *pattern, glob_block callback, void *userdata);
@@ -719,7 +719,7 @@ bool path_glob_block(const char *pattern, glob_block callback, void *userdata);
  @param callback Block to call for each file/directory
  @param userdata User data pointer to pass to the block
  @return Returns true/false on success
- @abstract Walk a directory and call a block for each file/directory
+ @brief Walk a directory and call a block for each file/directory
  @discussion Blocks are a clang/gcc extension. -fblocks must be enabled to use this.
  */
 bool path_walk_block(const char *path, bool recursive, walk_block callback, void *userdata);
@@ -729,75 +729,75 @@ bool path_walk_block(const char *path, bool recursive, walk_block callback, void
  @function path_exists
  @param path The path to check
  @return Returns true/false on success
- @abstract Check if a path exists. This will return true for both files and directories.
+ @brief Check if a path exists. This will return true for both files and directories.
  */
 bool path_exists(const char *path);
 /*!
  @function path_get_working_directory
  @return Returns the current working directory
- @abstract Get the current working directory
+ @brief Get the current working directory
  */
 const char* path_get_working_directory(void);
 /*!
  @function path_set_working_directory
  @param path The path to set as the working directory
  @return Returns true/false on success
- @abstract Set the current working directory
+ @brief Set the current working directory
  */
 bool path_set_working_directory(const char *path);
 
 /*!
  @function path_get_root_dir
  @return Returns the root directory
- @abstract Get the root directory
+ @brief Get the root directory
  */
 const char* path_get_root_dir(void);
 /*!
  @function path_get_home_dir
  @return Returns the home directory
- @abstract Get the home directory
+ @brief Get the home directory
  */
 const char* path_get_home_dir(void);
 /*!
  @function path_get_documents_dir
  @return Returns the documents directory
- @abstract Get the documents directory
+ @brief Get the documents directory
  */
 const char* path_get_documents_dir(void);
 /*!
  @function path_get_downloads_dir
  @return Returns the downloads directory
- @abstract Get the downloads directory
+ @brief Get the downloads directory
  */
 const char* path_get_downloads_dir(void);
 /*!
  @function path_get_video_dir
  @return Returns the video directory
- @abstract Get the video directory
+ @brief Get the video directory
  */
 const char* path_get_video_dir(void);
 /*!
  @function path_get_music_dir
  @return Returns the music directory
- @abstract Get the music directory
+ @brief Get the music directory
  */
 const char* path_get_music_dir(void);
 /*!
  @function path_get_picture_dir
  @return Returns the picture directory
- @abstract Get the picture directory
+ @brief Get the picture directory
  */
 const char* path_get_picture_dir(void);
 /*!
  @function path_get_application_dir
  @return Returns the application directory
- @abstract Get the application directory
+ @brief Get the application directory
  */
 const char* path_get_application_dir(void);
 /*!
  @function path_get_desktop_dir
  @return Returns the desktop directory
- @abstract Get the desktop directory
+ @brief Get the desktop directory
  */
 const char* path_get_desktop_dir(void);
 
@@ -805,21 +805,21 @@ const char* path_get_desktop_dir(void);
  @function path_get_file_extension
  @param path The path to get the file extension from
  @return Returns the file extension or NULL if there is no extension
- @abstract Get the file extension from a path
+ @brief Get the file extension from a path
  */
 const char* path_get_file_extension(const char *path);
 /*!
  @function path_get_file_name
  @param path The path to get the file name from
  @return Returns the file name or NULL if there is no file name
- @abstract Get the file name from a path
+ @brief Get the file name from a path
  */
 const char* path_get_file_name(const char *path);
 /*!
  @function path_get_file_name_no_extension
  @param path The path to get the file name without extension from
  @return Returns the file name without extension or NULL if there is no file name
- @abstract Get the file name without extension from a path
+ @brief Get the file name without extension from a path
  @discussion The result must be freed by the caller.
  */
 const char* path_get_file_name_no_extension(const char *path);  // !
@@ -827,7 +827,7 @@ const char* path_get_file_name_no_extension(const char *path);  // !
  @function path_without_file_name
  @param path The path to get the directory name from
  @return Returns the directory name or NULL if there is no directory name
- @abstract Get the directory name from a path
+ @brief Get the directory name from a path
  @discussion The result must be freed by the caller.
  */
 const char* path_without_file_name(const char *path);  // !
@@ -835,7 +835,7 @@ const char* path_without_file_name(const char *path);  // !
  @function path_get_directory_name
  @param path The path to get the directory name from
  @return Returns the directory name or NULL if there is no directory name
- @abstract Get the directory name from a path
+ @brief Get the directory name from a path
  @discussion The result must be freed by the caller.
  */
 const char* path_get_directory_name(const char *path); // !
@@ -843,7 +843,7 @@ const char* path_get_directory_name(const char *path); // !
  @function path_get_parent_directory
  @param path The path to get the parent directory from
  @return Returns the parent directory or NULL if there is no parent directory
- @abstract Get the parent directory from a path
+ @brief Get the parent directory from a path
  @discussion The result must be freed by the caller.
  */
 const char* path_get_parent_directory(const char *path); // !
@@ -852,7 +852,7 @@ const char* path_get_parent_directory(const char *path); // !
  @function path_resolve
  @param path The path to resolve
  @return Returns the resolved path or NULL on error
- @abstract Resolve a path to an absolute path
+ @brief Resolve a path to an absolute path
  @discussion This will attempt to resolve ~ to the user's home directory and ".." to the parent directory. The result must be freed by the caller. WIP.
  */
 const char* path_resolve(const char *path); // !
@@ -861,7 +861,7 @@ const char* path_resolve(const char *path); // !
  @param a The first path
  @param b The second path
  @return Returns the joined path or NULL on error
- @abstract Join two paths together
+ @brief Join two paths together
  @discussion The result must be freed by the caller.
  */
 const char* path_join(const char *a, const char *b); // !
@@ -870,7 +870,7 @@ const char* path_join(const char *a, const char *b); // !
  @param n The number of paths to join
  @param ... The paths to join
  @return Returns the joined path or NULL on error
- @abstract Join multiple paths together
+ @brief Join multiple paths together
  @discussion The result must be freed by the caller.
  */
 const char* path_join_va(int n, ...); // !
@@ -879,7 +879,7 @@ const char* path_join_va(int n, ...); // !
  @param path The path to split
  @param count Pointer to an integer to store the number of parts
  @return Returns an array of strings containing the parts of the path, or NULL on error
- @abstract Split a path into its components
+ @brief Split a path into its components
  @discussion The result must be freed by the caller.
              The count will be set to the number of parts.
              The array and its elements must be freed by the caller.

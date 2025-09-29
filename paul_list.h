@@ -15,23 +15,19 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
+/*!
+ @header paul_list.h
+ @copyright George Watson GPLv3
+ @updated 2025-09-29
+ @brief Dynamic array (stretchy-buffer) macros for C/C++.
+ @discussion
+    Implementation is included when PAUL_LIST_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+*/
+
 #ifndef PAUL_LIST_HEADER
 #define PAUL_LIST_HEADER
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef __cplusplus
-#define PAUL_NO_BLOCKS
-#endif
-#ifndef PAUL_NO_BLOCKS
-#if !__has_extension(blocks)
-#define PAUL_NO_BLOCKS
-#else
-#if __has_include(<Block.h>)
-#include <Block.h>
-#endif
-#endif
 #endif
 
 #include <stddef.h>
@@ -51,19 +47,110 @@ extern "C" {
 #define __list_maybeshrink__(a)     (__list_needshrink__(a) ? __list_shrink__(a) : 0)
 #define __list_shrink__(a)          __list_shrinkf__((void **) &(a), sizeof(*(a)))
 
+/*!
+ @define list_free
+ @brief Free the underlying buffer used by a dynamic list created with these macros.
+ @param a The list pointer previously used with the list macros. May be NULL.
+ @discussion If 'a' is non-NULL this macro frees the internal allocation backing the list. After calling this macro the caller must not use 'a' unless it is reinitialized. The macro evaluates to 0.
+ */
 #define list_free(a)                ((a) ? free(__list_raw__(a)),0 : 0)
+
+/*!
+ @define list_append
+ @brief Append a value to the end of the list.
+ @param a The list variable (pointer-to-element-type). May be NULL; it will be grown as needed.
+ @param v The value to append (assigned by value into the list element slot).
+ @discussion This macro may reallocate the list to accommodate the new element. After growing, it stores the value at the next index and increments the list count.
+ */
 #define list_append(a, v)           (__list_maybegrow__(a,1), (a)[__list_n__(a)++] = (v))
+
+/*!
+ @define list_count
+ @brief Return the number of elements currently stored in the list.
+ @param a The list variable (pointer-to-element-type). May be NULL.
+ @result The number of elements in the list (0 if 'a' is NULL).
+ */
 #define list_count(a)               ((a) ? __list_n__(a) : 0)
+
+/*!
+ @define list_insert
+ @brief Insert a value at the specified index, shifting subsequent elements.
+ @param a The list variable (pointer-to-element-type). May be NULL; it will be grown as needed.
+ @param idx Zero-based index at which to insert the value. Must be <= current count.
+ @param v The value to insert.
+ @discussion This macro grows the list if necessary, shifts elements starting at 'idx' one slot to the right, stores 'v' at 'idx', and increments the stored element count.
+ */
 #define list_insert(a, idx, v)      (__list_maybegrow__(a,1), memmove(&a[idx+1], &a[idx], (__list_n__(a)++ - idx) * sizeof(*(a))), a[idx] = (v))
+
+/*!
+ @define list_push
+ @brief Push a value to the front of the list (insert at index 0).
+ @param a The list variable (pointer-to-element-type).
+ @param v The value to push.
+ */
 #define list_push(a, v)             (list_insert(a,0,v))
+
+/*!
+ @define list_cdr
+ @brief Return a pointer to the list starting at the second element (the "cdr").
+ @param a The list variable (pointer-to-element-type).
+ @result Pointer to the second element of the list, or NULL if the list has fewer than two elements.
+ */
 #define list_cdr(a)                 (void*)(list_count(a) > 1 ? &(a+1) : NULL)
+
+/*!
+ @define list_car
+ @brief Return a pointer to the first element of the list (the "car").
+ @param a The list variable (pointer-to-element-type).
+ @result Pointer to the first element, or NULL if the list is NULL.
+ */
 #define list_car(a)                 (void*)((a) ? &(a)[0] : NULL)
+
+/*!
+ @define list_last
+ @brief Return a pointer to the last element in the list.
+ @param a The list variable (pointer-to-element-type).
+ @result Pointer to the last element, or NULL if the list is NULL or empty.
+ */
 #define list_last(a)                (void*)((a) ? &(a)[__list_n__(a)-1] : NULL)
+
+/*!
+ @define list_pop
+ @brief Remove the last element from the list (decrement count) and possibly shrink the backing storage.
+ @param a The list variable (pointer-to-element-type).
+ @discussion This macro only adjusts the stored element count; it does not return the popped value. It may shrink the backing allocation when the list becomes sparse.
+ */
 #define list_pop(a)                 (--__list_n__(a), __list_maybeshrink__(a))
+
+/*!
+ @define list_remove_at
+ @brief Remove the element at the given index, shifting subsequent elements left.
+ @param a The list variable (pointer-to-element-type).
+ @param idx The zero-based index of the element to remove.
+ @discussion The macro shifts elements after 'idx' down and adjusts the stored count. It will also attempt to shrink the backing allocation when appropriate.
+ */
 #define list_remove_at(a, idx)      (idx == __list_n__(a)-1 ? memmove(&a[idx], &arr[idx+1], (--__list_n__(a) - idx) * sizeof(*(a))) : list_pop(a), __list_maybeshrink__(a))
+
+/*!
+ @define list_shift
+ @brief Remove the first element of the list (shift).
+ @param a The list variable (pointer-to-element-type).
+ */
 #define list_shift(a)               (list_remove_at(a, 0))
+
+/*!
+ @define list_clear
+ @brief Clear all elements from the list and shrink its backing allocation.
+ @param a The list variable (pointer-to-element-type).
+ */
 #define list_clear(a)               ((a) ? (__list_n__(a) = 0) : 0, __list_shrink__(a))
 
+/*!
+ @define list_shuffle
+ @brief Randomly shuffle the elements of the list in-place using rand().
+ @param a The list variable (pointer-to-element-type).
+ @discussion Uses the Fisher–Yates shuffle algorithm. The caller is responsible for seeding the PRNG (e.g. srand()) if reproducible behaviour is required.
+ */
 #define list_shuffle(a)                             \
     do {                                            \
         int i, j, n = list_count(a);                \
@@ -75,196 +162,21 @@ extern "C" {
         }                                           \
     } while(0)
 
+/*!
+ @define list_reverse
+ @brief Reverse the order of elements in the list in-place.
+ @param a The list variable (pointer-to-element-type).
+ */
 #define list_reverse(a)                             \
     do {                                            \
         int len = list_count(a);                    \
-        for (int i = 0; i < len; i++) {             \
+        for (int i = 0; i < len / 2; i++) {         \
             int j = (len - i) - 1;                  \
-            if (i == j)                             \
-                continue;                           \
             typeof(a[i]) tmp  = a[i];               \
             a[i] = a[j];                            \
             a[j] = tmp;                             \
         }                                           \
     } while(0)
-
-#ifndef PAUL_NO_BLOCKS
-#define list_shuffled(a)                            \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        size_t n = list_count(a);                   \
-        int *indices = NULL;                        \
-        for (int i = 0; i < n; i++)                 \
-            list_append(indices, i);                \
-        list_shuffle(indices);                      \
-        for (int i = 0; i < n; i++)                 \
-            list_append(result, a[indices[i]]);     \
-        list_free(indices);                         \
-        return result;                              \
-    }(a)
-
-#define list_new(TYPE, ...)                         \
-    ^(void) {                                       \
-        TYPE *result = NULL;                        \
-        list_append_va(result, __VA_ARGS__);        \
-        return result;                              \
-    }()
-
-#define list_map(a, fn)                             \
-    ^(typeof(a) _a) {                               \
-        typeof(_a) result = NULL;                   \
-        for (int i = 0; i < list_count(_a); i++)    \
-            list_append(result, fn(_a[i]));         \
-        return result;                              \
-    }(a)
-
-#define list_map_enumerate(a, fn)                   \
-    ^(typeof(a) _a) {                               \
-        typeof(_a) result = NULL;                   \
-        for (int i = 0; i < list_count(_a); i++)    \
-            list_append(result, fn(i, _a[i]));      \
-        return result;                              \
-    }(a)
-
-#define list_reduce(a, initial, fn)                 \
-    ^(typeof(a) _a) {                               \
-        typeof(_a[0]) result = initial;             \
-        for (int i = 0; i < list_count(_a); i++)    \
-            fn(&result, _a[i]);                     \
-        return result;                              \
-    }(a)
-
-#define list_reduce_enumerate(a, initial, fn)       \
-    ^(typeof(a) _a) {                               \
-        typeof(_a[0]) result = initial;             \
-        for (int i = 0; i < list_count(_a); i++)    \
-            fn(i, &result, _a[i]);                  \
-        return result;                              \
-    }(a)
-
-#define list_filter(a, v)                           \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        for (int i = 0; i < list_count(_a); i++)    \
-            if (_a[i] == v)                         \
-                list_append(result, _a[i]);         \
-        return result;                              \
-    }(a)
-
-#define list_filter_fn(a, fn)                       \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        for (int i = 0; i < list_count(_a); i++)    \
-            if (fn(_a[i]))                          \
-                list_append(result, _a[i]);         \
-        return result;                              \
-    }(a)
-
-#define list_filter_indices(a, v)                   \
-    ^(typeof(a) _a) {                               \
-        int *result = NULL;                         \
-        for (int i = 0; i < list_count(_a); i++)    \
-            if (_a[i] == v)                         \
-                list_append(result, i);             \
-        return result;                              \
-    }(a)
-
-#define list_filter_indices_fn(a, fn)               \
-    ^(typeof(a) _a) {                               \
-        int *result = NULL;                         \
-        for (int i = 0; i < list_count(_a); i++)    \
-            if (fn(i, _a[i]))                       \
-                list_append(result, i);             \
-        return result;                              \
-    }(a)
-
-#define list_sample(a, n) \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        int l = list_count(a);                      \
-        if (n > l || !n || !l)                      \
-            return result;                          \
-        if (n == l)                                 \
-            return a;                               \
-        int x[n], j = 0;                            \
-        for (int i = 0; i < n; i++)                 \
-            x[i] = 0;                               \
-        for (int i = 0; i < n; i++) {               \
-            int y = rand() / (RAND_MAX / n + 1);    \
-            int alreadyFound = 0;                   \
-            for (int k = 0; k < j; k++)             \
-                if (x[k] == y) {                    \
-                    alreadyFound = 1;               \
-                    break;                          \
-                }                                   \
-            if (alreadyFound)                       \
-                i--;                                \
-            else {                                  \
-                list_append(result, _a[y]);         \
-                x[j++] = y;                         \
-            }                                       \
-        }                                           \
-        return result;                              \
-    }(a)
-
-#define list_slice(a, start, end)                   \
-    ^(typeof(a) _a, int _min, int _max) {           \
-        typeof(a) result = NULL;                    \
-        if (_min < 0)                               \
-            _min = 0;                               \
-        int l = list_count(_a);                     \
-        if (_max > l)                               \
-            _max = l;                               \
-        if (_min >= _max)                           \
-            return result;                          \
-        for (int i = _min; i < _max; i++)           \
-            list_append(result, _a[i]);             \
-        return result;                              \
-    }(a, start, end)
-
-#define list_unique(a)                              \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        int i, j;                                   \
-        for (i = 0; i < list_count(_a); i++) {      \
-            for (j = 0; j < i; j++)                 \
-                if (_a[i] == _a[j])                 \
-                    break;                          \
-            if (i == j)                             \
-                list_append(result, _a[i]);         \
-        }                                           \
-        return result;                              \
-    }(a)
-
-#define list_unique_fn(a, fn)                       \
-    ^(typeof(a) _a) {                               \
-        typeof(a) result = NULL;                    \
-        int i, j;                                   \
-        for (i = 0; i < list_count(_a); i++) {      \
-            for (j = 0; j < i; j++)                 \
-                if (fn(_a[i], _a[j]))               \
-                    break;                          \
-            if (i == j)                             \
-                list_append(result, _a[i]);         \
-        }                                           \
-        return result;                              \
-    }(a)
-
-#define list_clone(a)                               \
-    ^(typeof(a) _a) {                               \
-        typeof(_a) result = NULL;                   \
-        for (int i = 0; i < list_count(_a); i++)    \
-            list_append(result, _a[i]);             \
-        return result;                              \
-    }(a)
-
-#define list_reversed(a)                            \
-    ^(typeof(a) _a) {                               \
-        typeof(_a) result = list_clone(_a);         \
-        list_reverse(result);                       \
-        return result;                              \
-    }(a)
-#endif // PAUL_NO_BLOCKS
 
 #ifndef always_inline
 #if defined(__clang__) || defined(__GNUC__)
@@ -274,7 +186,7 @@ extern "C" {
 #endif
 #endif
 
-always_inline static inline void __list_growf(void **arr, int increment, int itemsize) {
+always_inline static inline void __list_growf__(void **arr, int increment, int itemsize) {
     int m = *arr ? 2 * __list_m__(*arr) + increment : increment + 1;
     void *p = (void*)realloc(*arr ? __list_raw__(*arr) : 0, itemsize * m + sizeof(int) * 2);
     assert(p);
@@ -286,7 +198,7 @@ always_inline static inline void __list_growf(void **arr, int increment, int ite
     }
 }
 
-always_inline static inline void __list_shrinkf(void **arr, int itemsize) {
+always_inline static inline void __list_shrinkf__(void **arr, int itemsize) {
     int m = *arr ? __list_m__(*arr) / 2 : 0;
     void *p = (void*)realloc(*arr ? __list_raw__(*arr) : 0, itemsize * m + sizeof(int) * 2);
     assert(p);
