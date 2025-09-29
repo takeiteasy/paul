@@ -10,7 +10,7 @@ endif
 TEST_SRCS := $(wildcard tests/test_*.c)
 TEST_BINS := $(patsubst tests/test_%.c,tests/test_%,$(TEST_SRCS))
 
-.PHONY: all test clean docs stubs
+.PHONY: all test clean docs stubs final default
 
 all: stubs tests docs clean
 
@@ -30,3 +30,5 @@ stubs:
 
 docs:
 	@./etc/build_docs.sh
+
+final: clean docs

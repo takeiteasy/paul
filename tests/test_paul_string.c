@@ -5,6 +5,7 @@
 
 #include "test_common.h"
 
+#define PAUL_STRING_IMPLEMENTATION
 #include "../paul_string.h"
 
 /* Expanded tests for paul_string: ascii/wide creation, conversion and many utilities */
@@ -30,7 +31,7 @@ static void expect_wstr(const char *name, const wchar_t *got, const wchar_t *wan
 
 int main(void) {
     /* total tests below: update header if you change count */
-    printf("1..32\n");
+    printf("1..43\n");
 
     /* creation and raw access */
     str_t a = str_from_cstr("Hello");
@@ -125,6 +126,20 @@ int main(void) {
     str_t wwf = str_from_wcstr(L"Test123");
     expect_int("wc_wide_star", str_wildcard_wide(wwf, L"Test*") ? 1 : 0, 1);
     expect_int("wc_wide_qmark", str_wildcard_wide(wwf, L"T?st[0-9][0-9][0-9]") ? 1 : 0, 1);
+
+    /* accessor functions */
+    str_t len_test = str_from_cstr("hello");
+    expect_int("length_ascii", (int)str_length(len_test), 5);
+    expect_int("char_at_0", str_char_at(len_test, 0), 'h');
+    expect_int("char_at_4", str_char_at(len_test, 4), 'o');
+    expect_int("char_at_oob", str_char_at(len_test, 5), 0);
+    str_t wlen = str_from_wcstr(L"world");
+    expect_int("length_wide", (int)str_length(wlen), 5);
+    expect_int("wchar_at_0", str_wchar_at(wlen, 0), L'w');
+    expect_int("wchar_at_4", str_wchar_at(wlen, 4), L'd');
+    expect_int("wchar_at_oob", str_wchar_at(wlen, 5), 0);
+    expect_int("char_at_wide", str_char_at(wlen, 0), 0);
+    expect_int("wchar_at_ascii", str_wchar_at(len_test, 0), 0);
 
     if (test_failures() == 0) {
         fprintf(stderr, "# all string tests passed\n");

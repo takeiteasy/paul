@@ -273,14 +273,26 @@ function disclosure_triangle(elt) {
 </tr>
 </table></div>
 <h2>Introduction</h2>
-<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_string.h;name=start --><!-- begin abstract -->Use the links in the table of contents to the left to access the documentation.<br>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_string.h;name=start --><!-- begin abstract --></p>
+<p>Unified ascii+wide string type for C/C++.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_string.h;name=end --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_string.h;name=start --><p>Implementation is included when PAUL_STRING_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+<!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_string.h;name=end --><!-- end discussion -->
+</p>
+<dl>
+<dt><b>Updated:</b></dt>
+<dd>Saturday, July 19, 2025</dd>
+</dl>
 <hr class="afterClassOrHeaderInfo">
 <br><a name="HeaderDoc_functions"></a>
 <h2 class="h2tight">Functions</h2>
 <dl>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_append_char" target="_top">str_append_char</a></tt></dt>
 <dd><p>Append a single ASCII character to an ASCII `str_t`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_char_at" target="_top">str_char_at</a></tt></dt>
+<dd><p>Get the ASCII character at the specified index.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_cmp" target="_top">str_cmp</a></tt></dt>
 <dd><p>Compare two `str_t` values. Returns &lt;0, 0, &gt;0 similar to strcmp/wcscmp.
@@ -324,6 +336,9 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/c/func/str_is_utf16" target="_top">str_is_utf16</a></tt></dt>
 <dd><p>Query whether the `str_t` stores wide (wchar_t) characters.
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_length" target="_top">str_length</a></tt></dt>
+<dd><p>Get the length of the string in characters.
+</p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_make_ascii" target="_top">str_make_ascii</a></tt></dt>
 <dd><p>Convert a `str_t` to an ASCII representation.
 </p></dd>
@@ -353,6 +368,9 @@ function disclosure_triangle(elt) {
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_trim" target="_top">str_trim</a></tt></dt>
 <dd><p>Trim leading and trailing whitespace (ASCII only) from *s.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_wchar_at" target="_top">str_wchar_at</a></tt></dt>
+<dd><p>Get the wide character at the specified index.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_wildcard_ascii" target="_top">str_wildcard_ascii</a></tt></dt>
 <dd><p>Match ASCII `str_t` against a glob-style pattern using '*', '?', and
@@ -392,6 +410,41 @@ character classes like [a-z] or [^aeiou].
 <dd><p>Character to append.</p></dd>
 </dl>
 </div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_char_at;   name=str_char_at -->
+<a name="//apple_ref/c/func/str_char_at"></a>
+<h3><a name="str_char_at">str_char_at</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_char_at;name=start --><!-- begin abstract --></p>
+<p>Get the ASCII character at the specified index.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_char_at;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_char_at;name=start --><!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_char_at" logicalPath="//apple_ref/c/instm/str_char_at //apple_ref/c/clm/str_char_at //apple_ref/c/intfcm/str_char_at //apple_ref/c/intfm/str_char_at //apple_ref/c/func/str_char_at" target="_top"><span class="function">str_char_at</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">index</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_char_at;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_char_at/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_char_at/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The ASCII str_t handle.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_char_at/index;   name=index -->
+<a name="//apple_ref/doc/functionparam/str_char_at/index"></a>
+<code>index</code>
+</dt>
+<dd><p>The index (0-based).</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The character, or 0 if out of bounds or not ASCII.
+
+<!-- end return value --></p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/str_cmp;   name=str_cmp -->
 <a name="//apple_ref/c/func/str_cmp"></a>
@@ -844,6 +897,34 @@ directly when generics are not available.
 
 <!-- end return value --></p>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_length;   name=str_length -->
+<a name="//apple_ref/c/func/str_length"></a>
+<h3><a name="str_length">str_length</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_length;name=start --><!-- begin abstract --></p>
+<p>Get the length of the string in characters.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_length;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_length;name=start --><!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_length" logicalPath="//apple_ref/c/instm/str_length //apple_ref/c/clm/str_length //apple_ref/c/intfcm/str_length //apple_ref/c/intfm/str_length //apple_ref/c/func/str_length" target="_top"><span class="function">str_length</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_length;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_length/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_length/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The str_t handle.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The number of characters (not including NUL).
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/str_make_ascii;   name=str_make_ascii -->
 <a name="//apple_ref/c/func/str_make_ascii"></a>
 <h3><a name="str_make_ascii">str_make_ascii</a></h3>
@@ -1139,6 +1220,41 @@ source contains non-ASCII characters the function will return NULL.
 </dl>
 </div>
 <hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_wchar_at;   name=str_wchar_at -->
+<a name="//apple_ref/c/func/str_wchar_at"></a>
+<h3><a name="str_wchar_at">str_wchar_at</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wchar_at;name=start --><!-- begin abstract --></p>
+<p>Get the wide character at the specified index.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wchar_at;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wchar_at;name=start --><!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="type">wchar_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wchar_at" logicalPath="//apple_ref/c/instm/str_wchar_at //apple_ref/c/clm/str_wchar_at //apple_ref/c/intfcm/str_wchar_at //apple_ref/c/intfm/str_wchar_at //apple_ref/c/func/str_wchar_at" target="_top"><span class="function">str_wchar_at</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">index</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wchar_at;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wchar_at/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_wchar_at/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The wide str_t handle.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wchar_at/index;   name=index -->
+<a name="//apple_ref/doc/functionparam/str_wchar_at/index"></a>
+<code>index</code>
+</dt>
+<dd><p>The index (0-based).</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The wide character, or 0 if out of bounds or not wide.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/str_wildcard_ascii;   name=str_wildcard_ascii -->
 <a name="//apple_ref/c/func/str_wildcard_ascii"></a>
 <h3><a name="str_wildcard_ascii">str_wildcard_ascii</a></h3>
@@ -1337,7 +1453,9 @@ the correct helper directly.
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Monday, September 29, 2025
+<p class="hd_copyright">© George Watson GPLv3
+ </p>
+<p class="hd_timestamp">Last Updated: Saturday, July 19, 2025
 </p>
 </div>
 </td>

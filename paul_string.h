@@ -343,6 +343,32 @@ bool str_wildcard_ascii(const str_t s, const char *pattern);
 */
 bool str_wildcard_wide(const str_t s, const wchar_t *pattern);
 
+/*!
+ @function str_length
+ @brief Get the length of the string in characters.
+ @param s The str_t handle.
+ @return The number of characters (not including NUL).
+*/
+size_t str_length(const str_t s);
+
+/*!
+ @function str_char_at
+ @brief Get the ASCII character at the specified index.
+ @param s The ASCII str_t handle.
+ @param index The index (0-based).
+ @return The character, or 0 if out of bounds or not ASCII.
+*/
+char str_char_at(const str_t s, size_t index);
+
+/*!
+ @function str_wchar_at
+ @brief Get the wide character at the specified index.
+ @param s The wide str_t handle.
+ @param index The index (0-based).
+ @return The wide character, or 0 if out of bounds or not wide.
+*/
+wchar_t str_wchar_at(const str_t s, size_t index);
+
 #ifdef __cplusplus
 }
 #endif
@@ -764,4 +790,23 @@ bool str_ends_with(const str_t s, const str_t suffix) {
 WILDCARD_IMPL(str_wildcard_ascii, char)
 WILDCARD_IMPL(str_wildcard_wide, wchar_t)
 #undef WILDCARD_IMPL
+
+size_t str_length(const str_t s) {
+    return *(uint32_t*)((char*)s - 4);
+}
+
+char str_char_at(const str_t s, size_t index) {
+    if (!str_is_ascii(s)) return 0;
+    uint32_t len = str_length(s);
+    if (index >= len) return 0;
+    return ((const char*)s)[index];
+}
+
+wchar_t str_wchar_at(const str_t s, size_t index) {
+    if (!str_is_utf16(s)) return 0;
+    uint32_t len = str_length(s);
+    if (index >= len) return 0;
+    return ((const wchar_t*)s)[index];
+}
+
 #endif // PAUL_STRING_IMPLEMENTATION

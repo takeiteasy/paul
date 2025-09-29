@@ -306,7 +306,7 @@ static int sparse_has(sparse_t *sparse, entity_t e) {
 }
 
 static void sparse_emplace(sparse_t *sparse, entity_t e) {
-    if (e.id > sparse->sizeOfSparse) {
+    if (e.id >= sparse->sizeOfSparse) {
         size_t size = e.id + 1;
         sparse->sparse = (entity_t*)realloc(sparse->sparse, size * sizeof * sparse->sparse);
         for (size_t i = sparse->sizeOfSparse; i < size; i++)
