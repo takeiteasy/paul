@@ -1248,8 +1248,7 @@ quat quat_from_mat4(mat4 mat) {
 
     float biggestVal = sqrt(fourBiggestSquaredMinus1 + 1.f) * .5f;
     float mult = .25f / biggestVal;
-    switch (biggestIndex)
-    {
+    switch (biggestIndex) {
         case 0:
             return (quat) {
                 (mat[2][1] - mat[1][2]) * mult,

@@ -14,21 +14,19 @@ TEST_BINS := $(patsubst tests/test_%.c,tests/test_%,$(TEST_SRCS))
 
 all: stubs tests docs clean
 
+default: tests
+
 tests/test_%: tests/test_%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 tests: $(TEST_BINS)
-	@./tests/run_tests.sh
+	@./etc/run_tests.sh
 
 clean:
 	@rm -rf $(TEST_BINS) $(STUB_BINS) tests/stubs/*.c.out tests/stubs/*.cpp.out tests/stubs/build
 
 stubs:
-	@if [ -x "./tests/build_stubs.sh" ]; then \
-		sh ./tests/build_stubs.sh; \
-	else \
-		$(MAKE) stubs; \
-	fi
+	sh ./etc/build_stubs.sh; \
 
 docs:
-	@./tests/build_docs.sh
+	@./etc/build_docs.sh

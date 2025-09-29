@@ -52,7 +52,7 @@ extern "C" {
  @brief Free the underlying buffer used by a dynamic list created with these macros.
  @param a The list pointer previously used with the list macros. May be NULL.
  @discussion If 'a' is non-NULL this macro frees the internal allocation backing the list. After calling this macro the caller must not use 'a' unless it is reinitialized. The macro evaluates to 0.
- */
+*/
 #define list_free(a)                ((a) ? free(__list_raw__(a)),0 : 0)
 
 /*!
@@ -61,7 +61,7 @@ extern "C" {
  @param a The list variable (pointer-to-element-type). May be NULL; it will be grown as needed.
  @param v The value to append (assigned by value into the list element slot).
  @discussion This macro may reallocate the list to accommodate the new element. After growing, it stores the value at the next index and increments the list count.
- */
+*/
 #define list_append(a, v)           (__list_maybegrow__(a,1), (a)[__list_n__(a)++] = (v))
 
 /*!
@@ -69,7 +69,7 @@ extern "C" {
  @brief Return the number of elements currently stored in the list.
  @param a The list variable (pointer-to-element-type). May be NULL.
  @result The number of elements in the list (0 if 'a' is NULL).
- */
+*/
 #define list_count(a)               ((a) ? __list_n__(a) : 0)
 
 /*!
@@ -79,7 +79,7 @@ extern "C" {
  @param idx Zero-based index at which to insert the value. Must be <= current count.
  @param v The value to insert.
  @discussion This macro grows the list if necessary, shifts elements starting at 'idx' one slot to the right, stores 'v' at 'idx', and increments the stored element count.
- */
+*/
 #define list_insert(a, idx, v)      (__list_maybegrow__(a,1), memmove(&a[idx+1], &a[idx], (__list_n__(a)++ - idx) * sizeof(*(a))), a[idx] = (v))
 
 /*!
@@ -87,7 +87,7 @@ extern "C" {
  @brief Push a value to the front of the list (insert at index 0).
  @param a The list variable (pointer-to-element-type).
  @param v The value to push.
- */
+*/
 #define list_push(a, v)             (list_insert(a,0,v))
 
 /*!
@@ -95,7 +95,7 @@ extern "C" {
  @brief Return a pointer to the list starting at the second element (the "cdr").
  @param a The list variable (pointer-to-element-type).
  @result Pointer to the second element of the list, or NULL if the list has fewer than two elements.
- */
+*/
 #define list_cdr(a)                 (void*)(list_count(a) > 1 ? &(a+1) : NULL)
 
 /*!
@@ -103,7 +103,7 @@ extern "C" {
  @brief Return a pointer to the first element of the list (the "car").
  @param a The list variable (pointer-to-element-type).
  @result Pointer to the first element, or NULL if the list is NULL.
- */
+*/
 #define list_car(a)                 (void*)((a) ? &(a)[0] : NULL)
 
 /*!
@@ -111,7 +111,7 @@ extern "C" {
  @brief Return a pointer to the last element in the list.
  @param a The list variable (pointer-to-element-type).
  @result Pointer to the last element, or NULL if the list is NULL or empty.
- */
+*/
 #define list_last(a)                (void*)((a) ? &(a)[__list_n__(a)-1] : NULL)
 
 /*!
@@ -119,7 +119,7 @@ extern "C" {
  @brief Remove the last element from the list (decrement count) and possibly shrink the backing storage.
  @param a The list variable (pointer-to-element-type).
  @discussion This macro only adjusts the stored element count; it does not return the popped value. It may shrink the backing allocation when the list becomes sparse.
- */
+*/
 #define list_pop(a)                 (--__list_n__(a), __list_maybeshrink__(a))
 
 /*!
@@ -128,21 +128,21 @@ extern "C" {
  @param a The list variable (pointer-to-element-type).
  @param idx The zero-based index of the element to remove.
  @discussion The macro shifts elements after 'idx' down and adjusts the stored count. It will also attempt to shrink the backing allocation when appropriate.
- */
+*/
 #define list_remove_at(a, idx)      (idx == __list_n__(a)-1 ? memmove(&a[idx], &arr[idx+1], (--__list_n__(a) - idx) * sizeof(*(a))) : list_pop(a), __list_maybeshrink__(a))
 
 /*!
  @define list_shift
  @brief Remove the first element of the list (shift).
  @param a The list variable (pointer-to-element-type).
- */
+*/
 #define list_shift(a)               (list_remove_at(a, 0))
 
 /*!
  @define list_clear
  @brief Clear all elements from the list and shrink its backing allocation.
  @param a The list variable (pointer-to-element-type).
- */
+*/
 #define list_clear(a)               ((a) ? (__list_n__(a) = 0) : 0, __list_shrink__(a))
 
 /*!
@@ -150,7 +150,7 @@ extern "C" {
  @brief Randomly shuffle the elements of the list in-place using rand().
  @param a The list variable (pointer-to-element-type).
  @discussion Uses the Fisher–Yates shuffle algorithm. The caller is responsible for seeding the PRNG (e.g. srand()) if reproducible behaviour is required.
- */
+*/
 #define list_shuffle(a)                             \
     do {                                            \
         int i, j, n = list_count(a);                \
@@ -166,7 +166,7 @@ extern "C" {
  @define list_reverse
  @brief Reverse the order of elements in the list in-place.
  @param a The list variable (pointer-to-element-type).
- */
+*/
 #define list_reverse(a)                             \
     do {                                            \
         int len = list_count(a);                    \

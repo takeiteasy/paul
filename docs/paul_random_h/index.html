@@ -1594,7 +1594,7 @@ function disclosure_triangle(elt) {
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_shuffle_cb;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_shuffle_cb" logicalPath="//apple_ref/c/instm/rnd_shuffle_cb //apple_ref/c/clm/rnd_shuffle_cb //apple_ref/c/intfcm/rnd_shuffle_cb //apple_ref/c/intfm/rnd_shuffle_cb //apple_ref/c/func/rnd_shuffle_cb" target="_top"><span class="function">rnd_shuffle_cb</span></a>(
     <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>,
     <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">element_count</span>,
-    <!-- a logicalPath="//apple_ref/c/cl/rnd_swap_fn_t //apple_ref/c/tdef/rnd_swap_fn_t //apple_ref/c/tag/rnd_swap_fn_t //apple_ref/c/struct/rnd_swap_fn_t //apple_ref/c/intf/rnd_swap_fn_t //apple_ref/doc/anysymbol/rnd_swap_fn_t" machineGenerated="true" --><span class="type">rnd_swap_fn_t</span><!-- /a --> <span class="param">swap_fn</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rnd_swap_fn_t" logicalPath="//apple_ref/c/cl/rnd_swap_fn_t //apple_ref/c/tdef/rnd_swap_fn_t" target="_top"><span class="type">rnd_swap_fn_t</span></a> <span class="param">swap_fn</span>,
     <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_shuffle_cb;name=end --></pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
@@ -1638,7 +1638,7 @@ function disclosure_triangle(elt) {
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_weighted_choice;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_weighted_choice" logicalPath="//apple_ref/c/instm/rnd_weighted_choice //apple_ref/c/clm/rnd_weighted_choice //apple_ref/c/intfcm/rnd_weighted_choice //apple_ref/c/intfm/rnd_weighted_choice //apple_ref/c/func/rnd_weighted_choice" target="_top"><span class="function">rnd_weighted_choice</span></a>(
     <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>,
     <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">n</span>,
-    <!-- a logicalPath="//apple_ref/c/cl/rnd_weight_fn_t //apple_ref/c/tdef/rnd_weight_fn_t //apple_ref/c/tag/rnd_weight_fn_t //apple_ref/c/struct/rnd_weight_fn_t //apple_ref/c/intf/rnd_weight_fn_t //apple_ref/doc/anysymbol/rnd_weight_fn_t" machineGenerated="true" --><span class="type">rnd_weight_fn_t</span><!-- /a --> <span class="param">weight_fn</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rnd_weight_fn_t" logicalPath="//apple_ref/c/cl/rnd_weight_fn_t //apple_ref/c/tdef/rnd_weight_fn_t" target="_top"><span class="type">rnd_weight_fn_t</span></a> <span class="param">weight_fn</span>,
     <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_weighted_choice;name=end --></pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
@@ -2058,6 +2058,12 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/c/tdef/poisson_point_t" target="_top">poisson_point_t</a></tt></dt>
 <dd><p>Structure representing a 2D point for Poisson disc sampling.
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/rnd_swap_fn_t" target="_top">rnd_swap_fn_t</a></tt></dt>
+<dd><p>Callback type used to swap two elements in an abstract container.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/rnd_weight_fn_t" target="_top">rnd_weight_fn_t</a></tt></dt>
+<dd><p>Callback type used to provide a weight for a given index when choosing from a list.
+</p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/tdef/rng_t" target="_top">rng_t</a></tt></dt>
 <dd><p>Random number generator state structure.
 </p></dd>
@@ -2252,6 +2258,78 @@ function disclosure_triangle(elt) {
 <dd><p>Y coordinate of the point.</p></dd>
 </dl>
 </div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/rnd_swap_fn_t;   name=rnd_swap_fn_t -->
+<a name="//apple_ref/c/tdef/rnd_swap_fn_t"></a>
+<h3><a name="rnd_swap_fn_t">rnd_swap_fn_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rnd_swap_fn_t;name=start --><!-- begin abstract --></p>
+<p>Callback type used to swap two elements in an abstract container.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rnd_swap_fn_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rnd_swap_fn_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> ( <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rnd_swap_fn_t" logicalPath="//apple_ref/c/instm/rnd_swap_fn_t //apple_ref/c/clm/rnd_swap_fn_t //apple_ref/c/intfcm/rnd_swap_fn_t //apple_ref/c/intfm/rnd_swap_fn_t //apple_ref/c/func/rnd_swap_fn_t //apple_ref/c/ftmplt/rnd_swap_fn_t //apple_ref/c/defn/rnd_swap_fn_t //apple_ref/c/macro/rnd_swap_fn_t //apple_ref/doc/anysymbol/rnd_swap_fn_t" target="_top"><span class="function">rnd_swap_fn_t</span></a>)(
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">a</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">b</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rnd_swap_fn_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rnd_swap_fn_t/a;   name=a -->
+<a name="//apple_ref/doc/typedeffield/rnd_swap_fn_t/a"></a>
+<code>a</code>
+</dt>
+<dd><p>Index of the first element to swap.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rnd_swap_fn_t/b;   name=b -->
+<a name="//apple_ref/doc/typedeffield/rnd_swap_fn_t/b"></a>
+<code>b</code>
+</dt>
+<dd><p>Index of the second element to swap.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rnd_swap_fn_t/user_data;   name=user_data -->
+<a name="//apple_ref/doc/typedeffield/rnd_swap_fn_t/user_data"></a>
+<code>user_data</code>
+</dt>
+<dd><p>Opaque user-provided pointer passed through by the caller.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/rnd_weight_fn_t;   name=rnd_weight_fn_t -->
+<a name="//apple_ref/c/tdef/rnd_weight_fn_t"></a>
+<h3><a name="rnd_weight_fn_t">rnd_weight_fn_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rnd_weight_fn_t;name=start --><!-- begin abstract --></p>
+<p>Callback type used to provide a weight for a given index when choosing from a list.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rnd_weight_fn_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rnd_weight_fn_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/double //apple_ref/c/tdef/double //apple_ref/c/tag/double //apple_ref/c/struct/double //apple_ref/c/intf/double //apple_ref/doc/anysymbol/double" machineGenerated="true" --><span class="type">double</span><!-- /a --> ( <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rnd_weight_fn_t" logicalPath="//apple_ref/c/instm/rnd_weight_fn_t //apple_ref/c/clm/rnd_weight_fn_t //apple_ref/c/intfcm/rnd_weight_fn_t //apple_ref/c/intfm/rnd_weight_fn_t //apple_ref/c/func/rnd_weight_fn_t //apple_ref/c/ftmplt/rnd_weight_fn_t //apple_ref/c/defn/rnd_weight_fn_t //apple_ref/c/macro/rnd_weight_fn_t //apple_ref/doc/anysymbol/rnd_weight_fn_t" target="_top"><span class="function">rnd_weight_fn_t</span></a>)(
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">idx</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rnd_weight_fn_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rnd_weight_fn_t/idx;   name=idx -->
+<a name="//apple_ref/doc/typedeffield/rnd_weight_fn_t/idx"></a>
+<code>idx</code>
+</dt>
+<dd><p>Index of the item for which a weight should be returned.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rnd_weight_fn_t/user_data;   name=user_data -->
+<a name="//apple_ref/doc/typedeffield/rnd_weight_fn_t/user_data"></a>
+<code>user_data</code>
+</dt>
+<dd><p>Opaque user-provided pointer passed through by the caller.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A non-negative double weight for the item. Negative values are treated as zero.
+
+<!-- end return value --></p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/rng_t;   name=rng_t -->
 <a name="//apple_ref/c/tdef/rng_t"></a>

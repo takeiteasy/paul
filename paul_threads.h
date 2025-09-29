@@ -22,7 +22,7 @@
  @brief Cross-platform polyfill for pthreads + C11 threads for C/C++.
  @discussion
     Implementation is included when PAUL_THREADS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
- */
+*/
 
 #ifndef PAUL_THREADS_HEADER
 #define PAUL_THREADS_HEADER
@@ -269,7 +269,7 @@ struct timespec {
  @return Returns a timespec representing the absolute time now + milliseconds
  @brief Return an absolute timespec representing now + milliseconds
  @discussion Named "thrd_timeout_ms" to avoid colliding with the enum identifier "thrd_timeout" used for return codes.
- */
+*/
 struct timespec thrd_timeout_ms(unsigned int milliseconds);
 
 /*!
@@ -277,7 +277,7 @@ struct timespec thrd_timeout_ms(unsigned int milliseconds);
  @field data Pointer to the data stored in the node
  @field next Pointer to the next node in the queue
  @discussion Node structure for the thread-safe queue
- */
+*/
 typedef struct thrd_queue_node {
     void *data;
     struct thrd_queue_node *next;
@@ -293,7 +293,7 @@ typedef struct thrd_queue_node {
  @field max_size Maximum size of the queue
  @field shutdown Flag indicating if the queue is shutting down
  @discussion Thread-safe queue structure
- */
+*/
 typedef struct thrd_queue {
     thrd_queue_node_t *head;
     thrd_queue_node_t *tail;
@@ -310,13 +310,13 @@ typedef struct thrd_queue {
  @param max_size Maximum size of the queue
  @return Returns thrd_success on success, thrd_error on failure
  @brief Initialize a thread-safe queue
- */
+*/
 int thrd_queue_init(thrd_queue_t *queue, size_t max_size);
 /*!
  @function thrd_queue_destroy
  @param queue Pointer to the queue to destroy
  @brief Destroy a thread-safe queue
- */
+*/
 void thrd_queue_destroy(thrd_queue_t *queue);
 /*!
  @function thrd_queue_enqueue
@@ -324,7 +324,7 @@ void thrd_queue_destroy(thrd_queue_t *queue);
  @param data Pointer to the data to enqueue
  @return Returns thrd_success on success, thrd_error on failure, thrd_busy if queue is full
  @brief Enqueue data into the thread-safe queue
- */
+*/
 int thrd_queue_enqueue(thrd_queue_t *queue, void *data);
 /*!
  @function thrd_queue_dequeue
@@ -332,7 +332,7 @@ int thrd_queue_enqueue(thrd_queue_t *queue, void *data);
  @param data Pointer to a pointer to receive the dequeued data
  @return Returns thrd_success on success, thrd_error on failure
  @brief Dequeue data from the thread-safe queue, blocking if empty
- */
+*/
 int thrd_queue_dequeue(thrd_queue_t *queue, void **data);
 /*!
  @function thrd_queue_try_dequeue
@@ -340,27 +340,27 @@ int thrd_queue_dequeue(thrd_queue_t *queue, void **data);
  @param data Pointer to a pointer to receive the dequeued data
  @return Returns thrd_success on success, thrd_busy if empty, thrd_error on failure
  @brief Try to dequeue data from the thread-safe queue without blocking
- */
+*/
 int thrd_queue_try_dequeue(thrd_queue_t *queue, void **data);
 /*!
  @function thrd_queue_size
  @param queue Pointer to the queue
  @return Returns the current number of items in the queue
  @brief Get the size of the thread-safe queue
- */
+*/
 size_t thrd_queue_size(thrd_queue_t *queue);
 /*!
  @function thrd_queue_empty
  @param queue Pointer to the queue
  @return Returns true if the queue is empty, false otherwise
  @brief Check if the thread-safe queue is empty
- */
+*/
 bool thrd_queue_empty(thrd_queue_t *queue);
 /*!
  @function thrd_queue_shutdown
  @param queue Pointer to the queue
  @brief Shutdown the thread-safe queue
- */
+*/
 void thrd_queue_shutdown(thrd_queue_t *queue);
 
 /*!
@@ -369,7 +369,7 @@ void thrd_queue_shutdown(thrd_queue_t *queue);
  @field arg Argument to pass to the function
  @field cleanup Optional cleanup function
  @discussion Job structure for thread pool tasks
- */
+*/
 typedef struct job {
     void (*function)(void *arg);
     void *arg;
@@ -381,7 +381,7 @@ typedef struct job {
  @field job The job contained in this node
  @field next Pointer to the next node
  @discussion Node structure for the job queue
- */
+*/
 typedef struct job_node {
     job_t job;
     struct job_node *next;
@@ -397,7 +397,7 @@ typedef struct job_node {
  @field max_size Maximum size of the queue
  @field shutdown Flag indicating if the queue is shutting down
  @discussion Job queue structure for thread pool
- */
+*/
 typedef struct job_queue {
     job_node_t *head;
     job_node_t *tail;
@@ -418,7 +418,7 @@ typedef struct job_queue {
  @field pool_mutex Mutex for pool operations
  @field all_threads_idle Condition variable for waiting on all threads idle
  @discussion Thread pool structure
- */
+*/
 typedef struct {
     thrd_t *threads;
     size_t num_threads;
@@ -435,7 +435,7 @@ typedef struct {
  @param max_queue_size Maximum size of the job queue
  @return Returns a pointer to the created thread pool, or NULL on failure
  @brief Create a thread pool
- */
+*/
 thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size);
 /*!
  @function thrd_pool_submit
@@ -445,40 +445,40 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size);
  @param cleanup Optional cleanup function
  @return Returns thrd_success on success, thrd_error on failure
  @brief Submit a job to the thread pool
- */
+*/
 int thrd_pool_submit(thrd_pool_t *pool, void (*function)(void*), void *arg, void (*cleanup)(void*));
 /*!
  @function thrd_pool_wait
  @param pool Pointer to the thread pool
  @brief Wait for all jobs in the thread pool to complete
- */
+*/
 void thrd_pool_wait(thrd_pool_t *pool);
 /*!
  @function thrd_pool_destroy
  @param pool Pointer to the thread pool
  @brief Destroy the thread pool
- */
+*/
 void thrd_pool_destroy(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_thread_count
  @param pool Pointer to the thread pool
  @return Returns the number of threads in the pool
  @brief Get the number of threads in the thread pool
- */
+*/
 size_t thrd_pool_get_thread_count(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_active_count
  @param pool Pointer to the thread pool
  @return Returns the number of active threads
  @brief Get the number of active threads in the thread pool
- */
+*/
 size_t thrd_pool_get_active_count(thrd_pool_t *pool);
 /*!
  @function thrd_pool_get_queue_size
  @param pool Pointer to the thread pool
  @return Returns the size of the job queue
  @brief Get the size of the job queue in the thread pool
- */
+*/
 size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
 
 #ifdef __cplusplus

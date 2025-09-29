@@ -1,0 +1,1346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+    <title>paul_string.h</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style type="text/css"><!--.char {background: #ffffff; color:#0000ff;}.comment {background:#ffffff; color:#236e25}.function {background:#ffffff; color:#000000;}.keyword {background:#ffffff; color:#761550;}.number {background: #ffffff; color:#0000ff;}.param {background:#ffffff; color:#000000;}.preprocessor {background:#ffffff; color:#236e25}.string {background: #ffffff; color:#891315;}.template {background:#ffffff; color:#761550;}.type {background:#ffffff; color:#761550;}.var {background:#ffffff; color:#000000;}body {border: 0px; margin: 0px;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+<style><!--
+body {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+.toc_contents_text {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+ul.tocSubEntryList li.tocSubEntry {
+    list-style: none;
+}
+
+#colorbox {
+		display: none;
+}
+.spec_sheet_line {
+		margin-bottom: 1px;
+}
+.collapsible {
+		display: none;
+}
+.toc_leadspace {
+		width: 10; min-width: 10;
+}
+.disclosure_triangle_td {
+		width: 14; min-width: 14;
+		font-size: 10px;
+		vertical-align: middle;
+}
+.specbox td {
+		font-size: 13px;
+}
+.specbox td a {
+		font-size: 13px;
+}
+.specbox td code {
+		font-size: 13px;
+}
+.specbox td tt {
+		font-size: 13px;
+}
+.specbox td pre {
+		font-size: 13px;
+}
+.specbox a {
+		font-size: 12px;
+}
+.disclosure_triangle_td a {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:link {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:active {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:visited:hover {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.hd_toc_box {
+		padding-top: 10px;
+		padding-right: 15px;
+}.tocSeparator {
+		margin-top: 15px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+}
+.tocSubEntryList {
+		margin-left: 0px;
+		padding-left: 40px;
+		padding-top: 0px;
+		margin-top: 2px;
+		padding-bottom: 0px;
+		margin-bottom: 8px;
+}
+.hd_toc_heading_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.hd_toc_entry_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.tocSubEntry {
+		margin-left: 0px;
+		padding-left: 0px;
+		margin-top: 0px;
+		margin-bottom: 1px;
+}
+.tocSubEntry a {
+		font-size: 10pt;
+}
+.tocSubheading {
+		padding-left: 14px;
+		margin-left: 0px;
+		margin-top: 5px;
+		padding-top: 0px;
+		font-size: 16px;
+		color: #808080;
+}
+
+#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }
+#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }
+#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }
+#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }
+#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }
+
+#tocMenu {
+		border-right: 1px solid #c0c0c0;
+		background-color: #f4f4ff;
+		top:0px;
+		left:0px;
+		width:230px;
+		height:100%;
+}
+#bodyContents {
+		width: auto;
+		padding-left: 15px;
+}
+--></style>
+<style id="disable_before_iOS_5"><!--
+#tocMenu {
+		position: fixed;
+		height: 100%;
+		overflow: auto;
+}
+#bodyContents {
+		width: auto;
+		left: 235px;
+		right: 0;
+		padding-left: 15px;
+		position: fixed;
+		height: 100%;
+		overflow-y: scroll;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+    if (navigator.platform && (navigator.platform.match(/iPad/) || navigator.platform.match(/iPhone/) || navigator.platform.match(/iPod/))) {
+        if (navigator.userAgent.match(/OS 1(_\d)+/) ||
+            navigator.userAgent.match(/OS 2(_\d)+/) ||
+            navigator.userAgent.match(/OS 3(_\d)+/) ||
+            navigator.userAgent.match(/OS 4(_\d)+/)) {
+                /* Earlier iOS versions require different scrolling gestures with position: fixed. */
+                var del_style_elt = document.getElementById("disable_before_iOS_5");
+                if (del_style_elt) del_style_elt.parentNode.removeChild(del_style_elt);
+        }
+    }
+// --></script>
+<script language="JavaScript" type="text/javascript"><!--
+function getNewHTTPObject()
+{
+        var xmlhttp;
+
+        /** Special IE only code ... */
+        /*@cc_on
+          @if (@_jscript_version >= 5)
+              try
+              {
+                  xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+              }
+              catch (e)
+              {
+                  try
+                  {
+                      xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+                  }
+                  catch (E)
+                  {
+                      xmlhttp = false;
+                  }
+             }
+          @else
+             xmlhttp = false;
+        @end @*/
+
+        /** Every other browser on the planet */
+        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
+        {
+            try
+            {
+                xmlhttp = new XMLHttpRequest();
+            }
+            catch (e)
+            {
+                xmlhttp = false;
+            }
+        }
+
+        return xmlhttp;
+}
+
+function hidetoc() {
+	var toc = document.getElementById('tocMenu');
+	var src = toc.getAttribute('src');
+	var xhr = getNewHTTPObject();
+	xhr.open('GET', src, true);
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4) {
+			var toc = document.getElementById('tocMenu');
+			toc.innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send(null);
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var body = document.getElementById('bodyContents');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+
+function disclosure_triangle(elt) {
+   var linkelt = elt;
+   while (elt && elt.tagName != 'TABLE') { elt = elt.parentNode;}
+   if (!elt) { return; }
+   while (elt && elt.tagName != 'DIV') { elt = elt.nextSibling;}
+   if (!elt) { return; }
+   if (parseInt(linkelt.getAttribute('state'))) {
+      // It's open.  Close it
+      linkelt.innerHTML = '&#x25B7;';
+      linkelt.setAttribute('state', 0);
+      linkelt.setAttribute('class', 'closed_disclosure_triangle');
+      elt.style.display = 'none';
+   } else {
+      // It's closed.  Open it
+      linkelt.innerHTML = '&#x25BC;';
+      linkelt.setAttribute('state', 1);
+      linkelt.setAttribute('class', 'open_disclosure_triangle');
+      elt.style.display = 'block';
+   }
+}
+--></script>
+<style type="text/css"><!--.char {background: #ffffff; color:#0000ff;}.comment {background:#ffffff; color:#236e25}.function {background:#ffffff; color:#000000;}.keyword {background:#ffffff; color:#761550;}.number {background: #ffffff; color:#0000ff;}.param {background:#ffffff; color:#000000;}.preprocessor {background:#ffffff; color:#236e25}.string {background: #ffffff; color:#891315;}.template {background:#ffffff; color:#761550;}.type {background:#ffffff; color:#761550;}.var {background:#ffffff; color:#000000;}body {border: 0px; margin: 0px;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+<!-- headerDoc=Header;  uid=//apple_ref/doc/header/paul_string.h;   name=paul_string.h -->
+<a name="//apple_ref/doc/header/paul_string.h"></a>
+<table id="hd_outermost_table" height="100%" width="100%"><tr>
+<td valign="top" id="tocMenu" src="toc.html"></td>
+<td id="bodyContents" valign="top">
+<a name="top"></a>
+<h1><a name="paul_string.h">paul_string.h</a></h1>
+<div class="spec_sheet_info_box"><table cellspacing="0" class="specbox">
+<tr>
+<td scope="row"><b>Includes:</b></td>
+<td><div style="margin-bottom:1px"><div class="content_text">
+<!-- a logicalPath="//apple_ref/doc/header/stdint.h" machineGenerated="true" -->&lt;stdint.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/stdlib.h" machineGenerated="true" -->&lt;stdlib.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/string.h" machineGenerated="true" -->&lt;string.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/wchar.h" machineGenerated="true" -->&lt;wchar.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/stdbool.h" machineGenerated="true" -->&lt;stdbool.h&gt;<!-- /a -->
+</div></div></td>
+</tr>
+</table></div>
+<h2>Introduction</h2>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_string.h;name=start --><!-- begin abstract -->Use the links in the table of contents to the left to access the documentation.<br>
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_string.h;name=end --></p>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_functions"></a>
+<h2 class="h2tight">Functions</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_append_char" target="_top">str_append_char</a></tt></dt>
+<dd><p>Append a single ASCII character to an ASCII `str_t`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_cmp" target="_top">str_cmp</a></tt></dt>
+<dd><p>Compare two `str_t` values. Returns &lt;0, 0, &gt;0 similar to strcmp/wcscmp.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_concat" target="_top">str_concat</a></tt></dt>
+<dd><p>Concatenate src to the end of *dest (dest is resized as needed).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_copy" target="_top">str_copy</a></tt></dt>
+<dd><p>Copy the contents of src into dest. Both must be the same underlying type.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_dup" target="_top">str_dup</a></tt></dt>
+<dd><p>Duplicate a string handle.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_ends_with" target="_top">str_ends_with</a></tt></dt>
+<dd><p>Return true when s ends with suffix.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_equal" target="_top">str_equal</a></tt></dt>
+<dd><p>Equality test between two `str_t` values.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_erase" target="_top">str_erase</a></tt></dt>
+<dd><p>Erase len characters from *s starting at pos.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_find" target="_top">str_find</a></tt></dt>
+<dd><p>Find the first occurrence of substr in s.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_find_char" target="_top">str_find_char</a></tt></dt>
+<dd><p>Find the first occurrence of ASCII character c in s (ASCII only).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_from_cstr" target="_top">str_from_cstr</a></tt></dt>
+<dd><p>Create a `str_t` from a NUL-terminated C string (ASCII).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_from_wcstr" target="_top">str_from_wcstr</a></tt></dt>
+<dd><p>Create a `str_t` from a NUL-terminated wide string (wchar_t).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_insert" target="_top">str_insert</a></tt></dt>
+<dd><p>Insert substr into *s at position pos.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_is_ascii" target="_top">str_is_ascii</a></tt></dt>
+<dd><p>Query whether the `str_t` stores ASCII (narrow) characters.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_is_utf16" target="_top">str_is_utf16</a></tt></dt>
+<dd><p>Query whether the `str_t` stores wide (wchar_t) characters.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_make_ascii" target="_top">str_make_ascii</a></tt></dt>
+<dd><p>Convert a `str_t` to an ASCII representation.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_make_utf16" target="_top">str_make_utf16</a></tt></dt>
+<dd><p>Convert a `str_t` to a wide (wchar_t) representation.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_raw_cstr" target="_top">str_raw_cstr</a></tt></dt>
+<dd><p>Return a raw NUL-terminated C string pointer for ASCII `str_t`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_raw_wcstr" target="_top">str_raw_wcstr</a></tt></dt>
+<dd><p>Return a raw NUL-terminated wide string pointer for wide `str_t`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_replace" target="_top">str_replace</a></tt></dt>
+<dd><p>Replace the first occurrence of old_sub in *s with new_sub.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_resize" target="_top">str_resize</a></tt></dt>
+<dd><p>Resize a `str_t` in-place to new length (truncates or extends with NUL).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_starts_with" target="_top">str_starts_with</a></tt></dt>
+<dd><p>Return true when s starts with prefix.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_to_lower" target="_top">str_to_lower</a></tt></dt>
+<dd><p>Convert the string in-place to lower-case.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_to_upper" target="_top">str_to_upper</a></tt></dt>
+<dd><p>Convert the string in-place to upper-case.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_trim" target="_top">str_trim</a></tt></dt>
+<dd><p>Trim leading and trailing whitespace (ASCII only) from *s.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_wildcard_ascii" target="_top">str_wildcard_ascii</a></tt></dt>
+<dd><p>Match ASCII `str_t` against a glob-style pattern using '*', '?', and
+character classes like [a-z] or [^aeiou].
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_wildcard_wide" target="_top">str_wildcard_wide</a></tt></dt>
+<dd><p>Match wide `str_t` against a wide glob-style pattern (wchar_t pattern).
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_append_char;   name=str_append_char -->
+<a name="//apple_ref/c/func/str_append_char"></a>
+<h3><a name="str_append_char">str_append_char</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_append_char;name=start --><!-- begin abstract --></p>
+<p>Append a single ASCII character to an ASCII `str_t`.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_append_char;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_append_char;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_append_char" logicalPath="//apple_ref/c/instm/str_append_char //apple_ref/c/clm/str_append_char //apple_ref/c/intfcm/str_append_char //apple_ref/c/intfm/str_append_char //apple_ref/c/func/str_append_char" target="_top"><span class="function">str_append_char</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="param">c</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_append_char;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_append_char/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_append_char/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to an ASCII `str_t`.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_append_char/c;   name=c -->
+<a name="//apple_ref/doc/functionparam/str_append_char/c"></a>
+<code>c</code>
+</dt>
+<dd><p>Character to append.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_cmp;   name=str_cmp -->
+<a name="//apple_ref/c/func/str_cmp"></a>
+<h3><a name="str_cmp">str_cmp</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_cmp;name=start --><!-- begin abstract --></p>
+<p>Compare two `str_t` values. Returns &lt;0, 0, &gt;0 similar to strcmp/wcscmp.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_cmp;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_cmp;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_cmp" logicalPath="//apple_ref/c/instm/str_cmp //apple_ref/c/clm/str_cmp //apple_ref/c/intfcm/str_cmp //apple_ref/c/intfm/str_cmp //apple_ref/c/func/str_cmp" target="_top"><span class="function">str_cmp</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">a</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">b</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_cmp;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_cmp/a;   name=a -->
+<a name="//apple_ref/doc/functionparam/str_cmp/a"></a>
+<code>a</code>
+</dt>
+<dd><p>First string.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_cmp/b;   name=b -->
+<a name="//apple_ref/doc/functionparam/str_cmp/b"></a>
+<code>b</code>
+</dt>
+<dd><p>Second string.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_concat;   name=str_concat -->
+<a name="//apple_ref/c/func/str_concat"></a>
+<h3><a name="str_concat">str_concat</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_concat;name=start --><!-- begin abstract --></p>
+<p>Concatenate src to the end of *dest (dest is resized as needed).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_concat;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_concat;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_concat" logicalPath="//apple_ref/c/instm/str_concat //apple_ref/c/clm/str_concat //apple_ref/c/intfcm/str_concat //apple_ref/c/intfm/str_concat //apple_ref/c/func/str_concat" target="_top"><span class="function">str_concat</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">dest</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">src</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_concat;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_concat/dest;   name=dest -->
+<a name="//apple_ref/doc/functionparam/str_concat/dest"></a>
+<code>dest</code>
+</dt>
+<dd><p>Pointer to destination `str_t` handle.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_concat/src;   name=src -->
+<a name="//apple_ref/doc/functionparam/str_concat/src"></a>
+<code>src</code>
+</dt>
+<dd><p>Source `str_t` to append.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_copy;   name=str_copy -->
+<a name="//apple_ref/c/func/str_copy"></a>
+<h3><a name="str_copy">str_copy</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_copy;name=start --><!-- begin abstract --></p>
+<p>Copy the contents of src into dest. Both must be the same underlying type.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_copy;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_copy;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_copy" logicalPath="//apple_ref/c/instm/str_copy //apple_ref/c/clm/str_copy //apple_ref/c/intfcm/str_copy //apple_ref/c/intfm/str_copy //apple_ref/c/func/str_copy" target="_top"><span class="function">str_copy</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">dest</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">src</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_copy;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_copy/dest;   name=dest -->
+<a name="//apple_ref/doc/functionparam/str_copy/dest"></a>
+<code>dest</code>
+</dt>
+<dd><p>Destination `str_t` data pointer.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_copy/src;   name=src -->
+<a name="//apple_ref/doc/functionparam/str_copy/src"></a>
+<code>src</code>
+</dt>
+<dd><p>Source `str_t`.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_dup;   name=str_dup -->
+<a name="//apple_ref/c/func/str_dup"></a>
+<h3><a name="str_dup">str_dup</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_dup;name=start --><!-- begin abstract --></p>
+<p>Duplicate a string handle.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_dup;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_dup;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_dup" logicalPath="//apple_ref/c/instm/str_dup //apple_ref/c/clm/str_dup //apple_ref/c/intfcm/str_dup //apple_ref/c/intfm/str_dup //apple_ref/c/func/str_dup" target="_top"><span class="function">str_dup</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_dup;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_dup/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_dup/s"></a>
+<code>s</code>
+</dt>
+<dd><p>A `str_t` previously returned by the library.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new `str_t` owning a copy of the string, or NULL on allocation failure.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_ends_with;   name=str_ends_with -->
+<a name="//apple_ref/c/func/str_ends_with"></a>
+<h3><a name="str_ends_with">str_ends_with</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_ends_with;name=start --><!-- begin abstract --></p>
+<p>Return true when s ends with suffix.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_ends_with;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_ends_with;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_ends_with" logicalPath="//apple_ref/c/instm/str_ends_with //apple_ref/c/clm/str_ends_with //apple_ref/c/intfcm/str_ends_with //apple_ref/c/intfm/str_ends_with //apple_ref/c/func/str_ends_with" target="_top"><span class="function">str_ends_with</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">suffix</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_ends_with;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_ends_with/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_ends_with/s"></a>
+<code>s</code>
+</dt>
+<dd><p>String to test.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_ends_with/suffix;   name=suffix -->
+<a name="//apple_ref/doc/functionparam/str_ends_with/suffix"></a>
+<code>suffix</code>
+</dt>
+<dd><p>Suffix string.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_equal;   name=str_equal -->
+<a name="//apple_ref/c/func/str_equal"></a>
+<h3><a name="str_equal">str_equal</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_equal;name=start --><!-- begin abstract --></p>
+<p>Equality test between two `str_t` values.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_equal;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_equal;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_equal" logicalPath="//apple_ref/c/instm/str_equal //apple_ref/c/clm/str_equal //apple_ref/c/intfcm/str_equal //apple_ref/c/intfm/str_equal //apple_ref/c/func/str_equal" target="_top"><span class="function">str_equal</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">a</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">b</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_equal;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_equal/a;   name=a -->
+<a name="//apple_ref/doc/functionparam/str_equal/a"></a>
+<code>a</code>
+</dt>
+<dd><p>First string.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_equal/b;   name=b -->
+<a name="//apple_ref/doc/functionparam/str_equal/b"></a>
+<code>b</code>
+</dt>
+<dd><p>Second string.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>true when equal, false otherwise.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_erase;   name=str_erase -->
+<a name="//apple_ref/c/func/str_erase"></a>
+<h3><a name="str_erase">str_erase</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_erase;name=start --><!-- begin abstract --></p>
+<p>Erase len characters from *s starting at pos.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_erase;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_erase;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_erase" logicalPath="//apple_ref/c/instm/str_erase //apple_ref/c/clm/str_erase //apple_ref/c/intfcm/str_erase //apple_ref/c/intfm/str_erase //apple_ref/c/func/str_erase" target="_top"><span class="function">str_erase</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">pos</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">len</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_erase;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_erase/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_erase/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to `str_t`.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_erase/pos;   name=pos -->
+<a name="//apple_ref/doc/functionparam/str_erase/pos"></a>
+<code>pos</code>
+</dt>
+<dd><p>Start index.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_erase/len;   name=len -->
+<a name="//apple_ref/doc/functionparam/str_erase/len"></a>
+<code>len</code>
+</dt>
+<dd><p>Number of characters to remove.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_find;   name=str_find -->
+<a name="//apple_ref/c/func/str_find"></a>
+<h3><a name="str_find">str_find</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_find;name=start --><!-- begin abstract --></p>
+<p>Find the first occurrence of substr in s.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_find;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_find;name=start --><!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_find" logicalPath="//apple_ref/c/instm/str_find //apple_ref/c/clm/str_find //apple_ref/c/intfcm/str_find //apple_ref/c/intfm/str_find //apple_ref/c/func/str_find" target="_top"><span class="function">str_find</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">substr</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_find;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_find/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_find/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The string to search.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_find/substr;   name=substr -->
+<a name="//apple_ref/doc/functionparam/str_find/substr"></a>
+<code>substr</code>
+</dt>
+<dd><p>The substring to find.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Index of first match or (size_t)-1 if not found.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_find_char;   name=str_find_char -->
+<a name="//apple_ref/c/func/str_find_char"></a>
+<h3><a name="str_find_char">str_find_char</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_find_char;name=start --><!-- begin abstract --></p>
+<p>Find the first occurrence of ASCII character c in s (ASCII only).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_find_char;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_find_char;name=start --><!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_find_char" logicalPath="//apple_ref/c/instm/str_find_char //apple_ref/c/clm/str_find_char //apple_ref/c/intfcm/str_find_char //apple_ref/c/intfm/str_find_char //apple_ref/c/func/str_find_char" target="_top"><span class="function">str_find_char</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="param">c</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_find_char;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_find_char/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_find_char/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The ASCII string to search.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_find_char/c;   name=c -->
+<a name="//apple_ref/doc/functionparam/str_find_char/c"></a>
+<code>c</code>
+</dt>
+<dd><p>Character to find.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Index or (size_t)-1 if not found.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_from_cstr;   name=str_from_cstr -->
+<a name="//apple_ref/c/func/str_from_cstr"></a>
+<h3><a name="str_from_cstr">str_from_cstr</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_from_cstr;name=start --><!-- begin abstract --></p>
+<p>Create a `str_t` from a NUL-terminated C string (ASCII).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_from_cstr;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_from_cstr;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_cstr" logicalPath="//apple_ref/c/instm/str_from_cstr //apple_ref/c/clm/str_from_cstr //apple_ref/c/intfcm/str_from_cstr //apple_ref/c/intfm/str_from_cstr //apple_ref/c/func/str_from_cstr" target="_top"><span class="function">str_from_cstr</span></a>(
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">cstr</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_from_cstr;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_from_cstr/cstr;   name=cstr -->
+<a name="//apple_ref/doc/functionparam/str_from_cstr/cstr"></a>
+<code>cstr</code>
+</dt>
+<dd><p>NUL-terminated ASCII string.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new `str_t` representing the same contents.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_from_cstr;name=start --><p>This function is the target of the `str_from` / `str` helper
+macros when called with a `const char *` (see the macro documentation
+above). Use the macros when convenient; you may call this function
+directly when generics are not available.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_from_cstr;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_from_wcstr;   name=str_from_wcstr -->
+<a name="//apple_ref/c/func/str_from_wcstr"></a>
+<h3><a name="str_from_wcstr">str_from_wcstr</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_from_wcstr;name=start --><!-- begin abstract --></p>
+<p>Create a `str_t` from a NUL-terminated wide string (wchar_t).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_from_wcstr;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_from_wcstr;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_wcstr" logicalPath="//apple_ref/c/instm/str_from_wcstr //apple_ref/c/clm/str_from_wcstr //apple_ref/c/intfcm/str_from_wcstr //apple_ref/c/intfm/str_from_wcstr //apple_ref/c/func/str_from_wcstr" target="_top"><span class="function">str_from_wcstr</span></a>(
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="type">wchar_t</span><!-- /a --> <span class="type">*</span><span class="param">cstr</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_from_wcstr;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_from_wcstr/cstr;   name=cstr -->
+<a name="//apple_ref/doc/functionparam/str_from_wcstr/cstr"></a>
+<code>cstr</code>
+</dt>
+<dd><p>NUL-terminated wide string.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new `str_t` representing the same contents as wide characters.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_from_wcstr;name=start --><p>This function is the wide-string variant targeted by the
+`str_from` / `str` helper macros when called with `const wchar_t *`.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_from_wcstr;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_insert;   name=str_insert -->
+<a name="//apple_ref/c/func/str_insert"></a>
+<h3><a name="str_insert">str_insert</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_insert;name=start --><!-- begin abstract --></p>
+<p>Insert substr into *s at position pos.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_insert;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_insert;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_insert" logicalPath="//apple_ref/c/instm/str_insert //apple_ref/c/clm/str_insert //apple_ref/c/intfcm/str_insert //apple_ref/c/intfm/str_insert //apple_ref/c/func/str_insert" target="_top"><span class="function">str_insert</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">pos</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">substr</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_insert;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_insert/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_insert/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to destination `str_t` handle.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_insert/pos;   name=pos -->
+<a name="//apple_ref/doc/functionparam/str_insert/pos"></a>
+<code>pos</code>
+</dt>
+<dd><p>Insertion index (must be &lt;= length).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_insert/substr;   name=substr -->
+<a name="//apple_ref/doc/functionparam/str_insert/substr"></a>
+<code>substr</code>
+</dt>
+<dd><p>Substring to insert.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_is_ascii;   name=str_is_ascii -->
+<a name="//apple_ref/c/func/str_is_ascii"></a>
+<h3><a name="str_is_ascii">str_is_ascii</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_is_ascii;name=start --><!-- begin abstract --></p>
+<p>Query whether the `str_t` stores ASCII (narrow) characters.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_is_ascii;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_is_ascii;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_is_ascii" logicalPath="//apple_ref/c/instm/str_is_ascii //apple_ref/c/clm/str_is_ascii //apple_ref/c/intfcm/str_is_ascii //apple_ref/c/intfm/str_is_ascii //apple_ref/c/func/str_is_ascii" target="_top"><span class="function">str_is_ascii</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_is_ascii;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_is_ascii/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_is_ascii/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The `str_t` handle.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>true when ASCII, false otherwise.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_is_utf16;   name=str_is_utf16 -->
+<a name="//apple_ref/c/func/str_is_utf16"></a>
+<h3><a name="str_is_utf16">str_is_utf16</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_is_utf16;name=start --><!-- begin abstract --></p>
+<p>Query whether the `str_t` stores wide (wchar_t) characters.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_is_utf16;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_is_utf16;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_is_utf16" logicalPath="//apple_ref/c/instm/str_is_utf16 //apple_ref/c/clm/str_is_utf16 //apple_ref/c/intfcm/str_is_utf16 //apple_ref/c/intfm/str_is_utf16 //apple_ref/c/func/str_is_utf16" target="_top"><span class="function">str_is_utf16</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_is_utf16;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_is_utf16/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_is_utf16/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The `str_t` handle.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>true when wide, false otherwise.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_make_ascii;   name=str_make_ascii -->
+<a name="//apple_ref/c/func/str_make_ascii"></a>
+<h3><a name="str_make_ascii">str_make_ascii</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_make_ascii;name=start --><!-- begin abstract --></p>
+<p>Convert a `str_t` to an ASCII representation.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_make_ascii;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_make_ascii;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_make_ascii" logicalPath="//apple_ref/c/instm/str_make_ascii //apple_ref/c/clm/str_make_ascii //apple_ref/c/intfcm/str_make_ascii //apple_ref/c/intfm/str_make_ascii //apple_ref/c/func/str_make_ascii" target="_top"><span class="function">str_make_ascii</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_make_ascii;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_make_ascii/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_make_ascii/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The source `str_t`.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new ASCII `str_t` or NULL on failure.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_make_ascii;name=start --><p>If the string is already ASCII this returns a duplicate. If the
+source contains non-ASCII characters the function will return NULL.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_make_ascii;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_make_utf16;   name=str_make_utf16 -->
+<a name="//apple_ref/c/func/str_make_utf16"></a>
+<h3><a name="str_make_utf16">str_make_utf16</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_make_utf16;name=start --><!-- begin abstract --></p>
+<p>Convert a `str_t` to a wide (wchar_t) representation.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_make_utf16;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_make_utf16;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_make_utf16" logicalPath="//apple_ref/c/instm/str_make_utf16 //apple_ref/c/clm/str_make_utf16 //apple_ref/c/intfcm/str_make_utf16 //apple_ref/c/intfm/str_make_utf16 //apple_ref/c/func/str_make_utf16" target="_top"><span class="function">str_make_utf16</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_make_utf16;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_make_utf16/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_make_utf16/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The source `str_t`.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new wide `str_t` or NULL on failure.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_make_utf16;name=start --><p>If the string is already wide this returns a duplicate.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_make_utf16;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_raw_cstr;   name=str_raw_cstr -->
+<a name="//apple_ref/c/func/str_raw_cstr"></a>
+<h3><a name="str_raw_cstr">str_raw_cstr</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_raw_cstr;name=start --><!-- begin abstract --></p>
+<p>Return a raw NUL-terminated C string pointer for ASCII `str_t`.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_raw_cstr;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_raw_cstr;name=start --><span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --><span class="type">*</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_raw_cstr" logicalPath="//apple_ref/c/instm/str_raw_cstr //apple_ref/c/clm/str_raw_cstr //apple_ref/c/intfcm/str_raw_cstr //apple_ref/c/intfm/str_raw_cstr //apple_ref/c/func/str_raw_cstr" target="_top"><span class="function">str_raw_cstr</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_raw_cstr;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_raw_cstr/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_raw_cstr/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The `str_t` handle.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Pointer to NUL-terminated char data when ASCII, otherwise NULL.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_raw_wcstr;   name=str_raw_wcstr -->
+<a name="//apple_ref/c/func/str_raw_wcstr"></a>
+<h3><a name="str_raw_wcstr">str_raw_wcstr</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_raw_wcstr;name=start --><!-- begin abstract --></p>
+<p>Return a raw NUL-terminated wide string pointer for wide `str_t`.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_raw_wcstr;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_raw_wcstr;name=start --><span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="type">wchar_t</span><!-- /a --><span class="type">*</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_raw_wcstr" logicalPath="//apple_ref/c/instm/str_raw_wcstr //apple_ref/c/clm/str_raw_wcstr //apple_ref/c/intfcm/str_raw_wcstr //apple_ref/c/intfm/str_raw_wcstr //apple_ref/c/func/str_raw_wcstr" target="_top"><span class="function">str_raw_wcstr</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_raw_wcstr;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_raw_wcstr/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_raw_wcstr/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The `str_t` handle.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Pointer to NUL-terminated wchar_t data when wide, otherwise NULL.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_replace;   name=str_replace -->
+<a name="//apple_ref/c/func/str_replace"></a>
+<h3><a name="str_replace">str_replace</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_replace;name=start --><!-- begin abstract --></p>
+<p>Replace the first occurrence of old_sub in *s with new_sub.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_replace;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_replace;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_replace" logicalPath="//apple_ref/c/instm/str_replace //apple_ref/c/clm/str_replace //apple_ref/c/intfcm/str_replace //apple_ref/c/intfm/str_replace //apple_ref/c/func/str_replace" target="_top"><span class="function">str_replace</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">old_sub</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">new_sub</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_replace;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_replace/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_replace/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to `str_t` to modify.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_replace/old_sub;   name=old_sub -->
+<a name="//apple_ref/doc/functionparam/str_replace/old_sub"></a>
+<code>old_sub</code>
+</dt>
+<dd><p>Substring to replace.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_replace/new_sub;   name=new_sub -->
+<a name="//apple_ref/doc/functionparam/str_replace/new_sub"></a>
+<code>new_sub</code>
+</dt>
+<dd><p>Replacement substring.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_resize;   name=str_resize -->
+<a name="//apple_ref/c/func/str_resize"></a>
+<h3><a name="str_resize">str_resize</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_resize;name=start --><!-- begin abstract --></p>
+<p>Resize a `str_t` in-place to new length (truncates or extends with NUL).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_resize;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_resize;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_resize" logicalPath="//apple_ref/c/instm/str_resize //apple_ref/c/clm/str_resize //apple_ref/c/intfcm/str_resize //apple_ref/c/intfm/str_resize //apple_ref/c/func/str_resize" target="_top"><span class="function">str_resize</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">new_len</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_resize;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_resize/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_resize/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to the `str_t` handle to resize.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_resize/new_len;   name=new_len -->
+<a name="//apple_ref/doc/functionparam/str_resize/new_len"></a>
+<code>new_len</code>
+</dt>
+<dd><p>New length in characters (not including NUL).</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_starts_with;   name=str_starts_with -->
+<a name="//apple_ref/c/func/str_starts_with"></a>
+<h3><a name="str_starts_with">str_starts_with</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_starts_with;name=start --><!-- begin abstract --></p>
+<p>Return true when s starts with prefix.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_starts_with;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_starts_with;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_starts_with" logicalPath="//apple_ref/c/instm/str_starts_with //apple_ref/c/clm/str_starts_with //apple_ref/c/intfcm/str_starts_with //apple_ref/c/intfm/str_starts_with //apple_ref/c/func/str_starts_with" target="_top"><span class="function">str_starts_with</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">prefix</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_starts_with;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_starts_with/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_starts_with/s"></a>
+<code>s</code>
+</dt>
+<dd><p>String to test.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_starts_with/prefix;   name=prefix -->
+<a name="//apple_ref/doc/functionparam/str_starts_with/prefix"></a>
+<code>prefix</code>
+</dt>
+<dd><p>Prefix string.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_to_lower;   name=str_to_lower -->
+<a name="//apple_ref/c/func/str_to_lower"></a>
+<h3><a name="str_to_lower">str_to_lower</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_to_lower;name=start --><!-- begin abstract --></p>
+<p>Convert the string in-place to lower-case.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_to_lower;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_to_lower;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_to_lower" logicalPath="//apple_ref/c/instm/str_to_lower //apple_ref/c/clm/str_to_lower //apple_ref/c/intfcm/str_to_lower //apple_ref/c/intfm/str_to_lower //apple_ref/c/func/str_to_lower" target="_top"><span class="function">str_to_lower</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_to_lower;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_to_lower/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_to_lower/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to `str_t`.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_to_lower;name=start --><p>Works for ASCII and wide strings.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_to_lower;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_to_upper;   name=str_to_upper -->
+<a name="//apple_ref/c/func/str_to_upper"></a>
+<h3><a name="str_to_upper">str_to_upper</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_to_upper;name=start --><!-- begin abstract --></p>
+<p>Convert the string in-place to upper-case.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_to_upper;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_to_upper;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_to_upper" logicalPath="//apple_ref/c/instm/str_to_upper //apple_ref/c/clm/str_to_upper //apple_ref/c/intfcm/str_to_upper //apple_ref/c/intfm/str_to_upper //apple_ref/c/func/str_to_upper" target="_top"><span class="function">str_to_upper</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_to_upper;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_to_upper/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_to_upper/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to `str_t`.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_to_upper;name=start --><p>Works for ASCII and wide strings.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_to_upper;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_trim;   name=str_trim -->
+<a name="//apple_ref/c/func/str_trim"></a>
+<h3><a name="str_trim">str_trim</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_trim;name=start --><!-- begin abstract --></p>
+<p>Trim leading and trailing whitespace (ASCII only) from *s.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_trim;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_trim;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_trim" logicalPath="//apple_ref/c/instm/str_trim //apple_ref/c/clm/str_trim //apple_ref/c/intfcm/str_trim //apple_ref/c/intfm/str_trim //apple_ref/c/func/str_trim" target="_top"><span class="function">str_trim</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="type">*</span><span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_trim;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_trim/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_trim/s"></a>
+<code>s</code>
+</dt>
+<dd><p>Pointer to ASCII `str_t`.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_wildcard_ascii;   name=str_wildcard_ascii -->
+<a name="//apple_ref/c/func/str_wildcard_ascii"></a>
+<h3><a name="str_wildcard_ascii">str_wildcard_ascii</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wildcard_ascii;name=start --><!-- begin abstract --></p>
+<p>Match ASCII `str_t` against a glob-style pattern using '*', '?', and
+character classes like [a-z] or [^aeiou].
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wildcard_ascii;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wildcard_ascii;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_ascii" logicalPath="//apple_ref/c/instm/str_wildcard_ascii //apple_ref/c/clm/str_wildcard_ascii //apple_ref/c/intfcm/str_wildcard_ascii //apple_ref/c/intfm/str_wildcard_ascii //apple_ref/c/func/str_wildcard_ascii" target="_top"><span class="function">str_wildcard_ascii</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">pattern</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wildcard_ascii;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wildcard_ascii/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_wildcard_ascii/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The ASCII `str_t` to test.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wildcard_ascii/pattern;   name=pattern -->
+<a name="//apple_ref/doc/functionparam/str_wildcard_ascii/pattern"></a>
+<code>pattern</code>
+</dt>
+<dd><p>NUL-terminated pattern using ASCII characters.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>true on match, false otherwise.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_wildcard_ascii;name=start --><p>This is the ASCII helper invoked by the `str_wildcard` macro
+when `_Generic` is available and the argument is an ASCII `const char *`.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_wildcard_ascii;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_wildcard_wide;   name=str_wildcard_wide -->
+<a name="//apple_ref/c/func/str_wildcard_wide"></a>
+<h3><a name="str_wildcard_wide">str_wildcard_wide</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wildcard_wide;name=start --><!-- begin abstract --></p>
+<p>Match wide `str_t` against a wide glob-style pattern (wchar_t pattern).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_wildcard_wide;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wildcard_wide;name=start --><!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_wide" logicalPath="//apple_ref/c/instm/str_wildcard_wide //apple_ref/c/clm/str_wildcard_wide //apple_ref/c/intfcm/str_wildcard_wide //apple_ref/c/intfm/str_wildcard_wide //apple_ref/c/func/str_wildcard_wide" target="_top"><span class="function">str_wildcard_wide</span></a>(
+    <span class="keyword">const</span> <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>,
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="type">wchar_t</span><!-- /a --> <span class="type">*</span><span class="param">pattern</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_wildcard_wide;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wildcard_wide/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_wildcard_wide/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The wide `str_t` to test.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_wildcard_wide/pattern;   name=pattern -->
+<a name="//apple_ref/doc/functionparam/str_wildcard_wide/pattern"></a>
+<code>pattern</code>
+</dt>
+<dd><p>NUL-terminated wide pattern using `wchar_t` characters.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>true on match, false otherwise.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/str_wildcard_wide;name=start --><p>This is the wide helper invoked by the `str_wildcard` macro when
+`_Generic` is available and the argument is a `const wchar_t *`.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/str_wildcard_wide;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenSections">
+<a name="HeaderDoc_datatypes"></a>
+<h2 class="h2tight">Typedefs</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/str_t" target="_top">str_t</a></tt></dt>
+<dd><p>Opaque string handle used by the paul string API.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/str_t;   name=str_t -->
+<a name="//apple_ref/c/tdef/str_t"></a>
+<h3><a name="str_t">str_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/str_t;name=start --><!-- begin abstract --></p>
+<p>Opaque string handle used by the paul string API.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/str_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/str_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --><span class="type">*</span> <!-- a logicalPath="//apple_ref/c/econst/str_t //apple_ref/c/data/str_t //apple_ref/c/clconst/str_t " machineGenerated="true" --><span class="var">str_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/str_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/str_t;name=start --><p>A `str_t` points to an internal buffer allocated by the paul library
+that stores either an ASCII (char) or wide (wchar_t) string. The
+implementation stores a small header placed immediately before the
+returned data pointer to track the stored type and the character length.
+Callers must treat `str_t` as an opaque handle and use the provided
+API functions to manipulate strings.
+<!-- headerDoc=discussion;uid=//apple_ref/c/tdef/str_t;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenSections">
+<a name="HeaderDoc_pdefines"></a>
+<h2 class="h2tight">Macro Definitions</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/macro/str" target="_top">str</a></tt></dt>
+<dd><p>Shortcut wrapper that calls `str_from` and constructs a `str_t` from a literal or pointer.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/macro/str_from" target="_top">str_from</a></tt></dt>
+<dd><p>Convenience generic constructor that selects `str_from_cstr` or `str_from_wcstr`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/macro/str_wildcard" target="_top">str_wildcard</a></tt></dt>
+<dd><p>Generic wildcard matcher dispatcher.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=macro;  uid=//apple_ref/c/macro/str;   name=str -->
+<a name="//apple_ref/c/macro/str"></a>
+<h3><a name="str">str</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str;name=start --><!-- begin abstract --></p>
+<p>Shortcut wrapper that calls `str_from` and constructs a `str_t` from a literal or pointer.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/macro/str;name=start --><span class="preprocessor">#define</span> <a machinegenerated="true" href="index.html#//apple_ref/c/macro/str" logicalPath="//apple_ref/c/cl/str //apple_ref/c/tdef/str //apple_ref/c/tag/str //apple_ref/c/struct/str //apple_ref/c/intf/str //apple_ref/c/econst/str //apple_ref/c/data/str //apple_ref/c/clconst/str //apple_ref/c/instm/str //apple_ref/c/clm/str //apple_ref/c/intfcm/str //apple_ref/c/intfm/str //apple_ref/c/func/str //apple_ref/c/ftmplt/str //apple_ref/c/defn/str //apple_ref/c/macro/str" target="_top"><span class="preprocessor">str</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/_Generic //apple_ref/c/tdef/_Generic //apple_ref/c/tag/_Generic //apple_ref/c/struct/_Generic //apple_ref/c/intf/_Generic //apple_ref/c/econst/_Generic //apple_ref/c/data/_Generic //apple_ref/c/clconst/_Generic //apple_ref/c/instm/_Generic //apple_ref/c/clm/_Generic //apple_ref/c/intfcm/_Generic //apple_ref/c/intfm/_Generic //apple_ref/c/func/_Generic //apple_ref/c/ftmplt/_Generic //apple_ref/c/defn/_Generic //apple_ref/c/macro/_Generic //apple_ref/doc/com/intfm/_Generic //apple_ref/doc/anysymbol/_Generic" machineGenerated="true" --><span class="preprocessor">_Generic</span><!-- /a --><span class="preprocessor">(</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_cstr" logicalPath="//apple_ref/c/cl/str_from_cstr //apple_ref/c/tdef/str_from_cstr //apple_ref/c/tag/str_from_cstr //apple_ref/c/struct/str_from_cstr //apple_ref/c/intf/str_from_cstr //apple_ref/c/econst/str_from_cstr //apple_ref/c/data/str_from_cstr //apple_ref/c/clconst/str_from_cstr //apple_ref/c/instm/str_from_cstr //apple_ref/c/clm/str_from_cstr //apple_ref/c/intfcm/str_from_cstr //apple_ref/c/intfm/str_from_cstr //apple_ref/c/func/str_from_cstr" target="_top"><span class="preprocessor">str_from_cstr</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_wcstr" logicalPath="//apple_ref/c/cl/str_from_wcstr //apple_ref/c/tdef/str_from_wcstr //apple_ref/c/tag/str_from_wcstr //apple_ref/c/struct/str_from_wcstr //apple_ref/c/intf/str_from_wcstr //apple_ref/c/econst/str_from_wcstr //apple_ref/c/data/str_from_wcstr //apple_ref/c/clconst/str_from_wcstr //apple_ref/c/instm/str_from_wcstr //apple_ref/c/clm/str_from_wcstr //apple_ref/c/intfcm/str_from_wcstr //apple_ref/c/intfm/str_from_wcstr //apple_ref/c/func/str_from_wcstr" target="_top"><span class="preprocessor">str_from_wcstr</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_cstr" logicalPath="//apple_ref/c/cl/str_from_cstr //apple_ref/c/tdef/str_from_cstr //apple_ref/c/tag/str_from_cstr //apple_ref/c/struct/str_from_cstr //apple_ref/c/intf/str_from_cstr //apple_ref/c/econst/str_from_cstr //apple_ref/c/data/str_from_cstr //apple_ref/c/clconst/str_from_cstr //apple_ref/c/instm/str_from_cstr //apple_ref/c/clm/str_from_cstr //apple_ref/c/intfcm/str_from_cstr //apple_ref/c/intfm/str_from_cstr //apple_ref/c/func/str_from_cstr" target="_top"><span class="preprocessor">str_from_cstr</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_wcstr" logicalPath="//apple_ref/c/cl/str_from_wcstr //apple_ref/c/tdef/str_from_wcstr //apple_ref/c/tag/str_from_wcstr //apple_ref/c/struct/str_from_wcstr //apple_ref/c/intf/str_from_wcstr //apple_ref/c/econst/str_from_wcstr //apple_ref/c/data/str_from_wcstr //apple_ref/c/clconst/str_from_wcstr //apple_ref/c/instm/str_from_wcstr //apple_ref/c/clm/str_from_wcstr //apple_ref/c/intfcm/str_from_wcstr //apple_ref/c/intfm/str_from_wcstr //apple_ref/c/func/str_from_wcstr" target="_top"><span class="preprocessor">str_from_wcstr</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/default //apple_ref/c/tdef/default //apple_ref/c/tag/default //apple_ref/c/struct/default //apple_ref/c/intf/default //apple_ref/c/econst/default //apple_ref/c/data/default //apple_ref/c/clconst/default //apple_ref/c/instm/default //apple_ref/c/clm/default //apple_ref/c/intfcm/default //apple_ref/c/intfm/default //apple_ref/c/func/default //apple_ref/c/ftmplt/default //apple_ref/c/defn/default //apple_ref/c/macro/default //apple_ref/doc/com/intfm/default //apple_ref/doc/anysymbol/default" machineGenerated="true" --><span class="preprocessor">default</span><!-- /a --><span class="preprocessor">:</span> <!-- a logicalPath="//apple_ref/c/cl/NULL //apple_ref/c/tdef/NULL //apple_ref/c/tag/NULL //apple_ref/c/struct/NULL //apple_ref/c/intf/NULL //apple_ref/c/econst/NULL //apple_ref/c/data/NULL //apple_ref/c/clconst/NULL //apple_ref/c/instm/NULL //apple_ref/c/clm/NULL //apple_ref/c/intfcm/NULL //apple_ref/c/intfm/NULL //apple_ref/c/func/NULL //apple_ref/c/ftmplt/NULL //apple_ref/c/defn/NULL //apple_ref/c/macro/NULL //apple_ref/doc/com/intfm/NULL //apple_ref/doc/anysymbol/NULL" machineGenerated="true" --><span class="preprocessor">NULL</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span> <!-- headerDoc=declaration;uid=//apple_ref/c/macro/str;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/macro/str;name=start --><p>See `str_from` for details. This macro is handy when passing string
+literals directly (it will pick the correct constructor based on the
+literal's type).
+<!-- headerDoc=discussion;uid=//apple_ref/c/macro/str;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=macro;  uid=//apple_ref/c/macro/str_from;   name=str_from -->
+<a name="//apple_ref/c/macro/str_from"></a>
+<h3><a name="str_from">str_from</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str_from;name=start --><!-- begin abstract --></p>
+<p>Convenience generic constructor that selects `str_from_cstr` or `str_from_wcstr`.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str_from;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/macro/str_from;name=start --><span class="preprocessor">#define</span> <a machinegenerated="true" href="index.html#//apple_ref/c/macro/str_from" logicalPath="//apple_ref/c/cl/str_from //apple_ref/c/tdef/str_from //apple_ref/c/tag/str_from //apple_ref/c/struct/str_from //apple_ref/c/intf/str_from //apple_ref/c/econst/str_from //apple_ref/c/data/str_from //apple_ref/c/clconst/str_from //apple_ref/c/instm/str_from //apple_ref/c/clm/str_from //apple_ref/c/intfcm/str_from //apple_ref/c/intfm/str_from //apple_ref/c/func/str_from //apple_ref/c/ftmplt/str_from //apple_ref/c/defn/str_from //apple_ref/c/macro/str_from" target="_top"><span class="preprocessor">str_from</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/_Generic //apple_ref/c/tdef/_Generic //apple_ref/c/tag/_Generic //apple_ref/c/struct/_Generic //apple_ref/c/intf/_Generic //apple_ref/c/econst/_Generic //apple_ref/c/data/_Generic //apple_ref/c/clconst/_Generic //apple_ref/c/instm/_Generic //apple_ref/c/clm/_Generic //apple_ref/c/intfcm/_Generic //apple_ref/c/intfm/_Generic //apple_ref/c/func/_Generic //apple_ref/c/ftmplt/_Generic //apple_ref/c/defn/_Generic //apple_ref/c/macro/_Generic //apple_ref/doc/com/intfm/_Generic //apple_ref/doc/anysymbol/_Generic" machineGenerated="true" --><span class="preprocessor">_Generic</span><!-- /a --><span class="preprocessor">(</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_cstr" logicalPath="//apple_ref/c/cl/str_from_cstr //apple_ref/c/tdef/str_from_cstr //apple_ref/c/tag/str_from_cstr //apple_ref/c/struct/str_from_cstr //apple_ref/c/intf/str_from_cstr //apple_ref/c/econst/str_from_cstr //apple_ref/c/data/str_from_cstr //apple_ref/c/clconst/str_from_cstr //apple_ref/c/instm/str_from_cstr //apple_ref/c/clm/str_from_cstr //apple_ref/c/intfcm/str_from_cstr //apple_ref/c/intfm/str_from_cstr //apple_ref/c/func/str_from_cstr" target="_top"><span class="preprocessor">str_from_cstr</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_wcstr" logicalPath="//apple_ref/c/cl/str_from_wcstr //apple_ref/c/tdef/str_from_wcstr //apple_ref/c/tag/str_from_wcstr //apple_ref/c/struct/str_from_wcstr //apple_ref/c/intf/str_from_wcstr //apple_ref/c/econst/str_from_wcstr //apple_ref/c/data/str_from_wcstr //apple_ref/c/clconst/str_from_wcstr //apple_ref/c/instm/str_from_wcstr //apple_ref/c/clm/str_from_wcstr //apple_ref/c/intfcm/str_from_wcstr //apple_ref/c/intfm/str_from_wcstr //apple_ref/c/func/str_from_wcstr" target="_top"><span class="preprocessor">str_from_wcstr</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_cstr" logicalPath="//apple_ref/c/cl/str_from_cstr //apple_ref/c/tdef/str_from_cstr //apple_ref/c/tag/str_from_cstr //apple_ref/c/struct/str_from_cstr //apple_ref/c/intf/str_from_cstr //apple_ref/c/econst/str_from_cstr //apple_ref/c/data/str_from_cstr //apple_ref/c/clconst/str_from_cstr //apple_ref/c/instm/str_from_cstr //apple_ref/c/clm/str_from_cstr //apple_ref/c/intfcm/str_from_cstr //apple_ref/c/intfm/str_from_cstr //apple_ref/c/func/str_from_cstr" target="_top"><span class="preprocessor">str_from_cstr</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_from_wcstr" logicalPath="//apple_ref/c/cl/str_from_wcstr //apple_ref/c/tdef/str_from_wcstr //apple_ref/c/tag/str_from_wcstr //apple_ref/c/struct/str_from_wcstr //apple_ref/c/intf/str_from_wcstr //apple_ref/c/econst/str_from_wcstr //apple_ref/c/data/str_from_wcstr //apple_ref/c/clconst/str_from_wcstr //apple_ref/c/instm/str_from_wcstr //apple_ref/c/clm/str_from_wcstr //apple_ref/c/intfcm/str_from_wcstr //apple_ref/c/intfm/str_from_wcstr //apple_ref/c/func/str_from_wcstr" target="_top"><span class="preprocessor">str_from_wcstr</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/default //apple_ref/c/tdef/default //apple_ref/c/tag/default //apple_ref/c/struct/default //apple_ref/c/intf/default //apple_ref/c/econst/default //apple_ref/c/data/default //apple_ref/c/clconst/default //apple_ref/c/instm/default //apple_ref/c/clm/default //apple_ref/c/intfcm/default //apple_ref/c/intfm/default //apple_ref/c/func/default //apple_ref/c/ftmplt/default //apple_ref/c/defn/default //apple_ref/c/macro/default //apple_ref/doc/com/intfm/default //apple_ref/doc/anysymbol/default" machineGenerated="true" --><span class="preprocessor">default</span><!-- /a --><span class="preprocessor">:</span> <!-- a logicalPath="//apple_ref/c/cl/NULL //apple_ref/c/tdef/NULL //apple_ref/c/tag/NULL //apple_ref/c/struct/NULL //apple_ref/c/intf/NULL //apple_ref/c/econst/NULL //apple_ref/c/data/NULL //apple_ref/c/clconst/NULL //apple_ref/c/instm/NULL //apple_ref/c/clm/NULL //apple_ref/c/intfcm/NULL //apple_ref/c/intfm/NULL //apple_ref/c/func/NULL //apple_ref/c/ftmplt/NULL //apple_ref/c/defn/NULL //apple_ref/c/macro/NULL //apple_ref/doc/com/intfm/NULL //apple_ref/doc/anysymbol/NULL" machineGenerated="true" --><span class="preprocessor">NULL</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span> <!-- headerDoc=declaration;uid=//apple_ref/c/macro/str_from;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/macro/str_from;name=start --><p>When the compiler supports C11 `_Generic` selections this macro dispatches
+at compile-time based on the type of the argument. It expands to
+`str_from_cstr(const char*)` for narrow C strings and to
+`str_from_wcstr(const wchar_t*)` for wide strings. If `_Generic` is not
+available then `PAUL_NO_GENERICS` is defined and these macros are not
+provided.
+<!-- headerDoc=discussion;uid=//apple_ref/c/macro/str_from;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=macro;  uid=//apple_ref/c/macro/str_wildcard;   name=str_wildcard -->
+<a name="//apple_ref/c/macro/str_wildcard"></a>
+<h3><a name="str_wildcard">str_wildcard</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str_wildcard;name=start --><!-- begin abstract --></p>
+<p>Generic wildcard matcher dispatcher.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/macro/str_wildcard;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/macro/str_wildcard;name=start --><span class="preprocessor">#define</span> <a machinegenerated="true" href="index.html#//apple_ref/c/macro/str_wildcard" logicalPath="//apple_ref/c/cl/str_wildcard //apple_ref/c/tdef/str_wildcard //apple_ref/c/tag/str_wildcard //apple_ref/c/struct/str_wildcard //apple_ref/c/intf/str_wildcard //apple_ref/c/econst/str_wildcard //apple_ref/c/data/str_wildcard //apple_ref/c/clconst/str_wildcard //apple_ref/c/instm/str_wildcard //apple_ref/c/clm/str_wildcard //apple_ref/c/intfcm/str_wildcard //apple_ref/c/intfm/str_wildcard //apple_ref/c/func/str_wildcard //apple_ref/c/ftmplt/str_wildcard //apple_ref/c/defn/str_wildcard //apple_ref/c/macro/str_wildcard" target="_top"><span class="preprocessor">str_wildcard</span></a><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">,</span> <!-- a logicalPath="//apple_ref/c/cl/P //apple_ref/c/tdef/P //apple_ref/c/tag/P //apple_ref/c/struct/P //apple_ref/c/intf/P //apple_ref/c/econst/P //apple_ref/c/data/P //apple_ref/c/clconst/P //apple_ref/c/instm/P //apple_ref/c/clm/P //apple_ref/c/intfcm/P //apple_ref/c/intfm/P //apple_ref/c/func/P //apple_ref/c/ftmplt/P //apple_ref/c/defn/P //apple_ref/c/macro/P //apple_ref/doc/com/intfm/P //apple_ref/doc/anysymbol/P" machineGenerated="true" --><span class="preprocessor">P</span><!-- /a --><span class="preprocessor">)</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/_Generic //apple_ref/c/tdef/_Generic //apple_ref/c/tag/_Generic //apple_ref/c/struct/_Generic //apple_ref/c/intf/_Generic //apple_ref/c/econst/_Generic //apple_ref/c/data/_Generic //apple_ref/c/clconst/_Generic //apple_ref/c/instm/_Generic //apple_ref/c/clm/_Generic //apple_ref/c/intfcm/_Generic //apple_ref/c/intfm/_Generic //apple_ref/c/func/_Generic //apple_ref/c/ftmplt/_Generic //apple_ref/c/defn/_Generic //apple_ref/c/macro/_Generic //apple_ref/doc/com/intfm/_Generic //apple_ref/doc/anysymbol/_Generic" machineGenerated="true" --><span class="preprocessor">_Generic</span><!-- /a --><span class="preprocessor">(</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_ascii" logicalPath="//apple_ref/c/cl/str_wildcard_ascii //apple_ref/c/tdef/str_wildcard_ascii //apple_ref/c/tag/str_wildcard_ascii //apple_ref/c/struct/str_wildcard_ascii //apple_ref/c/intf/str_wildcard_ascii //apple_ref/c/econst/str_wildcard_ascii //apple_ref/c/data/str_wildcard_ascii //apple_ref/c/clconst/str_wildcard_ascii //apple_ref/c/instm/str_wildcard_ascii //apple_ref/c/clm/str_wildcard_ascii //apple_ref/c/intfcm/str_wildcard_ascii //apple_ref/c/intfm/str_wildcard_ascii //apple_ref/c/func/str_wildcard_ascii" target="_top"><span class="preprocessor">str_wildcard_ascii</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/c/econst/char //apple_ref/c/data/char //apple_ref/c/clconst/char //apple_ref/c/instm/char //apple_ref/c/clm/char //apple_ref/c/intfcm/char //apple_ref/c/intfm/char //apple_ref/c/func/char //apple_ref/c/ftmplt/char //apple_ref/c/defn/char //apple_ref/c/macro/char //apple_ref/doc/com/intfm/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="preprocessor">char</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_ascii" logicalPath="//apple_ref/c/cl/str_wildcard_ascii //apple_ref/c/tdef/str_wildcard_ascii //apple_ref/c/tag/str_wildcard_ascii //apple_ref/c/struct/str_wildcard_ascii //apple_ref/c/intf/str_wildcard_ascii //apple_ref/c/econst/str_wildcard_ascii //apple_ref/c/data/str_wildcard_ascii //apple_ref/c/clconst/str_wildcard_ascii //apple_ref/c/instm/str_wildcard_ascii //apple_ref/c/clm/str_wildcard_ascii //apple_ref/c/intfcm/str_wildcard_ascii //apple_ref/c/intfm/str_wildcard_ascii //apple_ref/c/func/str_wildcard_ascii" target="_top"><span class="preprocessor">str_wildcard_ascii</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/const //apple_ref/c/tdef/const //apple_ref/c/tag/const //apple_ref/c/struct/const //apple_ref/c/intf/const //apple_ref/c/econst/const //apple_ref/c/data/const //apple_ref/c/clconst/const //apple_ref/c/instm/const //apple_ref/c/clm/const //apple_ref/c/intfcm/const //apple_ref/c/intfm/const //apple_ref/c/func/const //apple_ref/c/ftmplt/const //apple_ref/c/defn/const //apple_ref/c/macro/const //apple_ref/doc/com/intfm/const //apple_ref/doc/anysymbol/const" machineGenerated="true" --><span class="preprocessor">const</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_wide" logicalPath="//apple_ref/c/cl/str_wildcard_wide //apple_ref/c/tdef/str_wildcard_wide //apple_ref/c/tag/str_wildcard_wide //apple_ref/c/struct/str_wildcard_wide //apple_ref/c/intf/str_wildcard_wide //apple_ref/c/econst/str_wildcard_wide //apple_ref/c/data/str_wildcard_wide //apple_ref/c/clconst/str_wildcard_wide //apple_ref/c/instm/str_wildcard_wide //apple_ref/c/clm/str_wildcard_wide //apple_ref/c/intfcm/str_wildcard_wide //apple_ref/c/intfm/str_wildcard_wide //apple_ref/c/func/str_wildcard_wide" target="_top"><span class="preprocessor">str_wildcard_wide</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/wchar_t //apple_ref/c/tdef/wchar_t //apple_ref/c/tag/wchar_t //apple_ref/c/struct/wchar_t //apple_ref/c/intf/wchar_t //apple_ref/c/econst/wchar_t //apple_ref/c/data/wchar_t //apple_ref/c/clconst/wchar_t //apple_ref/c/instm/wchar_t //apple_ref/c/clm/wchar_t //apple_ref/c/intfcm/wchar_t //apple_ref/c/intfm/wchar_t //apple_ref/c/func/wchar_t //apple_ref/c/ftmplt/wchar_t //apple_ref/c/defn/wchar_t //apple_ref/c/macro/wchar_t //apple_ref/doc/com/intfm/wchar_t //apple_ref/doc/anysymbol/wchar_t" machineGenerated="true" --><span class="preprocessor">wchar_t</span><!-- /a --> <span class="preprocessor">*</span><span class="preprocessor">:</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_wildcard_wide" logicalPath="//apple_ref/c/cl/str_wildcard_wide //apple_ref/c/tdef/str_wildcard_wide //apple_ref/c/tag/str_wildcard_wide //apple_ref/c/struct/str_wildcard_wide //apple_ref/c/intf/str_wildcard_wide //apple_ref/c/econst/str_wildcard_wide //apple_ref/c/data/str_wildcard_wide //apple_ref/c/clconst/str_wildcard_wide //apple_ref/c/instm/str_wildcard_wide //apple_ref/c/clm/str_wildcard_wide //apple_ref/c/intfcm/str_wildcard_wide //apple_ref/c/intfm/str_wildcard_wide //apple_ref/c/func/str_wildcard_wide" target="_top"><span class="preprocessor">str_wildcard_wide</span></a><span class="preprocessor">,</span> <span class="preprocessor">\</span> 
+    <!-- a logicalPath="//apple_ref/c/cl/default //apple_ref/c/tdef/default //apple_ref/c/tag/default //apple_ref/c/struct/default //apple_ref/c/intf/default //apple_ref/c/econst/default //apple_ref/c/data/default //apple_ref/c/clconst/default //apple_ref/c/instm/default //apple_ref/c/clm/default //apple_ref/c/intfcm/default //apple_ref/c/intfm/default //apple_ref/c/func/default //apple_ref/c/ftmplt/default //apple_ref/c/defn/default //apple_ref/c/macro/default //apple_ref/doc/com/intfm/default //apple_ref/doc/anysymbol/default" machineGenerated="true" --><span class="preprocessor">default</span><!-- /a --><span class="preprocessor">:</span> <!-- a logicalPath="//apple_ref/c/cl/NULL //apple_ref/c/tdef/NULL //apple_ref/c/tag/NULL //apple_ref/c/struct/NULL //apple_ref/c/intf/NULL //apple_ref/c/econst/NULL //apple_ref/c/data/NULL //apple_ref/c/clconst/NULL //apple_ref/c/instm/NULL //apple_ref/c/clm/NULL //apple_ref/c/intfcm/NULL //apple_ref/c/intfm/NULL //apple_ref/c/func/NULL //apple_ref/c/ftmplt/NULL //apple_ref/c/defn/NULL //apple_ref/c/macro/NULL //apple_ref/doc/com/intfm/NULL //apple_ref/doc/anysymbol/NULL" machineGenerated="true" --><span class="preprocessor">NULL</span><!-- /a --><span class="preprocessor">)</span><span class="preprocessor">(</span><!-- a logicalPath="//apple_ref/c/cl/S //apple_ref/c/tdef/S //apple_ref/c/tag/S //apple_ref/c/struct/S //apple_ref/c/intf/S //apple_ref/c/econst/S //apple_ref/c/data/S //apple_ref/c/clconst/S //apple_ref/c/instm/S //apple_ref/c/clm/S //apple_ref/c/intfcm/S //apple_ref/c/intfm/S //apple_ref/c/func/S //apple_ref/c/ftmplt/S //apple_ref/c/defn/S //apple_ref/c/macro/S //apple_ref/doc/com/intfm/S //apple_ref/doc/anysymbol/S" machineGenerated="true" --><span class="preprocessor">S</span><!-- /a --><span class="preprocessor">,</span> <!-- a logicalPath="//apple_ref/c/cl/P //apple_ref/c/tdef/P //apple_ref/c/tag/P //apple_ref/c/struct/P //apple_ref/c/intf/P //apple_ref/c/econst/P //apple_ref/c/data/P //apple_ref/c/clconst/P //apple_ref/c/instm/P //apple_ref/c/clm/P //apple_ref/c/intfcm/P //apple_ref/c/intfm/P //apple_ref/c/func/P //apple_ref/c/ftmplt/P //apple_ref/c/defn/P //apple_ref/c/macro/P //apple_ref/doc/com/intfm/P //apple_ref/doc/anysymbol/P" machineGenerated="true" --><span class="preprocessor">P</span><!-- /a --><span class="preprocessor">)</span> <!-- headerDoc=declaration;uid=//apple_ref/c/macro/str_wildcard;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/macro/str_wildcard;name=start --><p>When `_Generic` is available this macro selects `str_wildcard_ascii` or
+`str_wildcard_wide` based on the type of the first argument. If
+`_Generic` is not available the macro is omitted and callers must call
+the correct helper directly.
+<!-- headerDoc=discussion;uid=//apple_ref/c/macro/str_wildcard;name=end --><!-- end discussion -->
+</p>
+<p class="gapBeforeFooter"> </p>
+<hr class="afterFooter">
+<div class="hd_copyright_and_timestamp">
+<p class="hd_timestamp">Last Updated: Monday, September 29, 2025
+</p>
+</div>
+</td>
+</tr></table>
+</body>
+</html>
