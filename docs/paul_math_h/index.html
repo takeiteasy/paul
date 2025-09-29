@@ -278,12 +278,100 @@ function disclosure_triangle(elt) {
 </tr>
 </table></div>
 <h2>Introduction</h2>
-<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_math.h;name=start --><!-- begin abstract -->Use the links in the table of contents to the left to access the documentation.<br>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_math.h;name=start --><!-- begin abstract --></p>
+<p>Linear algebra library for C/C++.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_math.h;name=end --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_math.h;name=start --><p>Implementation is included when PAUL_MATH_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+<!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_math.h;name=end --><!-- end discussion -->
+</p>
+<dl>
+<dt><b>Updated:</b></dt>
+<dd>Monday, September 29, 2025</dd>
+</dl>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_groups"><h2 class="h2tight">Groups</h2></a>
+
+<h3>Matrices</h3>
+<div class="group_desc_indent">
+<p></p>
+<p>Matrix types and transformation helpers (mat2/3/4)
+</p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<p></p>
+<p>Matrix creation and manipulation functions, plus helpers to construct
+translation/rotation/scale matrices, camera projection matrices (frustum,
+perspective, ortho) and utilities for transforming/unprojecting vectors.
+These functions are available when PAUL_MATH_NO_MATRICES is not defined.
+</p>
+</div>
+<p> </p>
+<h3>Vectors</h3>
+<div class="group_desc_indent">
+<p></p>
+<p>Vector types and helper functions (vec2, vec3, vec4)
+</p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<p></p>
+<p>A set of lightweight vector types and C-style helper functions for common
+operations (zero, length, dot, normalize, distance, clamp, lerp, etc.).
+These are provided for vec2, vec3 and vec4 (and integer variants where
+available). The functions are exported via macros for each supported size.
+</p>
+</div>
+<h4>Group members:</h4>
+<div class="group_indent">
+<dl>
+<dt><tt><a machinegenerated="true" logicalpath="//apple_ref/c/tdef/quat" target="_top" href="index.html#//apple_ref/c/tdef/quat">quat</a></tt></dt>
+<dd><p>Quaternion type (alias for vec4)
+</p></dd>
+</dl>
+</div>
+<p> </p>
+<h3>Easing</h3>
+<div class="group_desc_indent">
+<p></p>
+<p>Timing/easing functions for animations and interpolation
+</p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<p></p>
+<p>A set of common easing functions (linear, sine, circular, cubic, quad,
+exponential, back, bounce, elastic) and easing types (in, out, inout).
+Use `ease()` to evaluate an easing curve with the signature:
+ease(fn, type, t, b, c, d) where t is current time, b is start value,
+c is change in value, and d is duration.
+</p>
+</div>
+<hr class="afterGroupHeading">
+<a name="HeaderDoc_datatypes"></a>
+<h2 class="h2tight">Typedefs</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/quat" target="_top">quat</a></tt></dt>
+<dd><p>Quaternion type (alias for vec4)
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/quat;   name=quat -->
+<a name="//apple_ref/c/tdef/quat"></a>
+<h3><a name="quat">quat</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/quat;name=start --><!-- begin abstract --></p>
+<p>Quaternion type (alias for vec4)
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/quat;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/quat;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/vec4 //apple_ref/c/tdef/vec4 //apple_ref/c/tag/vec4 //apple_ref/c/struct/vec4 //apple_ref/c/intf/vec4 //apple_ref/doc/anysymbol/vec4" machineGenerated="true" --><span class="type">vec4</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/quat //apple_ref/c/data/quat //apple_ref/c/clconst/quat " machineGenerated="true" --><span class="var">quat</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/quat;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/quat;name=start --><p>A quaternion represented as a 4-component vector (x, y, z, w).
+Provided as an alias to vec4 for convenience when working with rotations.
+<!-- headerDoc=discussion;uid=//apple_ref/c/tdef/quat;name=end --><!-- end discussion -->
+</p>
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Sunday, September 28, 2025
+<p class="hd_copyright">© George Watson GPLv3
+ </p>
+<p class="hd_timestamp">Last Updated: Monday, September 29, 2025
 </p>
 </div>
 </td>

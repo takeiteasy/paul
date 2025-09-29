@@ -135,8 +135,7 @@ int main(void) {
     if (matches) {
         if (count >= 1)
             printf("ok directory_glob_count\n");
-        else
-        {
+        else {
             fprintf(stderr, "FAIL directory_glob_count: got %d want >=1\n", count);
             TEST_FAILURES++;
         }

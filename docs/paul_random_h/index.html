@@ -264,17 +264,1214 @@ function disclosure_triangle(elt) {
 <tr>
 <td scope="row"><b>Includes:</b></td>
 <td><div style="margin-bottom:1px"><div class="content_text">
-<!-- a logicalPath="//apple_ref/doc/header/stdint.h" machineGenerated="true" -->&lt;stdint.h&gt;<!-- /a -->
+<!-- a logicalPath="//apple_ref/doc/header/stdint.h" machineGenerated="true" -->&lt;stdint.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/stddef.h" machineGenerated="true" -->&lt;stddef.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/string.h" machineGenerated="true" -->&lt;string.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/float.h" machineGenerated="true" -->&lt;float.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/time.h" machineGenerated="true" -->&lt;time.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/math.h" machineGenerated="true" -->&lt;math.h&gt;<!-- /a --><br>
+<!-- a logicalPath="//apple_ref/doc/header/stdlib.h" machineGenerated="true" -->&lt;stdlib.h&gt;<!-- /a -->
 </div></div></td>
 </tr>
 </table></div>
 <h2>Introduction</h2>
-<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_random.h;name=start --><!-- begin abstract -->Use the links in the table of contents to the left to access the documentation.<br>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_random.h;name=start --><!-- begin abstract --></p>
+<p>Random number generation and noise functions for C/C++.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/paul_random.h;name=end --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_random.h;name=start --><p>Implementation is included when PAUL_RANDOM_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+<!-- headerDoc=discussion;uid=//apple_ref/doc/header/paul_random.h;name=end --><!-- end discussion -->
+</p>
+<dl>
+<dt><b>Updated:</b></dt>
+<dd>Saturday, July 19, 2025</dd>
+</dl>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_functions"></a>
+<h2 class="h2tight">Functions</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/func/cellular_automata" target="_top">cellular_automata</a></tt></dt>
+<dd><p>Generates a cellular automata pattern.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/fbm" target="_top">fbm</a></tt></dt>
+<dd><p>Computes fractal Brownian motion noise.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/fbm2D" target="_top">fbm2D</a></tt></dt>
+<dd><p>Generates a 2D fractal Brownian motion noise map.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/fbm3D" target="_top">fbm3D</a></tt></dt>
+<dd><p>Generates a 3D fractal Brownian motion noise volume.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/perlin_noise" target="_top">perlin_noise</a></tt></dt>
+<dd><p>Computes Perlin noise at the given coordinates.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/poisson_disc_free_list" target="_top">poisson_disc_free_list</a></tt></dt>
+<dd><p>Frees a Poisson disc sampling point list.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/poisson_disc_sample_foreach" target="_top">poisson_disc_sample_foreach</a></tt></dt>
+<dd><p>Generates Poisson disc sampling points and calls a callback for each.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/poisson_disc_sample_list" target="_top">poisson_disc_sample_list</a></tt></dt>
+<dd><p>Generates Poisson disc sampling points and returns them in a list.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/rnd_randf" target="_top">rnd_randf</a></tt></dt>
+<dd><p>Generates a random float between 0.0 and 1.0.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/rnd_randf_range" target="_top">rnd_randf_range</a></tt></dt>
+<dd><p>Generates a random float within a specified range.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/rnd_randi" target="_top">rnd_randi</a></tt></dt>
+<dd><p>Generates a random 64-bit unsigned integer.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/rnd_randi_range" target="_top">rnd_randi_range</a></tt></dt>
+<dd><p>Generates a random integer within a specified range.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/rng_init" target="_top">rng_init</a></tt></dt>
+<dd><p>Initializes the random number generator with a seed.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/simplex_noise" target="_top">simplex_noise</a></tt></dt>
+<dd><p>Computes Simplex noise at the given coordinates.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/value_noise" target="_top">value_noise</a></tt></dt>
+<dd><p>Computes value noise at the given coordinates.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/white_noise" target="_top">white_noise</a></tt></dt>
+<dd><p>Computes white noise at the given coordinates.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/worley_noise" target="_top">worley_noise</a></tt></dt>
+<dd><p>Computes Worley (cellular) noise at the given coordinates.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/cellular_automata;   name=cellular_automata -->
+<a name="//apple_ref/c/func/cellular_automata"></a>
+<h3><a name="cellular_automata">cellular_automata</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/cellular_automata;name=start --><!-- begin abstract --></p>
+<p>Generates a cellular automata pattern.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/cellular_automata;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/cellular_automata;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/cellular_automata" logicalPath="//apple_ref/c/instm/cellular_automata //apple_ref/c/clm/cellular_automata //apple_ref/c/intfcm/cellular_automata //apple_ref/c/intfm/cellular_automata //apple_ref/c/func/cellular_automata" target="_top"><span class="function">cellular_automata</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>, 
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">width</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">height</span>, 
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">fill_chance</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">smooth_iterations</span>, 
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">survive</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">starve</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/uint8_t //apple_ref/c/tdef/uint8_t //apple_ref/c/tag/uint8_t //apple_ref/c/struct/uint8_t //apple_ref/c/intf/uint8_t //apple_ref/doc/anysymbol/uint8_t" machineGenerated="true" --><span class="type">uint8_t</span><!-- /a --> <span class="type">*</span><span class="param">dst</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/cellular_automata;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the initialized rng_t structure.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/width;   name=width -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/width"></a>
+<code>width</code>
+</dt>
+<dd><p>Width of the grid.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/height;   name=height -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/height"></a>
+<code>height</code>
+</dt>
+<dd><p>Height of the grid.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/fill_chance;   name=fill_chance -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/fill_chance"></a>
+<code>fill_chance</code>
+</dt>
+<dd><p>Percentage chance to fill a cell initially (1-99).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/smooth_iterations;   name=smooth_iterations -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/smooth_iterations"></a>
+<code>smooth_iterations</code>
+</dt>
+<dd><p>Number of smoothing iterations.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/survive;   name=survive -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/survive"></a>
+<code>survive</code>
+</dt>
+<dd><p>Minimum neighbors to survive.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/starve;   name=starve -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/starve"></a>
+<code>starve</code>
+</dt>
+<dd><p>Maximum neighbors to starve.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/cellular_automata/dst;   name=dst -->
+<a name="//apple_ref/doc/functionparam/cellular_automata/dst"></a>
+<code>dst</code>
+</dt>
+<dd><p>Output buffer for the grid (uint8_t array).</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/fbm;   name=fbm -->
+<a name="//apple_ref/c/func/fbm"></a>
+<h3><a name="fbm">fbm</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm;name=start --><!-- begin abstract --></p>
+<p>Computes fractal Brownian motion noise.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/fbm" logicalPath="//apple_ref/c/instm/fbm //apple_ref/c/clm/fbm //apple_ref/c/intfcm/fbm //apple_ref/c/intfm/fbm //apple_ref/c/func/fbm" target="_top"><span class="function">fbm</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">lacunarity</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">gain</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">octaves</span>, 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/noise_fn_t" logicalPath="//apple_ref/c/cl/noise_fn_t //apple_ref/c/tdef/noise_fn_t" target="_top"><span class="type">noise_fn_t</span></a> <span class="param">noise_fn</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/fbm/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/fbm/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/fbm/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/lacunarity;   name=lacunarity -->
+<a name="//apple_ref/doc/functionparam/fbm/lacunarity"></a>
+<code>lacunarity</code>
+</dt>
+<dd><p>Frequency multiplier between octaves.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/gain;   name=gain -->
+<a name="//apple_ref/doc/functionparam/fbm/gain"></a>
+<code>gain</code>
+</dt>
+<dd><p>Amplitude multiplier between octaves.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/octaves;   name=octaves -->
+<a name="//apple_ref/doc/functionparam/fbm/octaves"></a>
+<code>octaves</code>
+</dt>
+<dd><p>Number of octaves.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm/noise_fn;   name=noise_fn -->
+<a name="//apple_ref/doc/functionparam/fbm/noise_fn"></a>
+<code>noise_fn</code>
+</dt>
+<dd><p>Base noise function.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>FBM noise value.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/fbm2D;   name=fbm2D -->
+<a name="//apple_ref/c/func/fbm2D"></a>
+<h3><a name="fbm2D">fbm2D</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm2D;name=start --><!-- begin abstract --></p>
+<p>Generates a 2D fractal Brownian motion noise map.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm2D;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm2D;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/fbm2D" logicalPath="//apple_ref/c/instm/fbm2D //apple_ref/c/clm/fbm2D //apple_ref/c/intfcm/fbm2D //apple_ref/c/intfm/fbm2D //apple_ref/c/func/fbm2D" target="_top"><span class="function">fbm2D</span></a>(
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">width</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">height</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">offset_x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">offset_y</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">scale</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">lacunarity</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">gain</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">octaves</span>, 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/noise_fn_t" logicalPath="//apple_ref/c/cl/noise_fn_t //apple_ref/c/tdef/noise_fn_t" target="_top"><span class="type">noise_fn_t</span></a> <span class="param">noise_fn</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/uint8_t //apple_ref/c/tdef/uint8_t //apple_ref/c/tag/uint8_t //apple_ref/c/struct/uint8_t //apple_ref/c/intf/uint8_t //apple_ref/doc/anysymbol/uint8_t" machineGenerated="true" --><span class="type">uint8_t</span><!-- /a --> <span class="type">*</span><span class="param">dst</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm2D;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/width;   name=width -->
+<a name="//apple_ref/doc/functionparam/fbm2D/width"></a>
+<code>width</code>
+</dt>
+<dd><p>Width of the output map.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/height;   name=height -->
+<a name="//apple_ref/doc/functionparam/fbm2D/height"></a>
+<code>height</code>
+</dt>
+<dd><p>Height of the output map.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/fbm2D/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate (fixed for 2D slice).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/offset_x;   name=offset_x -->
+<a name="//apple_ref/doc/functionparam/fbm2D/offset_x"></a>
+<code>offset_x</code>
+</dt>
+<dd><p>X offset.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/offset_y;   name=offset_y -->
+<a name="//apple_ref/doc/functionparam/fbm2D/offset_y"></a>
+<code>offset_y</code>
+</dt>
+<dd><p>Y offset.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/scale;   name=scale -->
+<a name="//apple_ref/doc/functionparam/fbm2D/scale"></a>
+<code>scale</code>
+</dt>
+<dd><p>Scale factor.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/lacunarity;   name=lacunarity -->
+<a name="//apple_ref/doc/functionparam/fbm2D/lacunarity"></a>
+<code>lacunarity</code>
+</dt>
+<dd><p>Frequency multiplier.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/gain;   name=gain -->
+<a name="//apple_ref/doc/functionparam/fbm2D/gain"></a>
+<code>gain</code>
+</dt>
+<dd><p>Amplitude multiplier.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/octaves;   name=octaves -->
+<a name="//apple_ref/doc/functionparam/fbm2D/octaves"></a>
+<code>octaves</code>
+</dt>
+<dd><p>Number of octaves.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/noise_fn;   name=noise_fn -->
+<a name="//apple_ref/doc/functionparam/fbm2D/noise_fn"></a>
+<code>noise_fn</code>
+</dt>
+<dd><p>Base noise function.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm2D/dst;   name=dst -->
+<a name="//apple_ref/doc/functionparam/fbm2D/dst"></a>
+<code>dst</code>
+</dt>
+<dd><p>Output buffer (uint8_t array).</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/fbm3D;   name=fbm3D -->
+<a name="//apple_ref/c/func/fbm3D"></a>
+<h3><a name="fbm3D">fbm3D</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm3D;name=start --><!-- begin abstract --></p>
+<p>Generates a 3D fractal Brownian motion noise volume.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/fbm3D;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm3D;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/fbm3D" logicalPath="//apple_ref/c/instm/fbm3D //apple_ref/c/clm/fbm3D //apple_ref/c/intfcm/fbm3D //apple_ref/c/intfm/fbm3D //apple_ref/c/func/fbm3D" target="_top"><span class="function">fbm3D</span></a>(
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">width</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">height</span>,
+    <span class="keyword">unsigned</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">depth</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">offset_x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">offset_y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">offset_z</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">scale</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">lacunarity</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">gain</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">octaves</span>, 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/noise_fn_t" logicalPath="//apple_ref/c/cl/noise_fn_t //apple_ref/c/tdef/noise_fn_t" target="_top"><span class="type">noise_fn_t</span></a> <span class="param">noise_fn</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/uint8_t //apple_ref/c/tdef/uint8_t //apple_ref/c/tag/uint8_t //apple_ref/c/struct/uint8_t //apple_ref/c/intf/uint8_t //apple_ref/doc/anysymbol/uint8_t" machineGenerated="true" --><span class="type">uint8_t</span><!-- /a --> <span class="type">*</span><span class="param">dst</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/fbm3D;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/width;   name=width -->
+<a name="//apple_ref/doc/functionparam/fbm3D/width"></a>
+<code>width</code>
+</dt>
+<dd><p>Width of the output volume.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/height;   name=height -->
+<a name="//apple_ref/doc/functionparam/fbm3D/height"></a>
+<code>height</code>
+</dt>
+<dd><p>Height of the output volume.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/depth;   name=depth -->
+<a name="//apple_ref/doc/functionparam/fbm3D/depth"></a>
+<code>depth</code>
+</dt>
+<dd><p>Depth of the output volume.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/offset_x;   name=offset_x -->
+<a name="//apple_ref/doc/functionparam/fbm3D/offset_x"></a>
+<code>offset_x</code>
+</dt>
+<dd><p>X offset.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/offset_y;   name=offset_y -->
+<a name="//apple_ref/doc/functionparam/fbm3D/offset_y"></a>
+<code>offset_y</code>
+</dt>
+<dd><p>Y offset.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/offset_z;   name=offset_z -->
+<a name="//apple_ref/doc/functionparam/fbm3D/offset_z"></a>
+<code>offset_z</code>
+</dt>
+<dd><p>Z offset.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/scale;   name=scale -->
+<a name="//apple_ref/doc/functionparam/fbm3D/scale"></a>
+<code>scale</code>
+</dt>
+<dd><p>Scale factor.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/lacunarity;   name=lacunarity -->
+<a name="//apple_ref/doc/functionparam/fbm3D/lacunarity"></a>
+<code>lacunarity</code>
+</dt>
+<dd><p>Frequency multiplier.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/gain;   name=gain -->
+<a name="//apple_ref/doc/functionparam/fbm3D/gain"></a>
+<code>gain</code>
+</dt>
+<dd><p>Amplitude multiplier.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/octaves;   name=octaves -->
+<a name="//apple_ref/doc/functionparam/fbm3D/octaves"></a>
+<code>octaves</code>
+</dt>
+<dd><p>Number of octaves.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/noise_fn;   name=noise_fn -->
+<a name="//apple_ref/doc/functionparam/fbm3D/noise_fn"></a>
+<code>noise_fn</code>
+</dt>
+<dd><p>Base noise function.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/fbm3D/dst;   name=dst -->
+<a name="//apple_ref/doc/functionparam/fbm3D/dst"></a>
+<code>dst</code>
+</dt>
+<dd><p>Output buffer (uint8_t array).</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/perlin_noise;   name=perlin_noise -->
+<a name="//apple_ref/c/func/perlin_noise"></a>
+<h3><a name="perlin_noise">perlin_noise</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/perlin_noise;name=start --><!-- begin abstract --></p>
+<p>Computes Perlin noise at the given coordinates.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/perlin_noise;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/perlin_noise;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/perlin_noise" logicalPath="//apple_ref/c/instm/perlin_noise //apple_ref/c/clm/perlin_noise //apple_ref/c/intfcm/perlin_noise //apple_ref/c/intfm/perlin_noise //apple_ref/c/func/perlin_noise" target="_top"><span class="function">perlin_noise</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/perlin_noise;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/perlin_noise/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/perlin_noise/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/perlin_noise/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/perlin_noise/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/perlin_noise/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/perlin_noise/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Perlin noise value in [-1, 1].
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/poisson_disc_free_list;   name=poisson_disc_free_list -->
+<a name="//apple_ref/c/func/poisson_disc_free_list"></a>
+<h3><a name="poisson_disc_free_list">poisson_disc_free_list</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_free_list;name=start --><!-- begin abstract --></p>
+<p>Frees a Poisson disc sampling point list.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_free_list;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_free_list;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/poisson_disc_free_list" logicalPath="//apple_ref/c/instm/poisson_disc_free_list //apple_ref/c/clm/poisson_disc_free_list //apple_ref/c/intfcm/poisson_disc_free_list //apple_ref/c/intfm/poisson_disc_free_list //apple_ref/c/func/poisson_disc_free_list" target="_top"><span class="function">poisson_disc_free_list</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_list_t" logicalPath="//apple_ref/c/cl/poisson_list_t //apple_ref/c/tdef/poisson_list_t" target="_top"><span class="type">poisson_list_t</span></a> <span class="type">*</span><span class="param">list</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_free_list;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_free_list/list;   name=list -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_free_list/list"></a>
+<code>list</code>
+</dt>
+<dd><p>The list to free.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/poisson_disc_sample_foreach;   name=poisson_disc_sample_foreach -->
+<a name="//apple_ref/c/func/poisson_disc_sample_foreach"></a>
+<h3><a name="poisson_disc_sample_foreach">poisson_disc_sample_foreach</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_sample_foreach;name=start --><!-- begin abstract --></p>
+<p>Generates Poisson disc sampling points and calls a callback for each.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_sample_foreach;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_sample_foreach;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/poisson_disc_sample_foreach" logicalPath="//apple_ref/c/instm/poisson_disc_sample_foreach //apple_ref/c/clm/poisson_disc_sample_foreach //apple_ref/c/intfcm/poisson_disc_sample_foreach //apple_ref/c/intfm/poisson_disc_sample_foreach //apple_ref/c/func/poisson_disc_sample_foreach" target="_top"><span class="function">poisson_disc_sample_foreach</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">width</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">height</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">min_dist</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">max_attempts</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_check_callback_t" logicalPath="//apple_ref/c/cl/poisson_check_callback_t //apple_ref/c/tdef/poisson_check_callback_t" target="_top"><span class="type">poisson_check_callback_t</span></a> <span class="param">check_fn</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">check_data</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_callback_t" logicalPath="//apple_ref/c/cl/poisson_callback_t //apple_ref/c/tdef/poisson_callback_t" target="_top"><span class="type">poisson_callback_t</span></a> <span class="param">point_fn</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">point_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_sample_foreach;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/width;   name=width -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/width"></a>
+<code>width</code>
+</dt>
+<dd><p>Width of the sampling area.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/height;   name=height -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/height"></a>
+<code>height</code>
+</dt>
+<dd><p>Height of the sampling area.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/min_dist;   name=min_dist -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/min_dist"></a>
+<code>min_dist</code>
+</dt>
+<dd><p>Minimum distance between points.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/max_attempts;   name=max_attempts -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/max_attempts"></a>
+<code>max_attempts</code>
+</dt>
+<dd><p>Maximum attempts to place a point around each active point.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/check_fn;   name=check_fn -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/check_fn"></a>
+<code>check_fn</code>
+</dt>
+<dd><p>Optional callback to validate points (NULL to accept all).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/check_data;   name=check_data -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/check_data"></a>
+<code>check_data</code>
+</dt>
+<dd><p>User data passed to the check callback.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/point_fn;   name=point_fn -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/point_fn"></a>
+<code>point_fn</code>
+</dt>
+<dd><p>Callback called for each generated point.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_foreach/point_data;   name=point_data -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_foreach/point_data"></a>
+<code>point_data</code>
+</dt>
+<dd><p>User data passed to the point callback.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/poisson_disc_sample_list;   name=poisson_disc_sample_list -->
+<a name="//apple_ref/c/func/poisson_disc_sample_list"></a>
+<h3><a name="poisson_disc_sample_list">poisson_disc_sample_list</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_sample_list;name=start --><!-- begin abstract --></p>
+<p>Generates Poisson disc sampling points and returns them in a list.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/poisson_disc_sample_list;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_sample_list;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_list_t" logicalPath="//apple_ref/c/cl/poisson_list_t //apple_ref/c/tdef/poisson_list_t" target="_top"><span class="type">poisson_list_t</span></a> <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/func/poisson_disc_sample_list" logicalPath="//apple_ref/c/instm/poisson_disc_sample_list //apple_ref/c/clm/poisson_disc_sample_list //apple_ref/c/intfcm/poisson_disc_sample_list //apple_ref/c/intfm/poisson_disc_sample_list //apple_ref/c/func/poisson_disc_sample_list" target="_top"><span class="function">poisson_disc_sample_list</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">width</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">height</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">min_dist</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">max_attempts</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_check_callback_t" logicalPath="//apple_ref/c/cl/poisson_check_callback_t //apple_ref/c/tdef/poisson_check_callback_t" target="_top"><span class="type">poisson_check_callback_t</span></a> <span class="param">check_fn</span>, 
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/poisson_disc_sample_list;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/width;   name=width -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/width"></a>
+<code>width</code>
+</dt>
+<dd><p>Width of the sampling area.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/height;   name=height -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/height"></a>
+<code>height</code>
+</dt>
+<dd><p>Height of the sampling area.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/min_dist;   name=min_dist -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/min_dist"></a>
+<code>min_dist</code>
+</dt>
+<dd><p>Minimum distance between points.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/max_attempts;   name=max_attempts -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/max_attempts"></a>
+<code>max_attempts</code>
+</dt>
+<dd><p>Maximum attempts to place a point around each active point.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/check_fn;   name=check_fn -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/check_fn"></a>
+<code>check_fn</code>
+</dt>
+<dd><p>Optional callback to validate points (NULL to accept all).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/poisson_disc_sample_list/user_data;   name=user_data -->
+<a name="//apple_ref/doc/functionparam/poisson_disc_sample_list/user_data"></a>
+<code>user_data</code>
+</dt>
+<dd><p>User data passed to the check callback.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Allocated list of points (must be freed with poisson_disc_free_list).
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/rnd_randf;   name=rnd_randf -->
+<a name="//apple_ref/c/func/rnd_randf"></a>
+<h3><a name="rnd_randf">rnd_randf</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randf;name=start --><!-- begin abstract --></p>
+<p>Generates a random float between 0.0 and 1.0.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randf;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randf;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_randf" logicalPath="//apple_ref/c/instm/rnd_randf //apple_ref/c/clm/rnd_randf //apple_ref/c/intfcm/rnd_randf //apple_ref/c/intfm/rnd_randf //apple_ref/c/func/rnd_randf" target="_top"><span class="function">rnd_randf</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randf;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randf/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/rnd_randf/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the initialized rng_t structure.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A random float value in [0.0, 1.0).
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/rnd_randf_range;   name=rnd_randf_range -->
+<a name="//apple_ref/c/func/rnd_randf_range"></a>
+<h3><a name="rnd_randf_range">rnd_randf_range</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randf_range;name=start --><!-- begin abstract --></p>
+<p>Generates a random float within a specified range.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randf_range;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randf_range;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_randf_range" logicalPath="//apple_ref/c/instm/rnd_randf_range //apple_ref/c/clm/rnd_randf_range //apple_ref/c/intfcm/rnd_randf_range //apple_ref/c/intfm/rnd_randf_range //apple_ref/c/func/rnd_randf_range" target="_top"><span class="function">rnd_randf_range</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">min</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">max</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randf_range;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randf_range/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/rnd_randf_range/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the initialized rng_t structure.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randf_range/min;   name=min -->
+<a name="//apple_ref/doc/functionparam/rnd_randf_range/min"></a>
+<code>min</code>
+</dt>
+<dd><p>The minimum value (inclusive).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randf_range/max;   name=max -->
+<a name="//apple_ref/doc/functionparam/rnd_randf_range/max"></a>
+<code>max</code>
+</dt>
+<dd><p>The maximum value (inclusive).</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A random float value between min and max.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/rnd_randi;   name=rnd_randi -->
+<a name="//apple_ref/c/func/rnd_randi"></a>
+<h3><a name="rnd_randi">rnd_randi</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randi;name=start --><!-- begin abstract --></p>
+<p>Generates a random 64-bit unsigned integer.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randi;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randi;name=start --><!-- a logicalPath="//apple_ref/c/cl/uint64_t //apple_ref/c/tdef/uint64_t //apple_ref/c/tag/uint64_t //apple_ref/c/struct/uint64_t //apple_ref/c/intf/uint64_t //apple_ref/doc/anysymbol/uint64_t" machineGenerated="true" --><span class="type">uint64_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_randi" logicalPath="//apple_ref/c/instm/rnd_randi //apple_ref/c/clm/rnd_randi //apple_ref/c/intfcm/rnd_randi //apple_ref/c/intfm/rnd_randi //apple_ref/c/func/rnd_randi" target="_top"><span class="function">rnd_randi</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randi;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randi/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/rnd_randi/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the initialized rng_t structure.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A random uint64_t value.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/rnd_randi_range;   name=rnd_randi_range -->
+<a name="//apple_ref/c/func/rnd_randi_range"></a>
+<h3><a name="rnd_randi_range">rnd_randi_range</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randi_range;name=start --><!-- begin abstract --></p>
+<p>Generates a random integer within a specified range.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/rnd_randi_range;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randi_range;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rnd_randi_range" logicalPath="//apple_ref/c/instm/rnd_randi_range //apple_ref/c/clm/rnd_randi_range //apple_ref/c/intfcm/rnd_randi_range //apple_ref/c/intfm/rnd_randi_range //apple_ref/c/func/rnd_randi_range" target="_top"><span class="function">rnd_randi_range</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">min</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">max</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rnd_randi_range;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randi_range/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/rnd_randi_range/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the initialized rng_t structure.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randi_range/min;   name=min -->
+<a name="//apple_ref/doc/functionparam/rnd_randi_range/min"></a>
+<code>min</code>
+</dt>
+<dd><p>The minimum value (inclusive).</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rnd_randi_range/max;   name=max -->
+<a name="//apple_ref/doc/functionparam/rnd_randi_range/max"></a>
+<code>max</code>
+</dt>
+<dd><p>The maximum value (inclusive).</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A random int value between min and max.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/rng_init;   name=rng_init -->
+<a name="//apple_ref/c/func/rng_init"></a>
+<h3><a name="rng_init">rng_init</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/rng_init;name=start --><!-- begin abstract --></p>
+<p>Initializes the random number generator with a seed.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/rng_init;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/rng_init;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/rng_init" logicalPath="//apple_ref/c/instm/rng_init //apple_ref/c/clm/rng_init //apple_ref/c/intfcm/rng_init //apple_ref/c/intfm/rng_init //apple_ref/c/func/rng_init" target="_top"><span class="function">rng_init</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/rng_t" logicalPath="//apple_ref/c/cl/rng_t //apple_ref/c/tdef/rng_t" target="_top"><span class="type">rng_t</span></a> <span class="type">*</span><span class="param">rng</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/uint64_t //apple_ref/c/tdef/uint64_t //apple_ref/c/tag/uint64_t //apple_ref/c/struct/uint64_t //apple_ref/c/intf/uint64_t //apple_ref/doc/anysymbol/uint64_t" machineGenerated="true" --><span class="type">uint64_t</span><!-- /a --> <span class="param">seed</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/rng_init;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rng_init/rng;   name=rng -->
+<a name="//apple_ref/doc/functionparam/rng_init/rng"></a>
+<code>rng</code>
+</dt>
+<dd><p>Pointer to the rng_t structure to initialize.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/rng_init/seed;   name=seed -->
+<a name="//apple_ref/doc/functionparam/rng_init/seed"></a>
+<code>seed</code>
+</dt>
+<dd><p>The seed value for the generator.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/simplex_noise;   name=simplex_noise -->
+<a name="//apple_ref/c/func/simplex_noise"></a>
+<h3><a name="simplex_noise">simplex_noise</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/simplex_noise;name=start --><!-- begin abstract --></p>
+<p>Computes Simplex noise at the given coordinates.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/simplex_noise;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/simplex_noise;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/simplex_noise" logicalPath="//apple_ref/c/instm/simplex_noise //apple_ref/c/clm/simplex_noise //apple_ref/c/intfcm/simplex_noise //apple_ref/c/intfm/simplex_noise //apple_ref/c/func/simplex_noise" target="_top"><span class="function">simplex_noise</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/simplex_noise;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/simplex_noise/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/simplex_noise/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/simplex_noise/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/simplex_noise/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/simplex_noise/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/simplex_noise/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Simplex noise value.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/value_noise;   name=value_noise -->
+<a name="//apple_ref/c/func/value_noise"></a>
+<h3><a name="value_noise">value_noise</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/value_noise;name=start --><!-- begin abstract --></p>
+<p>Computes value noise at the given coordinates.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/value_noise;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/value_noise;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/value_noise" logicalPath="//apple_ref/c/instm/value_noise //apple_ref/c/clm/value_noise //apple_ref/c/intfcm/value_noise //apple_ref/c/intfm/value_noise //apple_ref/c/func/value_noise" target="_top"><span class="function">value_noise</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/value_noise;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/value_noise/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/value_noise/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/value_noise/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/value_noise/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/value_noise/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/value_noise/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Value noise value in [-1, 1].
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/white_noise;   name=white_noise -->
+<a name="//apple_ref/c/func/white_noise"></a>
+<h3><a name="white_noise">white_noise</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/white_noise;name=start --><!-- begin abstract --></p>
+<p>Computes white noise at the given coordinates.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/white_noise;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/white_noise;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/white_noise" logicalPath="//apple_ref/c/instm/white_noise //apple_ref/c/clm/white_noise //apple_ref/c/intfcm/white_noise //apple_ref/c/intfm/white_noise //apple_ref/c/func/white_noise" target="_top"><span class="function">white_noise</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/white_noise;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/white_noise/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/white_noise/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/white_noise/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/white_noise/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/white_noise/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/white_noise/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>White noise value in [-1, 1].
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/worley_noise;   name=worley_noise -->
+<a name="//apple_ref/c/func/worley_noise"></a>
+<h3><a name="worley_noise">worley_noise</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/worley_noise;name=start --><!-- begin abstract --></p>
+<p>Computes Worley (cellular) noise at the given coordinates.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/worley_noise;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/worley_noise;name=start --><!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/worley_noise" logicalPath="//apple_ref/c/instm/worley_noise //apple_ref/c/clm/worley_noise //apple_ref/c/intfcm/worley_noise //apple_ref/c/intfm/worley_noise //apple_ref/c/func/worley_noise" target="_top"><span class="function">worley_noise</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">z</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/worley_noise;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/worley_noise/x;   name=x -->
+<a name="//apple_ref/doc/functionparam/worley_noise/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/worley_noise/y;   name=y -->
+<a name="//apple_ref/doc/functionparam/worley_noise/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/worley_noise/z;   name=z -->
+<a name="//apple_ref/doc/functionparam/worley_noise/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Worley noise value.
+
+<!-- end return value --></p>
+<hr class="betweenSections">
+<a name="HeaderDoc_datatypes"></a>
+<h2 class="h2tight">Typedefs</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/noise_fn_t" target="_top">noise_fn_t</a></tt></dt>
+<dd><p>Function pointer type for noise functions.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/poisson_callback_t" target="_top">poisson_callback_t</a></tt></dt>
+<dd><p>Callback function type for processing each generated point.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/poisson_check_callback_t" target="_top">poisson_check_callback_t</a></tt></dt>
+<dd><p>Callback function type for checking if a point is valid.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/poisson_list_t" target="_top">poisson_list_t</a></tt></dt>
+<dd><p>Structure for storing a list of Poisson disc sampling points.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/poisson_point_t" target="_top">poisson_point_t</a></tt></dt>
+<dd><p>Structure representing a 2D point for Poisson disc sampling.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/rng_t" target="_top">rng_t</a></tt></dt>
+<dd><p>Random number generator state structure.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/noise_fn_t;   name=noise_fn_t -->
+<a name="//apple_ref/c/tdef/noise_fn_t"></a>
+<h3><a name="noise_fn_t">noise_fn_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/noise_fn_t;name=start --><!-- begin abstract --></p>
+<p>Function pointer type for noise functions.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/noise_fn_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/noise_fn_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a -->( <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/noise_fn_t" logicalPath="//apple_ref/c/instm/noise_fn_t //apple_ref/c/clm/noise_fn_t //apple_ref/c/intfcm/noise_fn_t //apple_ref/c/intfm/noise_fn_t //apple_ref/c/func/noise_fn_t //apple_ref/c/ftmplt/noise_fn_t //apple_ref/c/defn/noise_fn_t //apple_ref/c/macro/noise_fn_t //apple_ref/doc/anysymbol/noise_fn_t" target="_top"><span class="function">noise_fn_t</span></a>)(
+    <span class="param">float</span>,
+    <span class="param">float</span>,
+    <span class="param">float</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/noise_fn_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/noise_fn_t/x;   name=x -->
+<a name="//apple_ref/doc/typedeffield/noise_fn_t/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/noise_fn_t/y;   name=y -->
+<a name="//apple_ref/doc/typedeffield/noise_fn_t/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/noise_fn_t/z;   name=z -->
+<a name="//apple_ref/doc/typedeffield/noise_fn_t/z"></a>
+<code>z</code>
+</dt>
+<dd><p>Z coordinate.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Noise value at the given coordinates.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/poisson_callback_t;   name=poisson_callback_t -->
+<a name="//apple_ref/c/tdef/poisson_callback_t"></a>
+<h3><a name="poisson_callback_t">poisson_callback_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_callback_t;name=start --><!-- begin abstract --></p>
+<p>Callback function type for processing each generated point.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_callback_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_callback_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> ( <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_callback_t" logicalPath="//apple_ref/c/instm/poisson_callback_t //apple_ref/c/clm/poisson_callback_t //apple_ref/c/intfcm/poisson_callback_t //apple_ref/c/intfm/poisson_callback_t //apple_ref/c/func/poisson_callback_t //apple_ref/c/ftmplt/poisson_callback_t //apple_ref/c/defn/poisson_callback_t //apple_ref/c/macro/poisson_callback_t //apple_ref/doc/anysymbol/poisson_callback_t" target="_top"><span class="function">poisson_callback_t</span></a>)(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_callback_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_callback_t/x;   name=x -->
+<a name="//apple_ref/doc/typedeffield/poisson_callback_t/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate of the point.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_callback_t/y;   name=y -->
+<a name="//apple_ref/doc/typedeffield/poisson_callback_t/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate of the point.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_callback_t/user_data;   name=user_data -->
+<a name="//apple_ref/doc/typedeffield/poisson_callback_t/user_data"></a>
+<code>user_data</code>
+</dt>
+<dd><p>User-provided data.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/poisson_check_callback_t;   name=poisson_check_callback_t -->
+<a name="//apple_ref/c/tdef/poisson_check_callback_t"></a>
+<h3><a name="poisson_check_callback_t">poisson_check_callback_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_check_callback_t;name=start --><!-- begin abstract --></p>
+<p>Callback function type for checking if a point is valid.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_check_callback_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_check_callback_t;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> ( <span class="type">*</span><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_check_callback_t" logicalPath="//apple_ref/c/instm/poisson_check_callback_t //apple_ref/c/clm/poisson_check_callback_t //apple_ref/c/intfcm/poisson_check_callback_t //apple_ref/c/intfm/poisson_check_callback_t //apple_ref/c/func/poisson_check_callback_t //apple_ref/c/ftmplt/poisson_check_callback_t //apple_ref/c/defn/poisson_check_callback_t //apple_ref/c/macro/poisson_check_callback_t //apple_ref/doc/anysymbol/poisson_check_callback_t" target="_top"><span class="function">poisson_check_callback_t</span></a>)(
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">x</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <span class="param">y</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <span class="type">*</span><span class="param">user_data</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_check_callback_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_check_callback_t/x;   name=x -->
+<a name="//apple_ref/doc/typedeffield/poisson_check_callback_t/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate of the point.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_check_callback_t/y;   name=y -->
+<a name="//apple_ref/doc/typedeffield/poisson_check_callback_t/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate of the point.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_check_callback_t/user_data;   name=user_data -->
+<a name="//apple_ref/doc/typedeffield/poisson_check_callback_t/user_data"></a>
+<code>user_data</code>
+</dt>
+<dd><p>User-provided data.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Non-zero if the point is valid, zero otherwise.
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/poisson_list_t;   name=poisson_list_t -->
+<a name="//apple_ref/c/tdef/poisson_list_t"></a>
+<h3><a name="poisson_list_t">poisson_list_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_list_t;name=start --><!-- begin abstract --></p>
+<p>Structure for storing a list of Poisson disc sampling points.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_list_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_list_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> <!-- a logicalPath="//apple_ref/c/cl/poisson_list //apple_ref/c/tdef/poisson_list //apple_ref/c/tag/poisson_list //apple_ref/c/struct/poisson_list //apple_ref/c/intf/poisson_list //apple_ref/doc/anysymbol/poisson_list" machineGenerated="true" --><span class="type">poisson_list</span><!-- /a --> { 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/poisson_point_t" logicalPath="//apple_ref/c/cl/poisson_point_t //apple_ref/c/tdef/poisson_point_t" target="_top"><span class="type">poisson_point_t</span></a> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/points //apple_ref/c/data/points //apple_ref/c/clconst/points " machineGenerated="true" --><span class="var">points</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/count //apple_ref/c/data/count //apple_ref/c/clconst/count " machineGenerated="true" --><span class="var">count</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/capacity //apple_ref/c/data/capacity //apple_ref/c/clconst/capacity " machineGenerated="true" --><span class="var">capacity</span><!-- /a -->; 
+} <!-- a logicalPath="//apple_ref/c/econst/poisson_list_t //apple_ref/c/data/poisson_list_t //apple_ref/c/clconst/poisson_list_t " machineGenerated="true" --><span class="var">poisson_list_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_list_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Fields</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_list_t/points;   name=points -->
+<a name="//apple_ref/doc/typedeffield/poisson_list_t/points"></a>
+<code>points</code>
+</dt>
+<dd><p>Array of points.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_list_t/count;   name=count -->
+<a name="//apple_ref/doc/typedeffield/poisson_list_t/count"></a>
+<code>count</code>
+</dt>
+<dd><p>Number of points in the list.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_list_t/capacity;   name=capacity -->
+<a name="//apple_ref/doc/typedeffield/poisson_list_t/capacity"></a>
+<code>capacity</code>
+</dt>
+<dd><p>Capacity of the points array.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/poisson_point_t;   name=poisson_point_t -->
+<a name="//apple_ref/c/tdef/poisson_point_t"></a>
+<h3><a name="poisson_point_t">poisson_point_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_point_t;name=start --><!-- begin abstract --></p>
+<p>Structure representing a 2D point for Poisson disc sampling.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/poisson_point_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_point_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> <!-- a logicalPath="//apple_ref/c/cl/poisson_point //apple_ref/c/tdef/poisson_point //apple_ref/c/tag/poisson_point //apple_ref/c/struct/poisson_point //apple_ref/c/intf/poisson_point //apple_ref/doc/anysymbol/poisson_point" machineGenerated="true" --><span class="type">poisson_point</span><!-- /a --> { 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/x //apple_ref/c/data/x //apple_ref/c/clconst/x " machineGenerated="true" --><span class="var">x</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/float //apple_ref/c/tdef/float //apple_ref/c/tag/float //apple_ref/c/struct/float //apple_ref/c/intf/float //apple_ref/doc/anysymbol/float" machineGenerated="true" --><span class="type">float</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/y //apple_ref/c/data/y //apple_ref/c/clconst/y " machineGenerated="true" --><span class="var">y</span><!-- /a -->; 
+} <!-- a logicalPath="//apple_ref/c/econst/poisson_point_t //apple_ref/c/data/poisson_point_t //apple_ref/c/clconst/poisson_point_t " machineGenerated="true" --><span class="var">poisson_point_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/poisson_point_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Fields</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_point_t/x;   name=x -->
+<a name="//apple_ref/doc/typedeffield/poisson_point_t/x"></a>
+<code>x</code>
+</dt>
+<dd><p>X coordinate of the point.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/poisson_point_t/y;   name=y -->
+<a name="//apple_ref/doc/typedeffield/poisson_point_t/y"></a>
+<code>y</code>
+</dt>
+<dd><p>Y coordinate of the point.</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/rng_t;   name=rng_t -->
+<a name="//apple_ref/c/tdef/rng_t"></a>
+<h3><a name="rng_t">rng_t</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rng_t;name=start --><!-- begin abstract --></p>
+<p>Random number generator state structure.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/tdef/rng_t;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rng_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/functionparam/rng_init/rng" logicalPath="//apple_ref/c/cl/rng //apple_ref/c/tdef/rng //apple_ref/c/tag/rng //apple_ref/c/struct/rng //apple_ref/c/intf/rng //apple_ref/doc/anysymbol/rng" target="_top"><span class="type">rng</span></a> { 
+    <!-- a logicalPath="//apple_ref/c/cl/uint64_t //apple_ref/c/tdef/uint64_t //apple_ref/c/tag/uint64_t //apple_ref/c/struct/uint64_t //apple_ref/c/intf/uint64_t //apple_ref/doc/anysymbol/uint64_t" machineGenerated="true" --><span class="type">uint64_t</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/doc/typedeffield/rng_t/s" logicalPath="//apple_ref/c/cl/s //apple_ref/c/tdef/s //apple_ref/c/tag/s //apple_ref/c/struct/s //apple_ref/c/intf/s //apple_ref/doc/anysymbol/s" target="_top"><span class="type">s</span></a>[<!-- a logicalPath="//apple_ref/c/cl/_PRNG_RAND_SSIZE //apple_ref/c/tdef/_PRNG_RAND_SSIZE //apple_ref/c/tag/_PRNG_RAND_SSIZE //apple_ref/c/struct/_PRNG_RAND_SSIZE //apple_ref/c/intf/_PRNG_RAND_SSIZE //apple_ref/doc/anysymbol/_PRNG_RAND_SSIZE" machineGenerated="true" --><span class="type">_PRNG_RAND_SSIZE</span><!-- /a -->]; 
+    <!-- a logicalPath="//apple_ref/c/cl/uint_fast16_t //apple_ref/c/tdef/uint_fast16_t //apple_ref/c/tag/uint_fast16_t //apple_ref/c/struct/uint_fast16_t //apple_ref/c/intf/uint_fast16_t //apple_ref/doc/anysymbol/uint_fast16_t" machineGenerated="true" --><span class="type">uint_fast16_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/i //apple_ref/c/data/i //apple_ref/c/clconst/i " machineGenerated="true" --><span class="var">i</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/uint_fast16_t //apple_ref/c/tdef/uint_fast16_t //apple_ref/c/tag/uint_fast16_t //apple_ref/c/struct/uint_fast16_t //apple_ref/c/intf/uint_fast16_t //apple_ref/doc/anysymbol/uint_fast16_t" machineGenerated="true" --><span class="type">uint_fast16_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/c //apple_ref/c/data/c //apple_ref/c/clconst/c " machineGenerated="true" --><span class="var">c</span><!-- /a -->; 
+} <!-- a logicalPath="//apple_ref/c/econst/rng_t //apple_ref/c/data/rng_t //apple_ref/c/clconst/rng_t " machineGenerated="true" --><span class="var">rng_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/rng_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Fields</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rng_t/s;   name=s -->
+<a name="//apple_ref/doc/typedeffield/rng_t/s"></a>
+<code>s</code>
+</dt>
+<dd><p>State array for the PRNG.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rng_t/i;   name=i -->
+<a name="//apple_ref/doc/typedeffield/rng_t/i"></a>
+<code>i</code>
+</dt>
+<dd><p>Current index in the state array.</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/rng_t/c;   name=c -->
+<a name="//apple_ref/doc/typedeffield/rng_t/c"></a>
+<code>c</code>
+</dt>
+<dd><p>Counter for refill cycles.</p></dd>
+</dl>
+</div>
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Sunday, September 28, 2025
+<p class="hd_copyright">© George Watson GPLv3
+ </p>
+<p class="hd_timestamp">Last Updated: Saturday, July 19, 2025
 </p>
 </div>
 </td>

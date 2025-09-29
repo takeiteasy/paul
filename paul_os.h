@@ -19,10 +19,11 @@
  @header paul_os.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
- @abstract Cross-platform file and path utilities for C/C++.
- @discussion Supports Windows, macOS and Linux/Unix-like systems.
-             Provides file I/O, directory management, path manipulation, and globbing.
-             Designed to be used in C/C++ projects with C17 standard.
+ @abstract Cross-platform file, path, and system utilities for C/C++.
+ @discussion
+    Implementation is included when PAUL_OS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined. 
+    On MacOS optional Cocoa support can be enabled by defining PAUL_OS_USE_COCOA and linking
+    against `-framework Foundation.framework`.
  */
 
 #ifndef PAUL_OS_H
@@ -46,12 +47,6 @@ extern "C" {
 #define PAUL_OS_NO_NATIVE
 #endif
 
-#ifdef PAUL_OS_NO_NATIVE
-#define PLATFORM_UNKNOWN
-#elif (defined(PAUL_OS_NO_COCOA) && defined(PLATFORM_MACOS)) || \
-       defined(PAUL_OS_FORCE_POSIX)
-#define PLATFORM_NIX
-#else
 #if defined(_WIN32) || defined(_WIN64)
 #define PLATFORM_WINDOWS
 #elif defined(__APPLE__)
@@ -62,7 +57,6 @@ extern "C" {
 #define PLATFORM_NIX
 #else
 #define PLATFORM_UNKNOWN
-#endif
 #endif
 
 #if defined(PLATFORM_MACOS) || defined(PLATFORM_NIX)
@@ -371,7 +365,7 @@ bool io_write_string(file_t file, const char *str);
 bool io_truncate(file_t file, long size);
 
 /*!
- @function enviroment_variable
+ @function environment_variable
  @param name Variable name
  @return Returns enviroment variable string or NULL on failure
  @abstract Get an enviroment variable
@@ -739,7 +733,7 @@ bool path_walk_block(const char *path, bool recursive, walk_block callback, void
  */
 bool path_exists(const char *path);
 /*!
- @function path_working_directory
+ @function path_get_working_directory
  @return Returns the current working directory
  @abstract Get the current working directory
  */
@@ -898,37 +892,7 @@ const char** path_split(const char *path, size_t *count); // !!
 #endif // PAUL_OS_H
 
 #if defined(PAUL_OS_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
-#ifdef PLATFORM_MACOS
-#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
-#define NSIntegerEncoding "q"
-#define NSUIntegerEncoding "L"
-#else
-#define NSIntegerEncoding "i"
-#define NSUIntegerEncoding "I"
-#endif
-
-#ifdef __arm64__
-#define abi_objc_msgSend_stret objc_msgSend
-#else
-#define abi_objc_msgSend_stret objc_msgSend_stret
-#endif
-#ifdef __i386__
-#define abi_objc_msgSend_fpret objc_msgSend_fpret
-#else
-#define abi_objc_msgSend_fpret objc_msgSend
-#endif
-
-#define __STRINGIFY(s) #s
-
-#define sel(NAME) sel_registerName(__STRINGIFY(NAME))
-#define class(NAME) ((id)objc_getClass(__STRINGIFY(NAME)))
-#define protocol(NAME) objc_getProtocol(__STRINGIFY(NAME))
-
-#define ObjC(RET, ...) ((RET(*)(id, SEL, ##__VA_ARGS__))objc_msgSend)
-#endif // PLATFORM_MACOS
-
 const file_t io_invalid = {.fd=INVALID_FILE_HANDLE};
-
 const file_t io_out = {.fd=IO_OUT};
 const file_t io_err = {.fd=IO_ERR};
 const file_t io_in  = {.fd=IO_IN};
@@ -3390,7 +3354,40 @@ static const char* __get_path(const GUID* folderid) {
 }
 #endif
 
+// Check if we can use Cocoa APIs
+#if defined(COCOA_FOUNDATION)
+#define PAUL_OS_USE_COCOA
+#endif
+
 #ifdef PLATFORM_MACOS
+#ifdef PAUL_OS_USE_COCOA
+#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
+#define NSIntegerEncoding "q"
+#define NSUIntegerEncoding "L"
+#else
+#define NSIntegerEncoding "i"
+#define NSUIntegerEncoding "I"
+#endif
+
+#ifdef __arm64__
+#define abi_objc_msgSend_stret objc_msgSend
+#else
+#define abi_objc_msgSend_stret objc_msgSend_stret
+#endif
+#ifdef __i386__
+#define abi_objc_msgSend_fpret objc_msgSend_fpret
+#else
+#define abi_objc_msgSend_fpret objc_msgSend
+#endif
+
+#define __STRINGIFY(s) #s
+
+#define sel(NAME) sel_registerName(__STRINGIFY(NAME))
+#define class(NAME) ((id)objc_getClass(__STRINGIFY(NAME)))
+#define protocol(NAME) objc_getProtocol(__STRINGIFY(NAME))
+
+#define ObjC(RET, ...) ((RET(*)(id, SEL, ##__VA_ARGS__))objc_msgSend)
+
 #ifndef __OBJC__
 typedef enum {
     NSApplicationDirectory  = 1,
@@ -3423,6 +3420,40 @@ static const char* __get_path(NSSearchPathDirectory directory) {
         _path[path_length] = '\0';
     return _path;
 }
+#else
+// Fallback implementation without Cocoa, using $HOME + standard folder names
+static const char* __secret_macos_get_path(const char *name) {
+    // Turn name from `NSApplicationDirectory` to `Application`
+    if (strncmp(name, "NS", 2) != 0)
+        return NULL;
+    name += 2;
+    const char *end = name;
+    // Check until find string "Directory"
+    while (*end && strncmp(end, "Directory", 9) != 0)
+        end++;
+    if (!*end)
+        return NULL;
+    size_t len = end - name;
+    char *tmp = (char*)malloc(len + 1);
+    if (!tmp)
+        return NULL;
+    memcpy(tmp, name, len);
+    tmp[len] = '\0';
+    // Get from $HOME and append tmp
+    const char *home = environment_variable("HOME");
+    if (!home)
+        return NULL;
+    const char *join = path_join(home, tmp);
+    free((void*)tmp);
+    // Check if directory exists
+    if (directory_exists(join))
+        return join;
+    free((void*)join);
+    return NULL;
+}
+
+#define __get_path(NAME) __secret_macos_get_path(#NAME)
+#endif
 #endif
 
 #ifdef PLATFORM_NIX
@@ -3509,12 +3540,18 @@ const char* path_get_home_dir(void) {
         _home = __get_path(&FOLDERID_Profile);
         _size = strlen(_home);
 #elif defined(PLATFORM_MACOS)
+#ifdef PAUL_OS_USE_COCOA
         id file_manager = ObjC(id)(class(NSFileManager), sel(defaultManager));
         id url = ObjC(id)(file_manager, sel(homeDirectory));
         _home = (const char*)ObjC(id)(ObjC(id)(url, sel(absoluteString)), sel(UTF8String));
         _size = strlen(_home);
+#else
+        if (!(_home = environment_variable("HOME")))
+            return NULL;
+        _size = strlen(_home);
+#endif
 #elif defined(PLATFORM_NIX)
-        if (!(_home = enviroment_variable("HOME")))
+        if (!(_home = environment_variable("HOME")))
             return NULL;
         _size = strlen(_home);
 #endif

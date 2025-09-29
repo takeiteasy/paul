@@ -1,28 +1,38 @@
 #!/bin/sh
-# Run all test binaries in the tests/ directory and report results
+# Simple test runner for the paul tests and stubs
+# Runs any executable matching tests/test_* and tests/stubs/*.{c.out,cpp.out}
+
 set -eu
 
-failed=0
+failures=0
 total=0
 
-for t in tests/test_*; do
-    if [ ! -x "$t" ]; then
-        continue
+run_one() {
+    path="$1"
+    if [ ! -x "$path" ]; then
+        return
     fi
-    total=$((total+1))
-    echo "Running $t"
-    ./$t
-    rc=$?
-    if [ $rc -ne 0 ]; then
-        echo "FAIL: $t (exit $rc)"
-        failed=$((failed+1))
+    total=$((total + 1))
+    printf "Running %s... " "$path"
+    if "$path"; then
+        echo "PASS"
     else
-        echo "PASS: $t"
+        echo "FAIL"
+        failures=$((failures + 1))
     fi
+}
+
+echo "Discovering tests..."
+
+for t in tests/test_*; do
+    run_one "$t"
 done
 
-echo "\nTotal: $total, Failures: $failed"
-if [ $failed -ne 0 ]; then
+echo
+echo "Total: $total, Failures: $failures"
+
+if [ "$failures" -ne 0 ]; then
     exit 1
 fi
+
 exit 0

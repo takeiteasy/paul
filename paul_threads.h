@@ -15,14 +15,19 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
+ /*!
+ @header paul_threads.h
+ @copyright George Watson GPLv3
+ @updated 2025-07-19
+ @abstract Cross-platform polyfill for pthreads + C11 threads for C/C++.
+ @discussion
+    Implementation is included when PAUL_THREADS_IMPLEMENTATION or PAUL_IMPLEMENTATION is defined.
+ */
+
 #ifndef PAUL_THREADS_HEADER
 #define PAUL_THREADS_HEADER
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if __STDC_VERSION__ < 201112L
-#error paul_threads requires C11 or later
 #endif
 
 // TODO: Add support for blocks
@@ -30,7 +35,7 @@ extern "C" {
 // TODO: Add support for c89atomics (if <C11)
 
 #if defined(_WIN32) || defined(_WIN64)
-#define _PAUL_THREADS_PLATFORM_WINDOWS
+#define PAUL_THREADS_PLATFORM_WINDOWS
 #endif
 
 #ifndef PATH_TO_C89ATOMICS_H
@@ -38,12 +43,12 @@ extern "C" {
 #endif
 
 #if __STDC_VERSION__ < 201112L
-#define _FORCE_INCLUDE 0
+#define PAUL_THREADS_FORCE_INCLUDE 0
 #else
-#define _FORCE_INCLUDE 1
+#define PAUL_THREADS_FORCE_INCLUDE 1
 #endif
 #ifndef __has_include
-#define __has_include(x) _FORCE_INCLUDE
+#define __has_include(x) PAUL_THREADS_FORCE_INCLUDE
 #endif
 // NOTE: do NOT close the header guard here - the guard stays open until
 // the end of this file. The stray #endif above caused the header to be
@@ -76,7 +81,7 @@ typedef size_t atomic_size_t;
 #endif
 #endif
 
-#if !defined(__cplusplus) && (__STDC_VERSION__ < 201112L || _MSV_VER < 1800)
+#if !defined(__cplusplus) || __STDC_VERSION__ < 201112L || (defined(PLATFORM_WINDOWS) && _MSV_VER < 1900)
 #define bool int
 #define true 1
 #define false 0
@@ -88,9 +93,10 @@ typedef size_t atomic_size_t;
 
 #if __STDC_VERSION__ >= 201112L && __has_include(<threads.h>)
 #include <threads.h>
-#define _PAUL_THREADS_NO_IMPL
+#define PAUL_THREADS_NO_IMPL
+#define PAUL_THREADS_C11
 #else
-#ifdef _PAUL_THREADS_PLATFORM_WINDOWS
+#ifdef PAUL_THREADS_PLATFORM_WINDOWS
 #if defined(PAUL_THREADS_USE_NATIVE_CALL_ONCE) && (_WIN32_WINNT < 0x0600)
 #error Native call once requires _WIN32_WINNT>=0x0600
 #endif
@@ -107,7 +113,7 @@ typedef size_t atomic_size_t;
 #endif
 #define TSS_DTOR_ITERATIONS 1
 
-#if _WIN32_WINNT >= 0x0600
+#if defined(PLATFORM_WINDOWS) && _WIN32_WINNT >= 0x0600
 // Prefer native WindowsAPI on newer environment.
 #define PAUL_THREADS_USE_NATIVE_CALL_ONCE
 #define EMULATED_THREADS_USE_NATIVE_CV
@@ -188,6 +194,7 @@ int pthread_setspecific(pthread_key_t key, const void *value);
 #include <pthread.h>
 #endif
 
+#ifndef PAUL_THREADS_C11
 #ifdef INIT_ONCE_STATIC_INIT
 #define TSS_DTOR_ITERATIONS PTHREAD_DESTRUCTOR_ITERATIONS
 #else
@@ -247,9 +254,9 @@ int tss_create(tss_t *key, tss_dtor_t dtor);
 void tss_delete(tss_t key);
 void *tss_get(tss_t key);
 int tss_set(tss_t key, void *val);
+#endif
 
-/* Only define struct timespec if the platform hasn't already provided it. */
-#if !defined(_STRUCT_TIMESPEC) && !defined(__timespec_defined) && !defined(_TIMESPEC_DEFINED) && !defined(_TIMESPEC)
+#if defined(PAUL_THREADS_PLATFORM_WINDOWS)
 struct timespec {
     long tv_sec;
     long tv_nsec;
@@ -480,8 +487,8 @@ size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
 #endif // PAUL_THREADS_HEADER
 
 #if defined(PAUL_THREADS_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
-#if !defined(_PAUL_THREADS_NO_IMPL)
-#if defined(_PAUL_THREADS_PLATFORM_WINDOWS)
+#if !defined(PAUL_THREADS_NO_IMPL)
+#if defined(PAUL_THREADS_PLATFORM_WINDOWS)
 static DWORD timespec2ms(const struct timespec *t) {
     return (DWORD)((t->tv_sec * 1000u) + (t->tv_nsec / 1000000));
 }
@@ -793,16 +800,16 @@ void *pthread_getspecific(pthread_key_t key) {
 int pthread_setspecific(pthread_key_t key, const void *value) {
     return TlsSetValue(key, value) ? 0 : -1;
 }
-#endif // _PAUL_THREADS_PLATFORM_WINDOWS
+#endif // PAUL_THREADS_PLATFORM_WINDOWS
 
-#ifndef _PAUL_THREADS_PLATFORM_WINDOWS
+#ifndef PAUL_THREADS_PLATFORM_WINDOWS
 #include <stdlib.h>
 #include <assert.h>
 #include <limits.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sched.h>
-#endif // !_PAUL_THREADS_PLATFORM_WINDOWS
+#endif // !PAUL_THREADS_PLATFORM_WINDOWS
 
 #if !defined(__CYGWIN__) && !defined(__APPLE__)
 #define EMULATED_THREADS_USE_NATIVE_TIMEDLOCK
@@ -990,7 +997,7 @@ int thrd_join(thrd_t thr, int *res) {
 
 void thrd_sleep(const struct timespec *xt) {
     assert(xt);
-#ifdef _PAUL_THREADS_PLATFORM_WINDOWS
+#ifdef PAUL_THREADS_PLATFORM_WINDOWS
     Sleep(timespec2ms(xt));
 #else
     struct timespec req;
@@ -1001,7 +1008,7 @@ void thrd_sleep(const struct timespec *xt) {
 }
 
 void thrd_yield(void) {
-#ifdef _PAUL_THREADS_PLATFORM_WINDOWS
+#ifdef PAUL_THREADS_PLATFORM_WINDOWS
     SwitchToThread();
 #else
     sched_yield();
@@ -1025,7 +1032,7 @@ void *tss_get(tss_t key) {
 int tss_set(tss_t key, void *val) {
     return (pthread_setspecific(key, val) == 0) ? thrd_success : thrd_error;
 }
-#endif // !_PAUL_THREADS_NO_IMPL
+#endif // !PAUL_THREADS_NO_IMPL
 
 struct timespec thread_timeout(unsigned int milliseconds) {
     return (struct timespec) {
