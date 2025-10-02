@@ -387,8 +387,14 @@ typedef struct wstr_header {
     wchar_t data[];
 } wstr_header_t;
 
-static str_t _make_ascii(const char* s, size_t len) {
-    struct str_header *h = (struct str_header*)malloc(sizeof(struct str_header) + (len + 1) * sizeof(char));
+/* Helper macros to access string header fields */
+#define STR_TYPE(s) (*(uint32_t *)((char *)(s) - 8))
+#define STR_LENGTH(s) (*(uint32_t *)((char *)(s) - 4))
+#define STR_HEADER_SIZE(type) ((type) == 0 ? sizeof(str_header_t) : sizeof(wstr_header_t))
+#define STR_ELEM_SIZE(type) ((type) == 0 ? sizeof(char) : sizeof(wchar_t))
+
+static str_t _make_ascii(const char *s, size_t len) {
+    struct str_header *h = (struct str_header *)malloc(sizeof(struct str_header) + (len + 1) * sizeof(char));
     h->type = 0;
     h->length = (uint32_t)len;
     memcpy(h->data, s, len);
@@ -396,8 +402,8 @@ static str_t _make_ascii(const char* s, size_t len) {
     return (str_t)h->data;
 }
 
-static str_t _make_utf16(const wchar_t* s, size_t len) {
-    struct wstr_header *h = (struct wstr_header*)malloc(sizeof(struct wstr_header) + (len + 1) * sizeof(wchar_t));
+static str_t _make_utf16(const wchar_t *s, size_t len) {
+    struct wstr_header *h = (struct wstr_header *)malloc(sizeof(struct wstr_header) + (len + 1) * sizeof(wchar_t));
     h->type = 1;
     h->length = (uint32_t)len;
     memcpy(h->data, s, len * sizeof(wchar_t));
@@ -407,37 +413,37 @@ static str_t _make_utf16(const wchar_t* s, size_t len) {
 
 static str_t _str_dup(const str_t *s, size_t header_size, size_t elem_size) {
     void *p = *s;
-    void *header_start = (char*)p - header_size;
-    uint32_t len = *(uint32_t*)((char*)p - 4);
+    void *header_start = (char *)p - header_size;
+    uint32_t len = STR_LENGTH(p);
     size_t alloc_sz = header_size + (len + 1) * elem_size;
     void *new_p = malloc(alloc_sz);
     memcpy(new_p, header_start, alloc_sz);
-    return (str_t)((char*)new_p + header_size);
+    return (str_t)((char *)new_p + header_size);
 }
 
 str_t str_dup(const str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
-    return type == 0 ? _str_dup(&s, sizeof(str_header_t), sizeof(char)) :
-                       _str_dup(&s, sizeof(wstr_header_t), sizeof(wchar_t));
+    uint32_t type = STR_TYPE(s);
+    return type == 0 ? _str_dup(&s, sizeof(str_header_t), sizeof(char)) : _str_dup(&s, sizeof(wstr_header_t), sizeof(wchar_t));
 }
 
-str_t str_from_cstr(const char* cstr) {
+str_t str_from_cstr(const char *cstr) {
     return _make_ascii(cstr, strlen(cstr));
 }
 
-str_t str_from_wcstr(const wchar_t* cstr) {
+str_t str_from_wcstr(const wchar_t *cstr) {
     return _make_utf16(cstr, wcslen(cstr));
 }
 
 str_t str_make_ascii(str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
-    uint32_t len = *(uint32_t*)((char*)s - 4);
+    uint32_t type = STR_TYPE(s);
+    uint32_t len = STR_LENGTH(s);
     if (type == 0)
         return str_dup(s);
-    else {
+    else
+    {
         // Convert wide to narrow, assume ASCII
-        const wchar_t* ws = (const wchar_t*)s;
-        char* narrow = (char*)malloc(len + 1);
+        const wchar_t *ws = (const wchar_t *)s;
+        char *narrow = (char *)malloc(len + 1);
         for (size_t i = 0; i < len; i++) {
             if (ws[i] > 127) {
                 free(narrow);
@@ -453,14 +459,15 @@ str_t str_make_ascii(str_t s) {
 }
 
 str_t str_make_utf16(str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
-    uint32_t len = *(uint32_t*)((char*)s - 4);
+    uint32_t type = STR_TYPE(s);
+    uint32_t len = STR_LENGTH(s);
     if (type == 1)
         return str_dup(s);
-    else {
+    else
+    {
         // Convert narrow to wide
-        const char* ns = (const char*)s;
-        wchar_t* wide = (wchar_t*)malloc((len + 1) * sizeof(wchar_t));
+        const char *ns = (const char *)s;
+        wchar_t *wide = (wchar_t *)malloc((len + 1) * sizeof(wchar_t));
         for (size_t i = 0; i < len; i++)
             wide[i] = (wchar_t)ns[i];
         wide[len] = L'\0';
@@ -470,117 +477,123 @@ str_t str_make_utf16(str_t s) {
     }
 }
 
-const char* str_raw_cstr(const str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
-    return type == 0 ? (const char*)s : NULL;
+const char *str_raw_cstr(const str_t s) {
+    uint32_t type = STR_TYPE(s);
+    return type == 0 ? (const char *)s : NULL;
 }
 
-const wchar_t* str_raw_wcstr(const str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
-    return type == 1 ? (const wchar_t*)s : NULL;
+const wchar_t *str_raw_wcstr(const str_t s) {
+    uint32_t type = STR_TYPE(s);
+    return type == 1 ? (const wchar_t *)s : NULL;
 }
 
 bool str_is_ascii(const str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
+    uint32_t type = STR_TYPE(s);
     return type == 0;
 }
 
 bool str_is_utf16(const str_t s) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
+    uint32_t type = STR_TYPE(s);
     return type == 1;
 }
 
-void str_resize(str_t* s, size_t new_len) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
-    uint32_t old_len = *(uint32_t*)((char*)*s - 4);
-    size_t header_size = type == 0 ? sizeof(str_header_t) : sizeof(wstr_header_t);
-    size_t elem_size = type == 0 ? sizeof(char) : sizeof(wchar_t);
+void str_resize(str_t *s, size_t new_len) {
+    uint32_t type = STR_TYPE(*s);
+    uint32_t old_len = STR_LENGTH(*s);
+    size_t header_size = STR_HEADER_SIZE(type);
+    size_t elem_size = STR_ELEM_SIZE(type);
     size_t new_alloc_sz = header_size + (new_len + 1) * elem_size;
-    void *new_p = realloc((char*)*s - header_size, new_alloc_sz);
-    void *new_data = (char*)new_p + header_size;
-    *(uint32_t*)((char*)new_data - 4) = (uint32_t)new_len;
+    void *new_p = realloc((char *)*s - header_size, new_alloc_sz);
+    void *new_data = (char *)new_p + header_size;
+    STR_LENGTH(new_data) = (uint32_t)new_len;
     if (type == 0)
-        ((char*)new_data)[new_len] = '\0';
+        ((char *)new_data)[new_len] = '\0';
     else
-        ((wchar_t*)new_data)[new_len] = L'\0';
+        ((wchar_t *)new_data)[new_len] = L'\0';
     *s = (str_t)new_data;
 }
 
 void str_copy(str_t dest, const str_t src) {
-    uint32_t type_dest = *(uint32_t*)((char*)dest - 8);
-    uint32_t type_src = *(uint32_t*)((char*)src - 8);
+    uint32_t type_dest = STR_TYPE(dest);
+    uint32_t type_src = STR_TYPE(src);
     if (type_dest != type_src)
         return; // or handle conversion
-    uint32_t len_src = *(uint32_t*)((char*)src - 4);
-    size_t elem_size = type_dest == 0 ? sizeof(char) : sizeof(wchar_t);
-    memcpy((void*)dest, (void*)src, len_src * elem_size);
+    uint32_t len_src = STR_LENGTH(src);
+    size_t elem_size = STR_ELEM_SIZE(type_dest);
+    memcpy((void *)dest, (void *)src, len_src * elem_size);
     if (type_dest == 0)
-        ((char*)dest)[len_src] = '\0';
+        ((char *)dest)[len_src] = '\0';
     else
-        ((wchar_t*)dest)[len_src] = L'\0';
-    *(uint32_t*)((char*)dest - 4) = len_src;
+        ((wchar_t *)dest)[len_src] = L'\0';
+    STR_LENGTH(dest) = len_src;
 }
 
-void str_concat(str_t* dest, const str_t src) {
-    uint32_t type_dest = *(uint32_t*)((char*)*dest - 8);
-    uint32_t type_src = *(uint32_t*)((char*)src - 8);
-    if (type_dest != type_src) return;
-    uint32_t len_dest = *(uint32_t*)((char*)*dest - 4);
-    uint32_t len_src = *(uint32_t*)((char*)src - 4);
+void str_concat(str_t *dest, const str_t src) {
+    uint32_t type_dest = STR_TYPE(*dest);
+    uint32_t type_src = STR_TYPE(src);
+    if (type_dest != type_src)
+        return;
+    uint32_t len_dest = STR_LENGTH(*dest);
+    uint32_t len_src = STR_LENGTH(src);
     size_t new_len = len_dest + len_src;
     str_resize(dest, new_len);
-    size_t elem_size = type_dest == 0 ? sizeof(char) : sizeof(wchar_t);
-    memcpy((char*)*dest + len_dest * elem_size, (void*)src, len_src * elem_size);
+    size_t elem_size = STR_ELEM_SIZE(type_dest);
+    memcpy((char *)*dest + len_dest * elem_size, (void *)src, len_src * elem_size);
 }
 
-void str_append_char(str_t* s, char c) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
-    if (type != 0) return; // only for ASCII
-    uint32_t len = *(uint32_t*)((char*)*s - 4);
+void str_append_char(str_t *s, char c) {
+    uint32_t type = STR_TYPE(*s);
+    if (type != 0)
+        return; // only for ASCII
+    uint32_t len = STR_LENGTH(*s);
     str_resize(s, len + 1);
-    ((char*)*s)[len] = c;
+    ((char *)*s)[len] = c;
 }
 
-void str_insert(str_t* s, size_t pos, const str_t substr) {
-    uint32_t type_s = *(uint32_t*)((char*)*s - 8);
-    uint32_t type_sub = *(uint32_t*)((char*)substr - 8);
-    if (type_s != type_sub) return;
-    uint32_t len_s = *(uint32_t*)((char*)*s - 4);
-    uint32_t len_sub = *(uint32_t*)((char*)substr - 4);
-    if (pos > len_s) return;
+void str_insert(str_t *s, size_t pos, const str_t substr) {
+    uint32_t type_s = STR_TYPE(*s);
+    uint32_t type_sub = STR_TYPE(substr);
+    if (type_s != type_sub)
+        return;
+    uint32_t len_s = STR_LENGTH(*s);
+    uint32_t len_sub = STR_LENGTH(substr);
+    if (pos > len_s)
+        return;
     size_t new_len = len_s + len_sub;
     str_resize(s, new_len);
-    size_t elem_size = type_s == 0 ? sizeof(char) : sizeof(wchar_t);
-    memmove((char*)*s + (pos + len_sub) * elem_size, (char*)*s + pos * elem_size, (len_s - pos) * elem_size);
-    memcpy((char*)*s + pos * elem_size, (void*)substr, len_sub * elem_size);
+    size_t elem_size = STR_ELEM_SIZE(type_s);
+    memmove((char *)*s + (pos + len_sub) * elem_size, (char *)*s + pos * elem_size, (len_s - pos) * elem_size);
+    memcpy((char *)*s + pos * elem_size, (void *)substr, len_sub * elem_size);
 }
 
-void str_erase(str_t* s, size_t pos, size_t len) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
-    uint32_t len_s = *(uint32_t*)((char*)*s - 4);
-    if (pos >= len_s || len == 0) return;
-    if (pos + len > len_s) len = len_s - pos;
-    size_t elem_size = type == 0 ? sizeof(char) : sizeof(wchar_t);
-    memmove((char*)*s + pos * elem_size, (char*)*s + (pos + len) * elem_size, (len_s - pos - len) * elem_size);
+void str_erase(str_t *s, size_t pos, size_t len) {
+    uint32_t type = STR_TYPE(*s);
+    uint32_t len_s = STR_LENGTH(*s);
+    if (pos >= len_s || len == 0)
+        return;
+    if (pos + len > len_s)
+        len = len_s - pos;
+    size_t elem_size = STR_ELEM_SIZE(type);
+    memmove((char *)*s + pos * elem_size, (char *)*s + (pos + len) * elem_size, (len_s - pos - len) * elem_size);
     str_resize(s, len_s - len);
 }
 
-void str_replace(str_t* s, const str_t old_sub, const str_t new_sub) {
+void str_replace(str_t *s, const str_t old_sub, const str_t new_sub) {
     // Simplified: find and replace first occurrence
     size_t pos = str_find(*s, old_sub);
     if (pos != (size_t)-1) {
-        uint32_t len_old = *(uint32_t*)((char*)old_sub - 4);
+        uint32_t len_old = STR_LENGTH(old_sub);
         str_erase(s, pos, len_old);
         str_insert(s, pos, new_sub);
     }
 }
 
-void str_trim(str_t* s) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
+void str_trim(str_t *s) {
+    uint32_t type = STR_TYPE(*s);
     if (type != 0)
         return; // only for ASCII
-    char* data = (char*)*s;
-    uint32_t len = *(uint32_t*)((char*)*s - 4);
+    char *data = (char *)*s;
+    uint32_t len = STR_LENGTH(*s);
     size_t start = 0, end = len;
     while (start < end && (data[start] == ' ' || data[start] == '\t' || data[start] == '\n'))
         start++;
@@ -592,69 +605,70 @@ void str_trim(str_t* s) {
     }
 }
 
-void str_to_upper(str_t* s) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
-    uint32_t len = *(uint32_t*)((char*)*s - 4);
+void str_to_upper(str_t *s) {
+    uint32_t type = STR_TYPE(*s);
+    uint32_t len = STR_LENGTH(*s);
     if (type == 0)
         for (size_t i = 0; i < len; i++)
-            ((char*)*s)[i] = toupper(((char*)*s)[i]);
+            ((char *)*s)[i] = toupper(((char *)*s)[i]);
     else
         for (size_t i = 0; i < len; i++)
-            ((wchar_t*)*s)[i] = towupper(((wchar_t*)*s)[i]);
+            ((wchar_t *)*s)[i] = towupper(((wchar_t *)*s)[i]);
 }
 
-void str_to_lower(str_t* s) {
-    uint32_t type = *(uint32_t*)((char*)*s - 8);
-    uint32_t len = *(uint32_t*)((char*)*s - 4);
+void str_to_lower(str_t *s) {
+    uint32_t type = STR_TYPE(*s);
+    uint32_t len = STR_LENGTH(*s);
     if (type == 0)
         for (size_t i = 0; i < len; i++)
-            ((char*)*s)[i] = tolower(((char*)*s)[i]);
+            ((char *)*s)[i] = tolower(((char *)*s)[i]);
     else
         for (size_t i = 0; i < len; i++)
-            ((wchar_t*)*s)[i] = towlower(((wchar_t*)*s)[i]);
+            ((wchar_t *)*s)[i] = towlower(((wchar_t *)*s)[i]);
 }
 
 int str_cmp(const str_t a, const str_t b) {
-    uint32_t type_a = *(uint32_t*)((char*)a - 8);
-    uint32_t type_b = *(uint32_t*)((char*)b - 8);
-    if (type_a != type_b) return type_a < type_b ? -1 : 1;
-    uint32_t len_a = *(uint32_t*)((char*)a - 4);
-    uint32_t len_b = *(uint32_t*)((char*)b - 4);
+    uint32_t type_a = STR_TYPE(a);
+    uint32_t type_b = STR_TYPE(b);
+    if (type_a != type_b)
+        return type_a < type_b ? -1 : 1;
+    uint32_t len_a = STR_LENGTH(a);
+    uint32_t len_b = STR_LENGTH(b);
     if (type_a == 0)
-        return strncmp((const char*)a, (const char*)b, len_a < len_b ? len_a : len_b) ?: (len_a - len_b);
+        return strncmp((const char *)a, (const char *)b, len_a < len_b ? len_a : len_b) ?: (len_a - len_b);
     else
-        return wcsncmp((const wchar_t*)a, (const wchar_t*)b, len_a < len_b ? len_a : len_b) ?: (len_a - len_b);
+        return wcsncmp((const wchar_t *)a, (const wchar_t *)b, len_a < len_b ? len_a : len_b) ?: (len_a - len_b);
 }
 
 bool str_equal(const str_t a, const str_t b) {
-    uint32_t type_a = *(uint32_t*)((char*)a - 8);
-    uint32_t type_b = *(uint32_t*)((char*)b - 8);
+    uint32_t type_a = STR_TYPE(a);
+    uint32_t type_b = STR_TYPE(b);
     if (type_a != type_b)
         return false;
-    uint32_t len_a = *(uint32_t*)((char*)a - 4);
-    uint32_t len_b = *(uint32_t*)((char*)b - 4);
+    uint32_t len_a = STR_LENGTH(a);
+    uint32_t len_b = STR_LENGTH(b);
     if (len_a != len_b)
         return false;
-    size_t elem_size = type_a == 0 ? sizeof(char) : sizeof(wchar_t);
-    return memcmp((void*)a, (void*)b, len_a * elem_size) == 0;
+    size_t elem_size = STR_ELEM_SIZE(type_a);
+    return memcmp((void *)a, (void *)b, len_a * elem_size) == 0;
 }
 
 size_t str_find(const str_t s, const str_t substr) {
-    uint32_t type_s = *(uint32_t*)((char*)s - 8);
-    uint32_t type_sub = *(uint32_t*)((char*)substr - 8);
+    uint32_t type_s = STR_TYPE(s);
+    uint32_t type_sub = STR_TYPE(substr);
     if (type_s != type_sub)
         return (size_t)-1;
-    uint32_t len_s = *(uint32_t*)((char*)s - 4);
-    uint32_t len_sub = *(uint32_t*)((char*)substr - 4);
+    uint32_t len_s = STR_LENGTH(s);
+    uint32_t len_sub = STR_LENGTH(substr);
     if (len_sub == 0)
         return 0;
     if (len_sub > len_s)
         return (size_t)-1;
-    size_t elem_size = type_s == 0 ? sizeof(char) : sizeof(wchar_t);
-    const void *data_s = (const void*)s;
-    const void *data_sub = (const void*)substr;
+    size_t elem_size = STR_ELEM_SIZE(type_s);
+    const void *data_s = (const void *)s;
+    const void *data_sub = (const void *)substr;
     for (size_t i = 0; i <= len_s - len_sub; i++) {
-        const void *p1 = (const char*)data_s + i * elem_size;
+        const void *p1 = (const char *)data_s + i * elem_size;
         if (memcmp(p1, data_sub, len_sub * elem_size) == 0)
             return i;
     }
@@ -662,10 +676,10 @@ size_t str_find(const str_t s, const str_t substr) {
 }
 
 size_t str_find_char(const str_t s, char c) {
-    uint32_t type = *(uint32_t*)((char*)s - 8);
+    uint32_t type = STR_TYPE(s);
     if (type != 0)
         return (size_t)-1; // only for ASCII
-    uint32_t len = *(uint32_t*)((char*)s - 4);
+    uint32_t len = STR_LENGTH(s);
     for (size_t i = 0; i < len; i++)
         if (((const char *)s)[i] == c)
             return i;
@@ -673,34 +687,34 @@ size_t str_find_char(const str_t s, char c) {
 }
 
 bool str_starts_with(const str_t s, const str_t prefix) {
-    uint32_t type_s = *(uint32_t*)((char*)s - 8);
-    uint32_t type_p = *(uint32_t*)((char*)prefix - 8);
+    uint32_t type_s = STR_TYPE(s);
+    uint32_t type_p = STR_TYPE(prefix);
     if (type_s != type_p)
         return false;
-    uint32_t len_p = *(uint32_t *)((char *)prefix - 4);
-    uint32_t len_s = *(uint32_t*)((char*)s - 4);
+    uint32_t len_p = STR_LENGTH(prefix);
+    uint32_t len_s = STR_LENGTH(s);
     if (len_p > len_s)
         return false;
-    size_t elem_size = type_s == 0 ? sizeof(char) : sizeof(wchar_t);
-    return memcmp((void*)s, (void*)prefix, len_p * elem_size) == 0;
+    size_t elem_size = STR_ELEM_SIZE(type_s);
+    return memcmp((void *)s, (void *)prefix, len_p * elem_size) == 0;
 }
 
 bool str_ends_with(const str_t s, const str_t suffix) {
-    uint32_t type_s = *(uint32_t*)((char*)s - 8);
-    uint32_t type_suf = *(uint32_t*)((char*)suffix - 8);
+    uint32_t type_s = STR_TYPE(s);
+    uint32_t type_suf = STR_TYPE(suffix);
     if (type_s != type_suf)
         return false;
-    uint32_t len_suf = *(uint32_t*)((char*)suffix - 4);
-    uint32_t len_s = *(uint32_t*)((char*)s - 4);
+    uint32_t len_suf = STR_LENGTH(suffix);
+    uint32_t len_s = STR_LENGTH(s);
     if (len_suf > len_s)
         return false;
-    size_t elem_size = type_s == 0 ? sizeof(char) : sizeof(wchar_t);
-    return memcmp((char*)s + (len_s - len_suf) * elem_size, (void*)suffix, len_suf * elem_size) == 0;
+    size_t elem_size = STR_ELEM_SIZE(type_s);
+    return memcmp((char *)s + (len_s - len_suf) * elem_size, (void *)suffix, len_suf * elem_size) == 0;
 }
 
 /* Generic wildcard implementation generated via macro for char/wchar_t.
  * Supports '*', '?', and character classes like [abc], [a-z], and negation [^...].
-*/
+ */
 #define WILDCARD_IMPL(fname, CHAR)                                                    \
     bool fname(const str_t s, const CHAR *pattern)                                    \
     {                                                                                 \
@@ -792,21 +806,25 @@ WILDCARD_IMPL(str_wildcard_wide, wchar_t)
 #undef WILDCARD_IMPL
 
 size_t str_length(const str_t s) {
-    return *(uint32_t*)((char*)s - 4);
+    return STR_LENGTH(s);
 }
 
 char str_char_at(const str_t s, size_t index) {
-    if (!str_is_ascii(s)) return 0;
+    if (!str_is_ascii(s))
+        return 0;
     uint32_t len = str_length(s);
-    if (index >= len) return 0;
-    return ((const char*)s)[index];
+    if (index >= len)
+        return 0;
+    return ((const char *)s)[index];
 }
 
 wchar_t str_wchar_at(const str_t s, size_t index) {
-    if (!str_is_utf16(s)) return 0;
+    if (!str_is_utf16(s))
+        return 0;
     uint32_t len = str_length(s);
-    if (index >= len) return 0;
-    return ((const wchar_t*)s)[index];
+    if (index >= len)
+        return 0;
+    return ((const wchar_t *)s)[index];
 }
 
 #endif // PAUL_STRING_IMPLEMENTATION

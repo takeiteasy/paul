@@ -667,7 +667,7 @@ static float fade(float t) {
 #define FASTFLOOR(x) (((x) >= 0) ? (int)(x) : (int)(x)-1)
 
 /* 3D Perlin noise */
-float perlin(float x, float y, float z) {
+float perlin_noise(float x, float y, float z) {
     /* Find grid points */
     int gx = FASTFLOOR(x);
     int gy = FASTFLOOR(y);
@@ -1149,8 +1149,6 @@ void poisson_disc_sample_foreach(float width, float height, float min_dist,
                                  check_fn, check_data, point_fn, point_data);
 }
 
-/* -------------------- Additional implementations -------------------- */
-
 float rnd_randf_signed(rng_t *rng) {
     return rnd_randf(rng) * 2.0f - 1.0f;
 }
@@ -1172,8 +1170,7 @@ uint64_t rnd_randi_range64(rng_t *rng, uint64_t min, uint64_t max) {
 float rnd_normal(rng_t *rng, float mean, float stddev) {
     /* Box-Muller transform: produce two normals, return one. Use rnd_randf in (0,1] */
     float u, v, s;
-    do
-    {
+    do {
         u = rnd_randf(rng);
         v = rnd_randf(rng);
         /* ensure u is not 0.0 to avoid logf(-inf) */
@@ -1238,23 +1235,27 @@ void rnd_permutation(rng_t *rng, uint32_t *out_perm, size_t n) {
 int rnd_reseed_from_entropy(rng_t *rng) {
     if (!rng)
         return 0;
-#if defined(__APPLE__)
-    /* Use arc4random on macOS for entropy */
-    uint64_t seed = ((uint64_t)arc4random() << 32) ^ (uint64_t)arc4random();
-    rnd_seed(rng, seed);
-    return 1;
-#else
+    
+    uint64_t seed = 0;
+#if defined(_WIN32)
+    #include <windows.h>
+    #include <bcrypt.h>
+    if (BCryptGenRandom(NULL, (PUCHAR)&seed, sizeof(seed), 
+                        BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
+        return 0;
+#elif defined(__APPLE__)
+    seed = ((uint64_t)arc4random() << 32) ^ (uint64_t)arc4random();
+#else  // Linux/Unix
     FILE *f = fopen("/dev/urandom", "rb");
     if (!f)
         return 0;
-    uint64_t seed = 0;
     size_t r = fread(&seed, 1, sizeof(seed), f);
     fclose(f);
     if (r != sizeof(seed))
         return 0;
+#endif
     rnd_seed(rng, seed);
     return 1;
-#endif
 }
 
 float rnd_exponential(rng_t *rng, float lambda) {

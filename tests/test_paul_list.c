@@ -66,19 +66,15 @@ int main(void) {
     /* verify same multiset by counting occurrences */
     int counts[256] = {0};
     int ok = 1;
-    for (int i = 0; i < n; i++)
-    {
-        if ((unsigned)orig[i] >= (unsigned)256)
-        {
+    for (int i = 0; i < n; i++) {
+        if ((unsigned)orig[i] >= (unsigned)256) {
             ok = 0;
             break;
         }
         counts[(unsigned)orig[i]]++;
     }
-    for (int i = 0; i < n; i++)
-    {
-        if ((unsigned)lst[i] >= (unsigned)256)
-        {
+    for (int i = 0; i < n; i++) {
+        if ((unsigned)lst[i] >= (unsigned)256) {
             ok = 0;
             break;
         }
@@ -98,8 +94,7 @@ int main(void) {
     lst = NULL;
     expect_int("free_null_count", list_count(lst), 0);
 
-    if (test_failures() == 0)
-    {
+    if (test_failures() == 0) {
         fprintf(stderr, "# all list tests passed\n");
         return 0;
     }
