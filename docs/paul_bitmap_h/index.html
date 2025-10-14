@@ -267,7 +267,6 @@ function disclosure_triangle(elt) {
 <!-- a logicalPath="//apple_ref/doc/header/stdint.h" machineGenerated="true" -->&lt;stdint.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/stddef.h" machineGenerated="true" -->&lt;stddef.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/stdbool.h" machineGenerated="true" -->&lt;stdbool.h&gt;<!-- /a --><br>
-<a machinegenerated="true" href="../paul_color_h/index.html#//apple_ref/doc/header/paul_color.h" logicalPath="//apple_ref/doc/header/paul_color.h" target="_top">"paul_color.h"</a><br>
 <!-- a logicalPath="//apple_ref/doc/header/io.h" machineGenerated="true" -->&lt;io.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/dirent.h" machineGenerated="true" -->&lt;dirent.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/unistd.h" machineGenerated="true" -->&lt;unistd.h&gt;<!-- /a --><br>
@@ -275,8 +274,8 @@ function disclosure_triangle(elt) {
 <!-- a logicalPath="//apple_ref/doc/header/math.h" machineGenerated="true" -->&lt;math.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/stdlib.h" machineGenerated="true" -->&lt;stdlib.h&gt;<!-- /a --><br>
 <!-- a logicalPath="//apple_ref/doc/header/string.h" machineGenerated="true" -->&lt;string.h&gt;<!-- /a --><br>
-<!-- a logicalPath="//apple_ref/doc/header/ctype.h" machineGenerated="true" -->&lt;ctype.h&gt;<!-- /a -->
-</div></div></td>
+<!-- a logicalPath="//apple_ref/doc/header/ctype.h" machineGenerated="true" -->&lt;ctype.h&gt;<!-- /a --><br>
+<a machinegenerated="true" href="../paul_color_h/index.html#//apple_ref/doc/header/paul_color.h" logicalPath="//apple_ref/doc/header/paul_color.h" target="_top">"paul_color.h"</a></div></div></td>
 </tr>
 </table></div>
 <h2>Introduction</h2>
@@ -298,7 +297,10 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/c/func/bitmap_clip" target="_top">bitmap_clip</a></tt></dt>
 <dd><p>Clips a rectangular region from an image in-place.
 </p></dd>
-<dt><tt><a href="index.html#//apple_ref/c/func/bitmap_clipped" target="_top">bitmap_clipped</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/c/func/bitmap_clipped" target="_top">bitmap_clipped(bitmap_t, int, int, int, int)</a></tt></dt>
+<dd><p>Creates a new image from a rectangular region of another image.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/bitmap_clipped_DONTLINK_1" target="_top">bitmap_clipped(bitmap_t, int, int, int, int)</a></tt></dt>
 <dd><p>Creates a new image from a rectangular region of another image.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/bitmap_clipped_paste" target="_top">bitmap_clipped_paste</a></tt></dt>
@@ -330,6 +332,9 @@ function disclosure_triangle(elt) {
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/bitmap_fill" target="_top">bitmap_fill</a></tt></dt>
 <dd><p>Fills the entire image with a solid color.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/bitmap_flipped" target="_top">bitmap_flipped</a></tt></dt>
+<dd><p>Creates a flipped copy of an image.
 </p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/bitmap_flood" target="_top">bitmap_flood</a></tt></dt>
 <dd><p>Performs a flood fill starting from the specified coordinates.
@@ -437,7 +442,7 @@ function disclosure_triangle(elt) {
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/bitmap_clipped;   name=bitmap_clipped -->
 <a name="//apple_ref/c/func/bitmap_clipped"></a>
-<h3><a name="bitmap_clipped">bitmap_clipped</a></h3>
+<h3><a name="bitmap_clipped(bitmap_t,int,int,int,int)">bitmap_clipped(bitmap_t, int, int, int, int)</a></h3>
 <hr class="afterName">
 <p><!-- headerDoc=abstract;uid=//apple_ref/c/func/bitmap_clipped;name=start --><!-- begin abstract --></p>
 <p>Creates a new image from a rectangular region of another image.
@@ -493,6 +498,66 @@ function disclosure_triangle(elt) {
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_clipped;name=start --><p>Allocates a new image containing only the specified rectangular region from the source image. The original image remains unchanged.
 <!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_clipped;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;   name=bitmap_clipped -->
+<a name="//apple_ref/c/func/bitmap_clipped_DONTLINK_1"></a>
+<h3><a name="bitmap_clipped(bitmap_t,int,int,int,int)">bitmap_clipped(bitmap_t, int, int, int, int)</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=start --><!-- begin abstract --></p>
+<p>Creates a new image from a rectangular region of another image.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/bitmap_t" logicalPath="//apple_ref/c/cl/bitmap_t //apple_ref/c/tdef/bitmap_t" target="_top"><span class="type">bitmap_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/bitmap_clipped" logicalPath="//apple_ref/c/instm/bitmap_clipped //apple_ref/c/clm/bitmap_clipped //apple_ref/c/intfcm/bitmap_clipped //apple_ref/c/intfm/bitmap_clipped //apple_ref/c/func/bitmap_clipped" target="_top"><span class="function">bitmap_clipped</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/bitmap_t" logicalPath="//apple_ref/c/cl/bitmap_t //apple_ref/c/tdef/bitmap_t" target="_top"><span class="type">bitmap_t</span></a> <span class="param">src</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">rx</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">ry</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">rw</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">rh</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_clipped/src;   name=src -->
+<a name="//apple_ref/doc/functionparam/bitmap_clipped/src"></a>
+<code>src</code>
+</dt>
+<dd><p>The source image to clip from.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_clipped/rx;   name=rx -->
+<a name="//apple_ref/doc/functionparam/bitmap_clipped/rx"></a>
+<code>rx</code>
+</dt>
+<dd><p>The x-coordinate of the region in the source image.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_clipped/ry;   name=ry -->
+<a name="//apple_ref/doc/functionparam/bitmap_clipped/ry"></a>
+<code>ry</code>
+</dt>
+<dd><p>The y-coordinate of the region in the source image.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_clipped/rw;   name=rw -->
+<a name="//apple_ref/doc/functionparam/bitmap_clipped/rw"></a>
+<code>rw</code>
+</dt>
+<dd><p>The width of the region.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_clipped/rh;   name=rh -->
+<a name="//apple_ref/doc/functionparam/bitmap_clipped/rh"></a>
+<code>rh</code>
+</dt>
+<dd><p>The height of the region.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new image containing the clipped region, or NULL on allocation failure.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=start --><p>Allocates a new image containing only the specified rectangular region from the source image. The original image remains unchanged.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_clipped_DONTLINK_1;name=end --><!-- end discussion -->
 </p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/bitmap_clipped_paste;   name=bitmap_clipped_paste -->
@@ -1046,6 +1111,52 @@ function disclosure_triangle(elt) {
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_fill;name=start --><p>Sets all pixels in the image to the specified color, effectively clearing the image to a uniform color.
 <!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_fill;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/bitmap_flipped;   name=bitmap_flipped -->
+<a name="//apple_ref/c/func/bitmap_flipped"></a>
+<h3><a name="bitmap_flipped">bitmap_flipped</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/bitmap_flipped;name=start --><!-- begin abstract --></p>
+<p>Creates a flipped copy of an image.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/bitmap_flipped;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/bitmap_flipped;name=start --><a machinegenerated="true" href="index.html#//apple_ref/c/tdef/bitmap_t" logicalPath="//apple_ref/c/cl/bitmap_t //apple_ref/c/tdef/bitmap_t" target="_top"><span class="type">bitmap_t</span></a> <a machinegenerated="true" href="index.html#//apple_ref/c/func/bitmap_flipped" logicalPath="//apple_ref/c/instm/bitmap_flipped //apple_ref/c/clm/bitmap_flipped //apple_ref/c/intfcm/bitmap_flipped //apple_ref/c/intfm/bitmap_flipped //apple_ref/c/func/bitmap_flipped" target="_top"><span class="function">bitmap_flipped</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/bitmap_t" logicalPath="//apple_ref/c/cl/bitmap_t //apple_ref/c/tdef/bitmap_t" target="_top"><span class="type">bitmap_t</span></a> <span class="param">src</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">horizontal</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <span class="param">vertical</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/bitmap_flipped;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_flipped/src;   name=src -->
+<a name="//apple_ref/doc/functionparam/bitmap_flipped/src"></a>
+<code>src</code>
+</dt>
+<dd><p>The source image to flip.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_flipped/horizontal;   name=horizontal -->
+<a name="//apple_ref/doc/functionparam/bitmap_flipped/horizontal"></a>
+<code>horizontal</code>
+</dt>
+<dd><p>Non-zero to flip horizontally, zero to keep original orientation.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/bitmap_flipped/vertical;   name=vertical -->
+<a name="//apple_ref/doc/functionparam/bitmap_flipped/vertical"></a>
+<code>vertical</code>
+</dt>
+<dd><p>Non-zero to flip vertically, zero to keep original orientation.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new flipped image, or NULL on allocation failure.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_flipped;name=start --><p>Allocates a new image that is a horizontally and/or vertically flipped version of the source image. The original image remains unchanged.
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/bitmap_flipped;name=end --><!-- end discussion -->
 </p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/bitmap_flood;   name=bitmap_flood -->

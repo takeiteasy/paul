@@ -178,6 +178,8 @@ size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
 }
 #endif
 #endif // PAUL_THREADS_HEADER
+
+#if defined(PAUL_THREADS_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
 #ifndef _PAUL_THREADS_C11
 #define thrd_error ((int)-1)
 #define thrd_success ((int)0)
@@ -249,6 +251,24 @@ int cnd_destroy(cnd_t *cond) {
     if (!cond)
         return thrd_error;
     // No explicit destruction needed for CONDITION_VARIABLE
+    return thrd_success;
+}
+
+int thrd_create(thrd_t *thr, int (*func)(void*), void *arg) {
+    if (!thr || !func)
+        return thrd_error;
+    *thr = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, arg, 0, NULL);
+    if (*thr == NULL)
+        return thrd_error;
+    return thrd_success;
+}
+
+int thrd_join(thrd_t thr, int *res) {
+    if (WaitForSingleObject(thr, INFINITE) != WAIT_OBJECT_0)
+        return thrd_error;
+    if (res)
+        GetExitCodeThread(thr, (LPDWORD)res);
+    CloseHandle(thr);
     return thrd_success;
 }
 #else
@@ -335,12 +355,9 @@ int thrd_join(thrd_t thr, int *res) {
         return thrd_error;
     return thrd_success;
 }
-
-
 #endif
 #endif
 
-#if defined(PAUL_THREADS_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
 static int job_queue_init(job_queue_t *queue, size_t max_size) {
     if (!queue)
         return thrd_error;

@@ -278,6 +278,30 @@ bitmap_t bitmap_rotated(bitmap_t src, float angle);
 bitmap_t bitmap_clipped(bitmap_t src, int rx, int ry, int rw, int rh);
 
 /*!
+ * @function bitmap_flipped
+ * @brief Creates a flipped copy of an image.
+ * @discussion Allocates a new image that is a horizontally and/or vertically flipped version of the source image. The original image remains unchanged.
+ * @param src The source image to flip.
+ * @param horizontal Non-zero to flip horizontally, zero to keep original orientation.
+ * @param vertical Non-zero to flip vertically, zero to keep original orientation.
+ * @return A new flipped image, or NULL on allocation failure.
+*/
+bitmap_t bitmap_flipped(bitmap_t src, int horizontal, int vertical);
+
+/*!
+ * @function bitmap_clipped
+ * @brief Creates a new image from a rectangular region of another image.
+ * @discussion Allocates a new image containing only the specified rectangular region from the source image. The original image remains unchanged.
+ * @param src The source image to clip from.
+ * @param rx The x-coordinate of the region in the source image.
+ * @param ry The y-coordinate of the region in the source image.
+ * @param rw The width of the region.
+ * @param rh The height of the region.
+ * @return A new image containing the clipped region, or NULL on allocation failure.
+*/
+bitmap_t bitmap_clipped(bitmap_t src, int rx, int ry, int rw, int rh);
+
+/*!
  * @function bitmap_dominant_color
  * @brief Finds the most frequently occurring color in the image.
  * @discussion Analyzes all pixels in the image and returns the color that appears most often. Useful for generating color palettes or determining the primary color of an image.
@@ -719,6 +743,48 @@ bool bitmap_rotate(bitmap_t *src, float angle) {
     bitmap_destroy(*src);
     *src = result;
     return true;
+}
+
+bool bitmap_flip(bitmap_t *src, int horizontal, int vertical) {
+    if (!src || !*src || (!horizontal && !vertical))
+        return false;
+    int w, h;
+    bitmap_size(*src, &w, &h);
+    if (w <= 0 || h <= 0)
+        return false;
+    bitmap_t result = bitmap_make(w, h);
+    if (!result)
+        return false;
+    int x, y, sx, sy;
+    for (x = 0; x < w; ++x)
+        for (y = 0; y < h; ++y) {
+            sx = horizontal ? (w - 1 - x) : x;
+            sy = vertical   ? (h - 1 - y) : y;
+            bitmap_pset(result, x, y, bitmap_pget(*src, sx, sy));
+        }
+    bitmap_destroy(*src);
+    *src = result;
+    return true;
+}
+
+bitmap_t bitmap_flipped(bitmap_t src, int horizontal, int vertical) {
+    if (!src || (!horizontal && !vertical))
+        return NULL;
+    int w, h;
+    bitmap_size(src, &w, &h);
+    if (w <= 0 || h <= 0)
+        return NULL;
+    bitmap_t result = bitmap_make(w, h);
+    if (!result)
+        return NULL;
+    int x, y, sx, sy;
+    for (x = 0; x < w; ++x)
+        for (y = 0; y < h; ++y) {
+            sx = horizontal ? (w - 1 - x) : x;
+            sy = vertical   ? (h - 1 - y) : y;
+            bitmap_pset(result, x, y, bitmap_pget(src, sx, sy));
+        }
+    return result;
 }
 
 bitmap_t bitmap_clipped(bitmap_t src, int rx, int ry, int rw, int rh) {
