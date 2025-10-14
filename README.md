@@ -8,22 +8,21 @@ A collection of header-only, platform-agnostic C libraries with no dependencies.
 
 | Library | C version | Notes |
 |:---|:---:|:---|
-| `paul_bitmap.h` | C89 | Bitmap manipulation utilities (optionally supports `paul_color`) |
-| `paul_color.h` | C89 | Color manipulation utilities |
-| `paul_ecs.h`* | C89 | Barebones pure entity-component-system (uses sparse arrays) |
-| `paul_list.h`¹ | C89 | Dynamic array (stretch-buffer) implementation |
-| `paul_math.h`§ | ? | Linear algebra, vector + matrix math |
-| `paul_os.h` | C89 | OS abstractions and path manipulation |
-| `paul_random.h`² | C89 | Pseudo-random number generation and noise functions |
-| `paul_string.h` | C89 | Unified ascii+wide string type |
-| `paul_threads.h`* | C89 | Polyfill for `pthreads` and C11 `threads.h` + thread pool/queue |
+| `paul_bitmap.h` | ?? | Bitmap manipulation utilities (optionally supports `paul_color`) |
+| `paul_color.h` | ?? | Color manipulation utilities |
+| `paul_ecs.h` | ?? | Barebones pure entity-component-system (uses sparse arrays) |
+| `paul_list.h`¹ | ?? | Dynamic array (stretch-buffer) implementation |
+| `paul_math.h`* | ?? | Linear algebra, vector + matrix math |
+| `paul_os.h` | ?? | OS abstractions and path manipulation |
+| `paul_random.h`² | ?? | Pseudo-random number generation and noise functions |
+| `paul_string.h` | ?? | Unified ascii+wide string type |
+| `paul_threads.h`§ | ?? | Thread pool + job queue |
 
 ### Legend
 
-- **\***: Library supports clang/gcc blocks (`^(...){...}`) (optionally)
-- **†**: Library doesn't support C++ (at all, won't build)
-- **§**: Library depends on clang/gcc extensions
-- **?**: I don't know (yet?)
+- **\***: Library depends on clang/gcc extensions
+- **§**: Library depends on C11 threads or pthreads/Win32 threads
+- **??**: I haven't determined the C standard yet
 
 - 1: Based on [stretchy buffer](https://github.com/nothings/stb/blob/master/deprecated/stretchy_buffer.h) by nothings (Sean Barrett)
 - 2: Uses prng generation from [prng](https://github.com/rdadolf/prng/tree/master) by rdadolf (Bob Adolf)
