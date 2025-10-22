@@ -1,14 +1,15 @@
-# paul
+# paul 
 
 **P**latform **A**gnostic **U**tility **L**ibraries
 
-A collection of header-only, platform-agnostic C libraries with no dependencies. Targets: Windows, macOS, and linux.
+A collection of header-only, zero-dependency, platform-agnostic C libraries. Targets: Windows, MacOS, and Linux.
 
 ## Libraries
 
 | Library | C version | Notes |
 |:---|:---:|:---|
 | `paul_bitmap.h` | ?? | Bitmap manipulation utilities (optionally supports `paul_color`) |
+| `paul_bignumbers.h` | ?? | Big number library. Big int, float (real), and complex |
 | `paul_color.h` | ?? | Color manipulation utilities |
 | `paul_ecs.h` | ?? | Barebones pure entity-component-system (uses sparse arrays) |
 | `paul_list.h`¹ | ?? | Dynamic array (stretch-buffer) implementation |
@@ -22,7 +23,8 @@ A collection of header-only, platform-agnostic C libraries with no dependencies.
 
 - **\***: Library depends on clang/gcc extensions
 - **§**: Library depends on C11 threads or pthreads/Win32 threads
-- **??**: I haven't determined the C standard yet
+- **†**: Library will not compile under C++
+- **??**: I haven't determined the C standard yet (**TODO**: determine C versions lol)
 
 - 1: Based on [stretchy buffer](https://github.com/nothings/stb/blob/master/deprecated/stretchy_buffer.h) by nothings (Sean Barrett)
 - 2: Uses prng generation from [prng](https://github.com/rdadolf/prng/tree/master) by rdadolf (Bob Adolf)
