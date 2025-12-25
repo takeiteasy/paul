@@ -81,7 +81,7 @@ typedef struct job_node {
 } job_node_t;
 
 /*!
- @typedef job_queue_t
+ @typedef thrd_queue_t
  @field head Pointer to the head of the job queue
  @field tail Pointer to the tail of the job queue
  @field mutex Mutex for thread safety
@@ -91,7 +91,7 @@ typedef struct job_node {
  @field shutdown Flag indicating if the queue is shutting down
  @discussion Job queue structure for thread pool
 */
-typedef struct job_queue {
+typedef struct thrd_queue {
     job_node_t *head;
     job_node_t *tail;
     mtx_t mutex;
@@ -99,7 +99,7 @@ typedef struct job_queue {
     size_t size;
     size_t max_size;
     bool shutdown;
-} job_queue_t;
+} thrd_queue_t;
 
 /*!
  @typedef thrd_pool_t
@@ -115,7 +115,7 @@ typedef struct job_queue {
 typedef struct {
     thrd_t *threads;
     size_t num_threads;
-    job_queue_t job_queue;
+    thrd_queue_t job_queue;
     atomic_bool shutdown;
     atomic_size_t active_threads;
     mtx_t pool_mutex;
@@ -173,6 +173,43 @@ size_t thrd_pool_get_active_count(thrd_pool_t *pool);
  @brief Get the size of the job queue in the thread pool
 */
 size_t thrd_pool_get_queue_size(thrd_pool_t *pool);
+
+/*!
+ @function thrd_queue_init
+ @param queue Pointer to the job queue
+ @param max_size Maximum size of the queue
+ @return Returns thrd_success on success, thrd_error on failure
+ @brief Initialize a job queue
+*/
+int thrd_queue_init(thrd_queue_t *queue, size_t max_size);
+/*!
+ @function thrd_queue_destroy
+ @param queue Pointer to the job queue
+ @brief Destroy the job queue
+*/
+void thrd_queue_destroy(thrd_queue_t *queue);
+/*!
+ @function thrd_queue_enqueue
+ @param queue Pointer to the job queue
+ @param job The job to enqueue
+ @return Returns thrd_success on success, thrd_busy if full, thrd_nomem if out of memory
+ @brief Add a job to the queue
+*/
+int thrd_queue_enqueue(thrd_queue_t *queue, job_t job);
+/*!
+ @function thrd_queue_dequeue
+ @param queue Pointer to the job queue
+ @param job Pointer to store the dequeued job
+ @return Returns thrd_success on success, thrd_error on failure
+ @brief Remove a job from the queue
+*/
+int thrd_queue_dequeue(thrd_queue_t *queue, job_t *job);
+/*!
+ @function thrd_queue_shutdown
+ @param queue Pointer to the job queue
+ @brief Shutdown the job queue
+*/
+void thrd_queue_shutdown(thrd_queue_t *queue);
 
 #ifdef __cplusplus
 }
@@ -358,7 +395,7 @@ int thrd_join(thrd_t thr, int *res) {
 #endif
 #endif
 
-static int job_queue_init(job_queue_t *queue, size_t max_size) {
+int thrd_queue_init(thrd_queue_t *queue, size_t max_size) {
     if (!queue)
         return thrd_error;
     queue->head = NULL;
@@ -375,7 +412,7 @@ static int job_queue_init(job_queue_t *queue, size_t max_size) {
     return thrd_success;
 }
 
-static void job_queue_destroy(job_queue_t *queue) {
+void thrd_queue_destroy(thrd_queue_t *queue) {
     if (!queue)
         return;
     mtx_lock(&queue->mutex);
@@ -393,7 +430,7 @@ static void job_queue_destroy(job_queue_t *queue) {
     cnd_destroy(&queue->not_empty);
 }
 
-static int job_queue_enqueue(job_queue_t *queue, job_t job) {
+int thrd_queue_enqueue(thrd_queue_t *queue, job_t job) {
     if (!queue)
         return thrd_error;
 
@@ -430,7 +467,7 @@ static int job_queue_enqueue(job_queue_t *queue, job_t job) {
     return thrd_success;
 }
 
-static int job_queue_dequeue(job_queue_t *queue, job_t *job) {
+int thrd_queue_dequeue(thrd_queue_t *queue, job_t *job) {
     if (!queue || !job)
         return thrd_error;
 
@@ -457,7 +494,7 @@ static int job_queue_dequeue(job_queue_t *queue, job_t *job) {
     return thrd_success;
 }
 
-static void job_queue_shutdown(job_queue_t *queue) {
+void thrd_queue_shutdown(thrd_queue_t *queue) {
     if (!queue)
         return;
 
@@ -472,7 +509,7 @@ static int worker_thread(void *arg) {
     thrd_pool_t *pool = (thrd_pool_t*)arg;
     job_t job;
     while (!atomic_load(&pool->shutdown))
-        if (job_queue_dequeue(&pool->job_queue, &job) == thrd_success) {
+        if (thrd_queue_dequeue(&pool->job_queue, &job) == thrd_success) {
             // Increment active thread count
             atomic_fetch_add(&pool->active_threads, 1);
 
@@ -511,14 +548,14 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size) {
     atomic_store(&pool->shutdown, false);
     atomic_store(&pool->active_threads, 0);
 
-    if (job_queue_init(&pool->job_queue, max_queue_size) != thrd_success) {
+    if (thrd_queue_init(&pool->job_queue, max_queue_size) != thrd_success) {
         free(pool->threads);
         free(pool);
         return NULL;
     }
 
     if (mtx_init(&pool->pool_mutex, 0) != thrd_success) {
-        job_queue_destroy(&pool->job_queue);
+        thrd_queue_destroy(&pool->job_queue);
         free(pool->threads);
         free(pool);
         return NULL;
@@ -526,7 +563,7 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size) {
 
     if (cnd_init(&pool->all_threads_idle) != thrd_success) {
         mtx_destroy(&pool->pool_mutex);
-        job_queue_destroy(&pool->job_queue);
+        thrd_queue_destroy(&pool->job_queue);
         free(pool->threads);
         free(pool);
         return NULL;
@@ -537,14 +574,14 @@ thrd_pool_t* thrd_pool_create(size_t num_threads, size_t max_queue_size) {
         if (thrd_create(&pool->threads[i], worker_thread, pool) != thrd_success) {
             // Cleanup on failure
             atomic_store(&pool->shutdown, true);
-            job_queue_shutdown(&pool->job_queue);
+            thrd_queue_shutdown(&pool->job_queue);
 
             for (size_t j = 0; j < i; j++)
                 thrd_join(pool->threads[j], NULL);
 
             cnd_destroy(&pool->all_threads_idle);
             mtx_destroy(&pool->pool_mutex);
-            job_queue_destroy(&pool->job_queue);
+            thrd_queue_destroy(&pool->job_queue);
             free(pool->threads);
             free(pool);
             return NULL;
@@ -565,7 +602,7 @@ int thrd_pool_submit(thrd_pool_t *pool, void (*function)(void*), void *arg, void
         .arg = arg,
         .cleanup = cleanup
     };
-    return job_queue_enqueue(&pool->job_queue, job);
+    return thrd_queue_enqueue(&pool->job_queue, job);
 }
 
 void thrd_pool_wait(thrd_pool_t *pool) {
@@ -582,12 +619,12 @@ void thrd_pool_destroy(thrd_pool_t *pool) {
         return;
     // Signal shutdown
     atomic_store(&pool->shutdown, true);
-    job_queue_shutdown(&pool->job_queue);
+    thrd_queue_shutdown(&pool->job_queue);
     // Wait for all threads to finish
     for (size_t i = 0; i < pool->num_threads; i++)
         thrd_join(pool->threads[i], NULL);
     // Cleanup
-    job_queue_destroy(&pool->job_queue);
+    thrd_queue_destroy(&pool->job_queue);
     cnd_destroy(&pool->all_threads_idle);
     mtx_destroy(&pool->pool_mutex);
     free(pool->threads);

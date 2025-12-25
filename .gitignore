@@ -2,4 +2,5 @@
 **/.DS_Store
 .vscode/
 a.out
-*.dSYM
+*.dSYMbuild_docs.sh
+build_docs.sh

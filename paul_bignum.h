@@ -1,4 +1,4 @@
-/* paul/paul_bignumbers.h -- https://github.com/takeiteasy/paul
+/* paul/paul_bignum.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025 George Watson
 
@@ -16,7 +16,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
  /*!
- @header paul_bignumbers.h
+ @header paul_bignum.h
  @copyright George Watson GPLv3
  @updated 2025-07-19
  @brief Arbitrary precision arithmetic library for C/C++.

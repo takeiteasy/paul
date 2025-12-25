@@ -311,6 +311,21 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/c/func/thrd_pool_wait" target="_top">thrd_pool_wait</a></tt></dt>
 <dd><p>Wait for all jobs in the thread pool to complete
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/thrd_queue_dequeue" target="_top">thrd_queue_dequeue</a></tt></dt>
+<dd><p>Remove a job from the queue
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/thrd_queue_destroy" target="_top">thrd_queue_destroy</a></tt></dt>
+<dd><p>Destroy the job queue
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/thrd_queue_enqueue" target="_top">thrd_queue_enqueue</a></tt></dt>
+<dd><p>Add a job to the queue
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/thrd_queue_init" target="_top">thrd_queue_init</a></tt></dt>
+<dd><p>Initialize a job queue
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/thrd_queue_shutdown" target="_top">thrd_queue_shutdown</a></tt></dt>
+<dd><p>Shutdown the job queue
+</p></dd>
 </dl>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_pool_create;   name=thrd_pool_create -->
@@ -528,17 +543,168 @@ function disclosure_triangle(elt) {
 <dd><p>Pointer to the thread pool</p></dd>
 </dl>
 </div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_queue_dequeue;   name=thrd_queue_dequeue -->
+<a name="//apple_ref/c/func/thrd_queue_dequeue"></a>
+<h3><a name="thrd_queue_dequeue">thrd_queue_dequeue</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_dequeue;name=start --><!-- begin abstract --></p>
+<p>Remove a job from the queue
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_dequeue;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_dequeue;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/thrd_queue_dequeue" logicalPath="//apple_ref/c/instm/thrd_queue_dequeue //apple_ref/c/clm/thrd_queue_dequeue //apple_ref/c/intfcm/thrd_queue_dequeue //apple_ref/c/intfm/thrd_queue_dequeue //apple_ref/c/func/thrd_queue_dequeue" target="_top"><span class="function">thrd_queue_dequeue</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <span class="type">*</span><span class="param">queue</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_t" logicalPath="//apple_ref/c/cl/job_t //apple_ref/c/tdef/job_t" target="_top"><span class="type">job_t</span></a> <span class="type">*</span><span class="param">job</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_dequeue;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_dequeue/queue;   name=queue -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_dequeue/queue"></a>
+<code>queue</code>
+</dt>
+<dd><p>Pointer to the job queue</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_dequeue/job;   name=job -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_dequeue/job"></a>
+<code>job</code>
+</dt>
+<dd><p>Pointer to store the dequeued job</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Returns thrd_success on success, thrd_error on failure
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_queue_destroy;   name=thrd_queue_destroy -->
+<a name="//apple_ref/c/func/thrd_queue_destroy"></a>
+<h3><a name="thrd_queue_destroy">thrd_queue_destroy</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_destroy;name=start --><!-- begin abstract --></p>
+<p>Destroy the job queue
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_destroy;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_destroy;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/thrd_queue_destroy" logicalPath="//apple_ref/c/instm/thrd_queue_destroy //apple_ref/c/clm/thrd_queue_destroy //apple_ref/c/intfcm/thrd_queue_destroy //apple_ref/c/intfm/thrd_queue_destroy //apple_ref/c/func/thrd_queue_destroy" target="_top"><span class="function">thrd_queue_destroy</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <span class="type">*</span><span class="param">queue</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_destroy;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_destroy/queue;   name=queue -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_destroy/queue"></a>
+<code>queue</code>
+</dt>
+<dd><p>Pointer to the job queue</p></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_queue_enqueue;   name=thrd_queue_enqueue -->
+<a name="//apple_ref/c/func/thrd_queue_enqueue"></a>
+<h3><a name="thrd_queue_enqueue">thrd_queue_enqueue</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_enqueue;name=start --><!-- begin abstract --></p>
+<p>Add a job to the queue
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_enqueue;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_enqueue;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/thrd_queue_enqueue" logicalPath="//apple_ref/c/instm/thrd_queue_enqueue //apple_ref/c/clm/thrd_queue_enqueue //apple_ref/c/intfcm/thrd_queue_enqueue //apple_ref/c/intfm/thrd_queue_enqueue //apple_ref/c/func/thrd_queue_enqueue" target="_top"><span class="function">thrd_queue_enqueue</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <span class="type">*</span><span class="param">queue</span>,
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_t" logicalPath="//apple_ref/c/cl/job_t //apple_ref/c/tdef/job_t" target="_top"><span class="type">job_t</span></a> <span class="param">job</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_enqueue;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_enqueue/queue;   name=queue -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_enqueue/queue"></a>
+<code>queue</code>
+</dt>
+<dd><p>Pointer to the job queue</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_enqueue/job;   name=job -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_enqueue/job"></a>
+<code>job</code>
+</dt>
+<dd><p>The job to enqueue</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Returns thrd_success on success, thrd_busy if full, thrd_nomem if out of memory
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_queue_init;   name=thrd_queue_init -->
+<a name="//apple_ref/c/func/thrd_queue_init"></a>
+<h3><a name="thrd_queue_init">thrd_queue_init</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_init;name=start --><!-- begin abstract --></p>
+<p>Initialize a job queue
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_init;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_init;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/thrd_queue_init" logicalPath="//apple_ref/c/instm/thrd_queue_init //apple_ref/c/clm/thrd_queue_init //apple_ref/c/intfcm/thrd_queue_init //apple_ref/c/intfm/thrd_queue_init //apple_ref/c/func/thrd_queue_init" target="_top"><span class="function">thrd_queue_init</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <span class="type">*</span><span class="param">queue</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <span class="param">max_size</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_init;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_init/queue;   name=queue -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_init/queue"></a>
+<code>queue</code>
+</dt>
+<dd><p>Pointer to the job queue</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_init/max_size;   name=max_size -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_init/max_size"></a>
+<code>max_size</code>
+</dt>
+<dd><p>Maximum size of the queue</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>Returns thrd_success on success, thrd_error on failure
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/thrd_queue_shutdown;   name=thrd_queue_shutdown -->
+<a name="//apple_ref/c/func/thrd_queue_shutdown"></a>
+<h3><a name="thrd_queue_shutdown">thrd_queue_shutdown</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_shutdown;name=start --><!-- begin abstract --></p>
+<p>Shutdown the job queue
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/thrd_queue_shutdown;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_shutdown;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/thrd_queue_shutdown" logicalPath="//apple_ref/c/instm/thrd_queue_shutdown //apple_ref/c/clm/thrd_queue_shutdown //apple_ref/c/intfcm/thrd_queue_shutdown //apple_ref/c/intfm/thrd_queue_shutdown //apple_ref/c/func/thrd_queue_shutdown" target="_top"><span class="function">thrd_queue_shutdown</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <span class="type">*</span><span class="param">queue</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/thrd_queue_shutdown;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/thrd_queue_shutdown/queue;   name=queue -->
+<a name="//apple_ref/doc/functionparam/thrd_queue_shutdown/queue"></a>
+<code>queue</code>
+</dt>
+<dd><p>Pointer to the job queue</p></dd>
+</dl>
+</div>
 <hr class="betweenSections">
 <a name="HeaderDoc_datatypes"></a>
 <h2 class="h2tight">Typedefs</h2>
 <dl>
 <dt><tt><a href="index.html#//apple_ref/c/tdef/job_node_t" target="_top">job_node_t</a></tt></dt>
 <dd></dd>
-<dt><tt><a href="index.html#//apple_ref/c/tdef/job_queue_t" target="_top">job_queue_t</a></tt></dt>
-<dd></dd>
 <dt><tt><a href="index.html#//apple_ref/c/tdef/job_t" target="_top">job_t</a></tt></dt>
 <dd></dd>
 <dt><tt><a href="index.html#//apple_ref/c/tdef/thrd_pool_t" target="_top">thrd_pool_t</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/c/tdef/thrd_queue_t" target="_top">thrd_queue_t</a></tt></dt>
 <dd></dd>
 </dl>
 <hr class="betweenAPIEntries">
@@ -572,73 +738,6 @@ function disclosure_triangle(elt) {
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/job_node_t;name=start --><p>Node structure for the job queue
 <!-- headerDoc=discussion;uid=//apple_ref/c/tdef/job_node_t;name=end --><!-- end discussion -->
-</p>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/job_queue_t;   name=job_queue_t -->
-<a name="//apple_ref/c/tdef/job_queue_t"></a>
-<h3><a name="job_queue_t">job_queue_t</a></h3>
-<hr class="afterName">
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/job_queue_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/typedeffield/thrd_pool_t/job_queue" logicalPath="//apple_ref/c/cl/job_queue //apple_ref/c/tdef/job_queue //apple_ref/c/tag/job_queue //apple_ref/c/struct/job_queue //apple_ref/c/intf/job_queue //apple_ref/doc/anysymbol/job_queue" target="_top"><span class="type">job_queue</span></a> { 
-    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_node_t" logicalPath="//apple_ref/c/cl/job_node_t //apple_ref/c/tdef/job_node_t" target="_top"><span class="type">job_node_t</span></a> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/head //apple_ref/c/data/head //apple_ref/c/clconst/head " machineGenerated="true" --><span class="var">head</span><!-- /a -->; 
-    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_node_t" logicalPath="//apple_ref/c/cl/job_node_t //apple_ref/c/tdef/job_node_t" target="_top"><span class="type">job_node_t</span></a> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/tail //apple_ref/c/data/tail //apple_ref/c/clconst/tail " machineGenerated="true" --><span class="var">tail</span><!-- /a -->; 
-    <!-- a logicalPath="//apple_ref/c/cl/mtx_t //apple_ref/c/tdef/mtx_t //apple_ref/c/tag/mtx_t //apple_ref/c/struct/mtx_t //apple_ref/c/intf/mtx_t //apple_ref/doc/anysymbol/mtx_t" machineGenerated="true" --><span class="type">mtx_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/mutex //apple_ref/c/data/mutex //apple_ref/c/clconst/mutex " machineGenerated="true" --><span class="var">mutex</span><!-- /a -->; 
-    <!-- a logicalPath="//apple_ref/c/cl/cnd_t //apple_ref/c/tdef/cnd_t //apple_ref/c/tag/cnd_t //apple_ref/c/struct/cnd_t //apple_ref/c/intf/cnd_t //apple_ref/doc/anysymbol/cnd_t" machineGenerated="true" --><span class="type">cnd_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/not_empty //apple_ref/c/data/not_empty //apple_ref/c/clconst/not_empty " machineGenerated="true" --><span class="var">not_empty</span><!-- /a -->; 
-    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/size //apple_ref/c/data/size //apple_ref/c/clconst/size " machineGenerated="true" --><span class="var">size</span><!-- /a -->; 
-    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/max_size //apple_ref/c/data/max_size //apple_ref/c/clconst/max_size " machineGenerated="true" --><span class="var">max_size</span><!-- /a -->; 
-    <!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/shutdown //apple_ref/c/data/shutdown //apple_ref/c/clconst/shutdown " machineGenerated="true" --><span class="var">shutdown</span><!-- /a -->; 
-} <!-- a logicalPath="//apple_ref/c/econst/job_queue_t //apple_ref/c/data/job_queue_t //apple_ref/c/clconst/job_queue_t " machineGenerated="true" --><span class="var">job_queue_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/job_queue_t;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Fields</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/head;   name=head -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/head"></a>
-<code>head</code>
-</dt>
-<dd><p>Pointer to the head of the job queue</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/tail;   name=tail -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/tail"></a>
-<code>tail</code>
-</dt>
-<dd><p>Pointer to the tail of the job queue</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/mutex;   name=mutex -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/mutex"></a>
-<code>mutex</code>
-</dt>
-<dd><p>Mutex for thread safety</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/not_empty;   name=not_empty -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/not_empty"></a>
-<code>not_empty</code>
-</dt>
-<dd><p>Condition variable for waiting on empty queue</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/size;   name=size -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/size"></a>
-<code>size</code>
-</dt>
-<dd><p>Current number of jobs in the queue</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/max_size;   name=max_size -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/max_size"></a>
-<code>max_size</code>
-</dt>
-<dd><p>Maximum size of the queue</p></dd>
-<dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/job_queue_t/shutdown;   name=shutdown -->
-<a name="//apple_ref/doc/typedeffield/job_queue_t/shutdown"></a>
-<code>shutdown</code>
-</dt>
-<dd><p>Flag indicating if the queue is shutting down</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/job_queue_t;name=start --><p>Job queue structure for thread pool
-<!-- headerDoc=discussion;uid=//apple_ref/c/tdef/job_queue_t;name=end --><!-- end discussion -->
 </p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/job_t;   name=job_t -->
@@ -690,7 +789,7 @@ function disclosure_triangle(elt) {
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/thrd_pool_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> { 
     <!-- a logicalPath="//apple_ref/c/cl/thrd_t //apple_ref/c/tdef/thrd_t //apple_ref/c/tag/thrd_t //apple_ref/c/struct/thrd_t //apple_ref/c/intf/thrd_t //apple_ref/doc/anysymbol/thrd_t" machineGenerated="true" --><span class="type">thrd_t</span><!-- /a --> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/threads //apple_ref/c/data/threads //apple_ref/c/clconst/threads " machineGenerated="true" --><span class="var">threads</span><!-- /a -->; 
     <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/num_threads //apple_ref/c/data/num_threads //apple_ref/c/clconst/num_threads " machineGenerated="true" --><span class="var">num_threads</span><!-- /a -->; 
-    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_queue_t" logicalPath="//apple_ref/c/cl/job_queue_t //apple_ref/c/tdef/job_queue_t" target="_top"><span class="type">job_queue_t</span></a> <!-- a logicalPath="//apple_ref/c/econst/job_queue //apple_ref/c/data/job_queue //apple_ref/c/clconst/job_queue " machineGenerated="true" --><span class="var">job_queue</span><!-- /a -->; 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/thrd_queue_t" logicalPath="//apple_ref/c/cl/thrd_queue_t //apple_ref/c/tdef/thrd_queue_t" target="_top"><span class="type">thrd_queue_t</span></a> <!-- a logicalPath="//apple_ref/c/econst/job_queue //apple_ref/c/data/job_queue //apple_ref/c/clconst/job_queue " machineGenerated="true" --><span class="var">job_queue</span><!-- /a -->; 
     <!-- a logicalPath="//apple_ref/c/cl/atomic_bool //apple_ref/c/tdef/atomic_bool //apple_ref/c/tag/atomic_bool //apple_ref/c/struct/atomic_bool //apple_ref/c/intf/atomic_bool //apple_ref/doc/anysymbol/atomic_bool" machineGenerated="true" --><span class="type">atomic_bool</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/shutdown //apple_ref/c/data/shutdown //apple_ref/c/clconst/shutdown " machineGenerated="true" --><span class="var">shutdown</span><!-- /a -->; 
     <!-- a logicalPath="//apple_ref/c/cl/atomic_size_t //apple_ref/c/tdef/atomic_size_t //apple_ref/c/tag/atomic_size_t //apple_ref/c/struct/atomic_size_t //apple_ref/c/intf/atomic_size_t //apple_ref/doc/anysymbol/atomic_size_t" machineGenerated="true" --><span class="type">atomic_size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/active_threads //apple_ref/c/data/active_threads //apple_ref/c/clconst/active_threads " machineGenerated="true" --><span class="var">active_threads</span><!-- /a -->; 
     <!-- a logicalPath="//apple_ref/c/cl/mtx_t //apple_ref/c/tdef/mtx_t //apple_ref/c/tag/mtx_t //apple_ref/c/struct/mtx_t //apple_ref/c/intf/mtx_t //apple_ref/doc/anysymbol/mtx_t" machineGenerated="true" --><span class="type">mtx_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/pool_mutex //apple_ref/c/data/pool_mutex //apple_ref/c/clconst/pool_mutex " machineGenerated="true" --><span class="var">pool_mutex</span><!-- /a -->; 
@@ -747,6 +846,73 @@ function disclosure_triangle(elt) {
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/thrd_pool_t;name=start --><p>Thread pool structure
 <!-- headerDoc=discussion;uid=//apple_ref/c/tdef/thrd_pool_t;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=tdef;  uid=//apple_ref/c/tdef/thrd_queue_t;   name=thrd_queue_t -->
+<a name="//apple_ref/c/tdef/thrd_queue_t"></a>
+<h3><a name="thrd_queue_t">thrd_queue_t</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/thrd_queue_t;name=start --><span class="keyword">typedef</span> <span class="keyword">struct</span> <!-- a logicalPath="//apple_ref/c/cl/thrd_queue //apple_ref/c/tdef/thrd_queue //apple_ref/c/tag/thrd_queue //apple_ref/c/struct/thrd_queue //apple_ref/c/intf/thrd_queue //apple_ref/doc/anysymbol/thrd_queue" machineGenerated="true" --><span class="type">thrd_queue</span><!-- /a --> { 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_node_t" logicalPath="//apple_ref/c/cl/job_node_t //apple_ref/c/tdef/job_node_t" target="_top"><span class="type">job_node_t</span></a> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/head //apple_ref/c/data/head //apple_ref/c/clconst/head " machineGenerated="true" --><span class="var">head</span><!-- /a -->; 
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/job_node_t" logicalPath="//apple_ref/c/cl/job_node_t //apple_ref/c/tdef/job_node_t" target="_top"><span class="type">job_node_t</span></a> <span class="type">*</span><!-- a logicalPath="//apple_ref/c/econst/tail //apple_ref/c/data/tail //apple_ref/c/clconst/tail " machineGenerated="true" --><span class="var">tail</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/mtx_t //apple_ref/c/tdef/mtx_t //apple_ref/c/tag/mtx_t //apple_ref/c/struct/mtx_t //apple_ref/c/intf/mtx_t //apple_ref/doc/anysymbol/mtx_t" machineGenerated="true" --><span class="type">mtx_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/mutex //apple_ref/c/data/mutex //apple_ref/c/clconst/mutex " machineGenerated="true" --><span class="var">mutex</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/cnd_t //apple_ref/c/tdef/cnd_t //apple_ref/c/tag/cnd_t //apple_ref/c/struct/cnd_t //apple_ref/c/intf/cnd_t //apple_ref/doc/anysymbol/cnd_t" machineGenerated="true" --><span class="type">cnd_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/not_empty //apple_ref/c/data/not_empty //apple_ref/c/clconst/not_empty " machineGenerated="true" --><span class="var">not_empty</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/size //apple_ref/c/data/size //apple_ref/c/clconst/size " machineGenerated="true" --><span class="var">size</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --><span class="type">size_t</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/max_size //apple_ref/c/data/max_size //apple_ref/c/clconst/max_size " machineGenerated="true" --><span class="var">max_size</span><!-- /a -->; 
+    <!-- a logicalPath="//apple_ref/c/cl/bool //apple_ref/c/tdef/bool //apple_ref/c/tag/bool //apple_ref/c/struct/bool //apple_ref/c/intf/bool //apple_ref/doc/anysymbol/bool" machineGenerated="true" --><span class="type">bool</span><!-- /a --> <!-- a logicalPath="//apple_ref/c/econst/shutdown //apple_ref/c/data/shutdown //apple_ref/c/clconst/shutdown " machineGenerated="true" --><span class="var">shutdown</span><!-- /a -->; 
+} <!-- a logicalPath="//apple_ref/c/econst/thrd_queue_t //apple_ref/c/data/thrd_queue_t //apple_ref/c/clconst/thrd_queue_t " machineGenerated="true" --><span class="var">thrd_queue_t</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/thrd_queue_t;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Fields</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/head;   name=head -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/head"></a>
+<code>head</code>
+</dt>
+<dd><p>Pointer to the head of the job queue</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/tail;   name=tail -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/tail"></a>
+<code>tail</code>
+</dt>
+<dd><p>Pointer to the tail of the job queue</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/mutex;   name=mutex -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/mutex"></a>
+<code>mutex</code>
+</dt>
+<dd><p>Mutex for thread safety</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/not_empty;   name=not_empty -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/not_empty"></a>
+<code>not_empty</code>
+</dt>
+<dd><p>Condition variable for waiting on empty queue</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/size;   name=size -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/size"></a>
+<code>size</code>
+</dt>
+<dd><p>Current number of jobs in the queue</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/max_size;   name=max_size -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/max_size"></a>
+<code>max_size</code>
+</dt>
+<dd><p>Maximum size of the queue</p></dd>
+<dt>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/thrd_queue_t/shutdown;   name=shutdown -->
+<a name="//apple_ref/doc/typedeffield/thrd_queue_t/shutdown"></a>
+<code>shutdown</code>
+</dt>
+<dd><p>Flag indicating if the queue is shutting down</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/tdef/thrd_queue_t;name=start --><p>Job queue structure for thread pool
+<!-- headerDoc=discussion;uid=//apple_ref/c/tdef/thrd_queue_t;name=end --><!-- end discussion -->
 </p>
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">

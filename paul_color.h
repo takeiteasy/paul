@@ -69,7 +69,7 @@ typedef union color_t {
     - COLOR_NAME_FLT: Floating-point RGBA values {r, g, b, a}
     - COLOR_NAME_INT: Packed 32-bit RGBA integer
     - color_name: _CONSTEXPR color_t struct instance
-    
+
     All colors use standard web color values with alpha=255 (fully opaque) unless otherwise noted.
 */
 #ifndef NO_COLOR_CONSTANTS
@@ -702,32 +702,6 @@ typedef struct color_hsla_t {
 } color_hsla_t;
 
 /*!
- * @typedef color_lab_t
- * @brief Represents a color in CIE L*a*b* color space.
- * @discussion The CIE L*a*b* color space is a device-independent color model designed to approximate human vision. It separates lightness from color information and is perceptually uniform.
- * @field l Lightness component (0.0 to 100.0, but can exceed these bounds)
- * @field a Green-red axis component (typically -128.0 to 127.0, but can exceed these bounds)
- * @field b Blue-yellow axis component (typically -128.0 to 127.0, but can exceed these bounds)
- * @field alpha Alpha transparency component (0.0 to 1.0)
-*/
-typedef struct color_lab_t {
-    float l, a, b, alpha;
-} color_lab_t;
-
-/*!
- * @typedef color_xyz_t
- * @brief Represents a color in CIE XYZ color space.
- * @discussion The CIE XYZ color space is a device-independent color model based on the human visual system's response to red, green, and blue stimuli. It serves as the foundation for other color spaces and is designed to encompass all colors visible to the human eye.
- * @field x X component (red response, typically 0.0 to 1.0, but can exceed these bounds)
- * @field y Y component (luminance/green response, typically 0.0 to 1.0, but can exceed these bounds)
- * @field z Z component (blue response, typically 0.0 to 1.0, but can exceed these bounds)
- * @field a Alpha transparency component (0.0 to 1.0)
-*/
-typedef struct color_xyz_t {
-    float x, y, z, a;
-} color_xyz_t;
-
-/*!
  * @typedef color_yuv_t
  * @brief Represents a color in YUV color space.
  * @discussion The YUV color space separates luminance (Y) from chrominance (U and V) components. It is commonly used in video systems and digital broadcasting, with BT.601 standard coefficients used for the conversion.
@@ -753,18 +727,6 @@ typedef struct color_yuv_t {
 typedef struct color_cmyk_t {
     float c, m, y, k, a;
 } color_cmyk_t;
-
-/*!
- * @typedef color_rgb_t565
- * @brief Represents a color in RGB565 format with alpha.
- * @discussion RGB565 is a 16-bit color format commonly used in displays, embedded systems, and graphics hardware. It allocates 5 bits for red, 6 bits for green, and 5 bits for blue components, providing 65,536 possible colors. This format is efficient for memory usage while maintaining reasonable color fidelity, particularly for green hues which are more perceptually important.
- * @field rgb565 Packed 16-bit RGB565 color value (5-bit R, 6-bit G, 5-bit B)
- * @field a Alpha transparency component (0-255)
-*/
-typedef struct color_rgb_t565 {
-    uint16_t rgb565;
-    uint8_t a;
-} color_rgb_t565;
 
 /*!
  * @typedef color_int_t
@@ -866,30 +828,6 @@ color_t hsla(float h, float s, float l, float a);
 color_t hsl(float h, float s, float l);
 
 /*!
- * @function lab
- * @brief Creates a color from CIELAB components.
- * @param l Lightness component (0.0-100.0).
- * @param a Green-red axis component (-128.0 to 128.0).
- * @param b Blue-yellow axis component (-128.0 to 128.0).
- * @param alpha Alpha component (0.0-1.0).
- * @return A color_t value representing the specified CIELAB color.
- * @discussion This function constructs a color_t union from CIELAB color space components. The L*a*b* values are converted to XYZ and then to RGBA internally. This color space is designed to be perceptually uniform.
-*/
-color_t lab(float l, float a, float b, float alpha);
-
-/*!
- * @function xyz
- * @brief Creates a color from CIEXYZ components.
- * @param x X tristimulus value (0.0-1.0+).
- * @param y Y tristimulus value (0.0-1.0+).
- * @param z Z tristimulus value (0.0-1.0+).
- * @param a Alpha component (0.0-1.0).
- * @return A color_t value representing the specified CIEXYZ color.
- * @discussion This function constructs a color_t union from CIEXYZ color space components. The XYZ values are converted to sRGB and then to RGBA internally. XYZ represents absolute color measurements.
-*/
-color_t xyz(float x, float y, float z, float a);
-
-/*!
  * @function yuv
  * @brief Creates a color from YUV components.
  * @param y Luma/brightness component (0.0-1.0).
@@ -913,16 +851,6 @@ color_t yuv(float y, float u, float v, float a);
  * @discussion This function constructs a color_t union from CMYK color space components. CMYK is the standard color model used in printing, where colors are represented as the amount of cyan, magenta, yellow, and black ink needed.
 */
 color_t cmyk(float c, float m, float y, float k, float a);
-
-/*!
- * @function rgb_565
- * @brief Creates a color from a 16-bit RGB565 value.
- * @param rgb565 16-bit RGB565 packed color value.
- * @param a Alpha component (0-255).
- * @return A color_t value representing the specified RGB565 color.
- * @discussion This function constructs a color_t union from a 16-bit RGB565 packed color value. RGB565 uses 5 bits for red, 6 bits for green, and 5 bits for blue, providing 65,536 possible colors. Commonly used in embedded systems and older displays.
-*/
-color_t rgb_565(uint16_t rgb565, uint8_t a);
 
 /*!
  * @function rgba_to_rgbaf
@@ -1014,59 +942,7 @@ color_hsla_t rgbaf_to_hsla(color_rgbaf_t rgbaf);
 */
 color_rgbaf_t hsla_to_rgbaf(color_hsla_t hsla);
 
-/*!
- * @function rgba_to_lab
- * @brief Converts an RGBA color to CIELAB color space.
- * @param rgba The input RGBA color.
- * @return A color_lab_t structure with L* (0-100), a* (-128 to 128), b* (-128 to 128), and alpha (0.0-1.0).
- * @discussion This function converts RGBA to CIELAB color space using the D65 white point. CIELAB is designed to be perceptually uniform, making it ideal for color difference calculations.
-*/
-color_lab_t rgba_to_lab(color_t rgba);
 
-/*!
- * @function lab_to_rgba
- * @brief Converts CIELAB color space to RGBA.
- * @param lab The input CIELAB color.
- * @return A color_t value representing the equivalent RGBA color.
- * @discussion This function converts CIELAB color space back to RGBA using the D65 white point and sRGB color space.
-*/
-color_t lab_to_rgba(color_lab_t lab);
-
-/*!
- * @function rgba_to_xyz
- * @brief Converts an RGBA color to CIEXYZ color space.
- * @param rgba The input RGBA color.
- * @return A color_xyz_t structure with X, Y, Z tristimulus values and alpha.
- * @discussion This function converts RGBA to CIEXYZ color space using the D65 white point. XYZ represents absolute color measurements in the CIE 1931 color space.
-*/
-color_xyz_t rgba_to_xyz(color_t rgba);
-
-/*!
- * @function xyz_to_rgba
- * @brief Converts CIEXYZ color space to RGBA.
- * @param xyz The input CIEXYZ color.
- * @return A color_t value representing the equivalent RGBA color.
- * @discussion This function converts CIEXYZ color space back to RGBA using the D65 white point and sRGB color space.
-*/
-color_t xyz_to_rgba(color_xyz_t xyz);
-
-/*!
- * @function lab_to_xyz
- * @brief Converts CIELAB to CIEXYZ color space.
- * @param lab The input CIELAB color.
- * @return A color_xyz_t structure with XYZ tristimulus values.
- * @discussion This function converts CIELAB to CIEXYZ using the D65 white point reference.
-*/
-color_xyz_t lab_to_xyz(color_lab_t lab);
-
-/*!
- * @function xyz_to_lab
- * @brief Converts CIEXYZ to CIELAB color space.
- * @param xyz The input CIEXYZ color.
- * @return A color_lab_t structure with LAB components.
- * @discussion This function converts CIEXYZ to CIELAB using the D65 white point reference.
-*/
-color_lab_t xyz_to_lab(color_xyz_t xyz);
 
 /*!
  * @function rgba_to_yuv
@@ -1104,23 +980,7 @@ color_cmyk_t rgba_to_cmyk(color_t rgba);
 */
 color_t cmyk_to_rgba(color_cmyk_t cmyk);
 
-/*!
- * @function rgba_to_rgb565
- * @brief Converts an RGBA color to RGB565 format.
- * @param rgba The input RGBA color.
- * @return A color_rgb_t565 structure with packed RGB565 value and alpha.
- * @discussion This function converts RGBA to RGB565 format, which uses 5 bits for red, 6 bits for green, and 5 bits for blue. This format is commonly used in embedded systems and older displays.
-*/
-color_rgb_t565 rgba_to_rgb565(color_t rgba);
 
-/*!
- * @function rgb565_to_rgba
- * @brief Converts RGB565 format to RGBA.
- * @param rgb565 The input RGB565 color.
- * @return A color_t value representing the equivalent RGBA color.
- * @discussion This function converts RGB565 format back to RGBA, expanding the 5-6-5 bit components back to 8-bit values.
-*/
-color_t rgb565_to_rgba(color_rgb_t565 rgb565);
 
 /*!
  * @function color_cmp
@@ -1131,16 +991,6 @@ color_t rgb565_to_rgba(color_rgb_t565 rgb565);
  * @discussion This function performs a bitwise comparison of all color components including alpha. It returns true only if both colors are exactly identical.
 */
 bool color_cmp(color_t a, color_t b);
-
-/*!
- * @function color_distance_lab
- * @brief Calculates the Euclidean distance between two colors in CIELAB color space.
- * @param a First color in CIELAB space.
- * @param b Second color in CIELAB space.
- * @return The Euclidean distance in LAB space (Delta E CIE76).
- * @discussion This function computes the straight-line distance between two points in CIELAB color space. This is a simple but effective color difference metric, though not as perceptually accurate as CIEDE2000.
-*/
-float color_distance_lab(color_lab_t a, color_lab_t b);
 
 /*!
  * @function color_distance
@@ -1669,60 +1519,10 @@ void color_monochromatic(color_t base, color_t* colors, int count);             
 void color_gradient(color_t start, color_t end, color_t* colors, int count); // 1D gradient
 
 // Color space conversions with custom white points
-/*!
- * @function rgba_to_xyz_custom
- * @brief Converts an RGBA color to CIEXYZ color space using a custom white point.
- * @param rgba The input RGBA color.
- * @param wx The X component of the custom white point.
- * @param wy The Y component of the custom white point.
- * @param wz The Z component of the custom white point.
- * @return A color_xyz_t structure with XYZ tristimulus values and alpha.
- * @discussion This function converts RGBA to CIEXYZ color space using the specified custom white point instead of the standard D65 illuminant. This allows for color space conversions under different lighting conditions or for specific display characteristics.
-*/
-color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz);
 
-/*!
- * @function rgba_to_lab_custom
- * @brief Converts an RGBA color to CIELAB color space using a custom white point.
- * @param rgba The input RGBA color.
- * @param wx The X component of the custom white point.
- * @param wy The Y component of the custom white point.
- * @param wz The Z component of the custom white point.
- * @return A color_lab_t structure with L*, a*, b* components and alpha.
- * @discussion This function converts RGBA to CIELAB color space using the specified custom white point. CIELAB is designed to be perceptually uniform, making it ideal for color difference calculations under specific lighting conditions.
-*/
-color_lab_t rgba_to_lab_custom(color_t rgba, float wx, float wy, float wz);
 
 // Delta E calculations (color difference)
-/*!
- * @function color_delta_e_76
- * @brief Calculates the color difference using the CIE76 formula (Delta E CIE76).
- * @param a First color in CIELAB space.
- * @param b Second color in CIELAB space.
- * @return The Euclidean distance in CIELAB space (Delta E CIE76).
- * @discussion This function computes the straight-line Euclidean distance between two colors in CIELAB color space. This is a simple but effective color difference metric, though not as perceptually accurate as CIEDE2000.
-*/
-float color_delta_e_76(color_lab_t a, color_lab_t b);     // CIE76 formula
 
-/*!
- * @function color_delta_e_94
- * @brief Calculates the color difference using the CIE94 formula (Delta E CIE94).
- * @param a First color in CIELAB space.
- * @param b Second color in CIELAB space.
- * @return The color difference value using CIE94 weighting (Delta E CIE94).
- * @discussion This function computes color difference using the CIE94 formula, which applies different weighting factors to lightness, chroma, and hue differences. It provides better perceptual accuracy than CIE76, especially for small color differences.
-*/
-float color_delta_e_94(color_lab_t a, color_lab_t b);     // CIE94 formula
-
-/*!
- * @function color_delta_e_2000
- * @brief Calculates the color difference using the CIEDE2000 formula (Delta E CIEDE2000).
- * @param a First color in CIELAB space.
- * @param b Second color in CIELAB space.
- * @return The color difference value using CIEDE2000 weighting (Delta E CIEDE2000).
- * @discussion This function computes color difference using the CIEDE2000 formula, which is the most perceptually accurate color difference metric currently available. It accounts for perceptual non-uniformities in CIELAB space and provides excellent correlation with visual judgments.
-*/
-float color_delta_e_2000(color_lab_t a, color_lab_t b);   // CIEDE2000 formula
 
 // Levels adjustment
 /*!
@@ -2076,24 +1876,12 @@ color_t hsl(float h, float s, float l) {
     return hsla(h, s, l, 1.f);
 }
 
-color_t lab(float l, float a, float b, float alpha) {
-    return lab_to_rgba((color_lab_t){ l, a, b, alpha });
-}
-
-color_t xyz(float x, float y, float z, float a) {
-    return xyz_to_rgba((color_xyz_t){ x, y, z, a });
-}
-
 color_t yuv(float y, float u, float v, float a) {
     return yuv_to_rgba((color_yuv_t){ y, u, v, a });
 }
 
 color_t cmyk(float c, float m, float y, float k, float a) {
     return cmyk_to_rgba((color_cmyk_t){ c, m, y, k, a });
-}
-
-color_t rgb_565(uint16_t rgb565, uint8_t a) {
-    return rgb565_to_rgba((color_rgb_t565){ rgb565, a });
 }
 
 // Basic RGBA <-> RGBAf conversions
@@ -2258,103 +2046,7 @@ color_rgbaf_t hsla_to_rgbaf(color_hsla_t hsla) {
     return rgbaf;
 }
 
-// XYZ conversions (sRGB D65 white point)
-color_xyz_t rgba_to_xyz(color_t rgba) {
-    color_rgbaf_t rgbaf = rgba_to_rgbaf(rgba);
 
-    // Apply gamma correction (sRGB to linear RGB)
-    float r = (rgbaf.r > 0.04045f) ? powf((rgbaf.r + 0.055f) / 1.055f, 2.4f) : rgbaf.r / 12.92f;
-    float g = (rgbaf.g > 0.04045f) ? powf((rgbaf.g + 0.055f) / 1.055f, 2.4f) : rgbaf.g / 12.92f;
-    float b = (rgbaf.b > 0.04045f) ? powf((rgbaf.b + 0.055f) / 1.055f, 2.4f) : rgbaf.b / 12.92f;
-
-    color_xyz_t xyz;
-
-    // sRGB to XYZ matrix (D65)
-    xyz.x = r * 0.4124564f + g * 0.3575761f + b * 0.1804375f;
-    xyz.y = r * 0.2126729f + g * 0.7151522f + b * 0.0721750f;
-    xyz.z = r * 0.0193339f + g * 0.1191920f + b * 0.9503041f;
-    xyz.a = rgbaf.a;
-
-    return xyz;
-}
-
-color_t xyz_to_rgba(color_xyz_t xyz) {
-    // XYZ to sRGB matrix (D65)
-    float r = xyz.x *  3.2404542f + xyz.y * -1.5371385f + xyz.z * -0.4985314f;
-    float g = xyz.x * -0.9692660f + xyz.y *  1.8760108f + xyz.z *  0.0415560f;
-    float b = xyz.x *  0.0556434f + xyz.y * -0.2040259f + xyz.z *  1.0572252f;
-
-    // Apply gamma correction (linear RGB to sRGB)
-    r = (r > 0.0031308f) ? 1.055f * powf(r, 1.0f/2.4f) - 0.055f : 12.92f * r;
-    g = (g > 0.0031308f) ? 1.055f * powf(g, 1.0f/2.4f) - 0.055f : 12.92f * g;
-    b = (b > 0.0031308f) ? 1.055f * powf(b, 1.0f/2.4f) - 0.055f : 12.92f * b;
-
-    color_rgbaf_t rgbaf = {
-        _CLAMP_FLOAT(r),
-        _CLAMP_FLOAT(g),
-        _CLAMP_FLOAT(b),
-        xyz.a
-    };
-    return rgbaf_to_rgba(rgbaf);
-}
-
-// Lab conversions
-color_lab_t xyz_to_lab(color_xyz_t xyz) {
-    // D65 white point
-    const float xn = 0.95047f;
-    const float yn = 1.00000f;
-    const float zn = 1.08883f;
-
-    float x = xyz.x / xn;
-    float y = xyz.y / yn;
-    float z = xyz.z / zn;
-
-    // Apply Lab transformation
-    x = (x > 0.008856f) ? cbrtf(x) : (7.787f * x + 16.0f/116.0f);
-    y = (y > 0.008856f) ? cbrtf(y) : (7.787f * y + 16.0f/116.0f);
-    z = (z > 0.008856f) ? cbrtf(z) : (7.787f * z + 16.0f/116.0f);
-
-    color_lab_t lab;
-    lab.l = 116.0f * y - 16.0f;
-    lab.a = 500.0f * (x - y);
-    lab.b = 200.0f * (y - z);
-    lab.alpha = xyz.a;
-
-    return lab;
-}
-
-color_xyz_t lab_to_xyz(color_lab_t lab) {
-    // D65 white point
-    const float xn = 0.95047f;
-    const float yn = 1.00000f;
-    const float zn = 1.08883f;
-
-    float fy = (lab.l + 16.0f) / 116.0f;
-    float fx = lab.a / 500.0f + fy;
-    float fz = fy - lab.b / 200.0f;
-
-    float x = (fx > 0.206897f) ? fx*fx*fx : (fx - 16.0f/116.0f) / 7.787f;
-    float y = (fy > 0.206897f) ? fy*fy*fy : (fy - 16.0f/116.0f) / 7.787f;
-    float z = (fz > 0.206897f) ? fz*fz*fz : (fz - 16.0f/116.0f) / 7.787f;
-
-    color_xyz_t xyz;
-    xyz.x = x * xn;
-    xyz.y = y * yn;
-    xyz.z = z * zn;
-    xyz.a = lab.alpha;
-
-    return xyz;
-}
-
-color_lab_t rgba_to_lab(color_t rgba) {
-    color_xyz_t xyz = rgba_to_xyz(rgba);
-    return xyz_to_lab(xyz);
-}
-
-color_t lab_to_rgba(color_lab_t lab) {
-    color_xyz_t xyz = lab_to_xyz(lab);
-    return xyz_to_rgba(xyz);
-}
 
 // YUV conversions (BT.601)
 color_yuv_t rgba_to_yuv(color_t rgba) {
@@ -2418,44 +2110,9 @@ color_t cmyk_to_rgba(color_cmyk_t cmyk) {
     return rgbaf_to_rgba(rgbaf);
 }
 
-// RGB565 conversions
-color_rgb_t565 rgba_to_rgb565(color_t rgba) {
-    color_rgb_t565 rgb565;
 
-    // Convert to 5-6-5 format
-    uint16_t r = (rgba.r >> 3) & 0x1F;
-    uint16_t g = (rgba.g >> 2) & 0x3F;
-    uint16_t b = (rgba.b >> 3) & 0x1F;
 
-    rgb565.rgb565 = (r << 11) | (g << 5) | b;
-    rgb565.a = rgba.a;
 
-    return rgb565;
-}
-
-color_t rgb565_to_rgba(color_rgb_t565 rgb565) {
-    color_t rgba;
-
-    // Extract components
-    uint16_t r = (rgb565.rgb565 >> 11) & 0x1F;
-    uint16_t g = (rgb565.rgb565 >> 5) & 0x3F;
-    uint16_t b = rgb565.rgb565 & 0x1F;
-
-    // Scale back to 8-bit
-    rgba.r = (r << 3) | (r >> 2);
-    rgba.g = (g << 2) | (g >> 4);
-    rgba.b = (b << 3) | (b >> 2);
-    rgba.a = rgb565.a;
-
-    return rgba;
-}
-
-float color_distance_lab(color_lab_t a, color_lab_t b) {
-    float dl = a.l - b.l;
-    float da = a.a - b.a;
-    float db = a.b - b.b;
-    return sqrtf(dl*dl + da*da + db*db);
-}
 
 float color_distance(color_t a, color_t b) {
     int dr = a.r - b.r;
@@ -3199,173 +2856,9 @@ static float inverse_gamma_correct(float value) {
     }
 }
 
-// Convert RGBA to XYZ with custom white point
-color_xyz_t rgba_to_xyz_custom(color_t rgba, float wx, float wy, float wz) {
-    color_xyz_t xyz;
 
-    // Convert to 0-1 range and apply gamma correction
-    float r = gamma_correct(rgba.r / 255.0f);
-    float g = gamma_correct(rgba.g / 255.0f);
-    float b = gamma_correct(rgba.b / 255.0f);
 
-    // sRGB to XYZ matrix (D65 illuminant)
-    // Then scale by custom white point
-    float x = (0.4124564f * r + 0.3575761f * g + 0.1804375f * b) * wx;
-    float y = (0.2126729f * r + 0.7151522f * g + 0.0721750f * b) * wy;
-    float z = (0.0193339f * r + 0.1191920f * g + 0.9503041f * b) * wz;
 
-    xyz.x = x;
-    xyz.y = y;
-    xyz.z = z;
-    xyz.a = rgba.a / 255.0f;
-
-    return xyz;
-}
-
-// XYZ to LAB conversion helper
-static float xyz_to_lab_f(float t) {
-    const float delta = 6.0f / 29.0f;
-    const float delta_cubed = delta * delta * delta;
-
-    if (t > delta_cubed) {
-        return powf(t, 1.0f / 3.0f);
-    } else {
-        return t / (3.0f * delta * delta) + 4.0f / 29.0f;
-    }
-}
-
-// Convert RGBA to LAB with custom white point
-color_lab_t rgba_to_lab_custom(color_t rgba, float wx, float wy, float wz) {
-    color_lab_t lab;
-
-    // First convert to XYZ
-    color_xyz_t xyz = rgba_to_xyz_custom(rgba, wx, wy, wz);
-
-    // Normalize by white point
-    float xn = xyz.x / wx;
-    float yn = xyz.y / wy;
-    float zn = xyz.z / wz;
-
-    // Convert to LAB
-    float fx = xyz_to_lab_f(xn);
-    float fy = xyz_to_lab_f(yn);
-    float fz = xyz_to_lab_f(zn);
-
-    lab.l = 116.0f * fy - 16.0f;
-    lab.a = 500.0f * (fx - fy);
-    lab.b = 200.0f * (fy - fz);
-    lab.alpha = rgba.a / 255.0f;
-
-    return lab;
-}
-
-// Delta E CIE76 (simple Euclidean distance in LAB)
-float color_delta_e_76(color_lab_t a, color_lab_t b) {
-    float dl = a.l - b.l;
-    float da = a.a - b.a;
-    float db = a.b - b.b;
-
-    return sqrtf(dl*dl + da*da + db*db);
-}
-
-// Delta E CIE94 (improved formula with weighting)
-float color_delta_e_94(color_lab_t a, color_lab_t b) {
-    float dl = a.l - b.l;
-    float da = a.a - b.a;
-    float db = a.b - b.b;
-
-    float c1 = sqrtf(a.a * a.a + a.b * a.b);
-    float c2 = sqrtf(b.a * b.a + b.b * b.b);
-    float dc = c1 - c2;
-
-    float dh_squared = da*da + db*db - dc*dc;
-    float dh = (dh_squared < 0) ? 0 : sqrtf(dh_squared);
-
-    // Weighting factors for CIE94
-    float kl = 1.0f;
-    float kc = 1.0f;
-    float kh = 1.0f;
-
-    float sl = 1.0f;
-    float sc = 1.0f + 0.045f * c1;
-    float sh = 1.0f + 0.015f * c1;
-
-    float dl_term = dl / (kl * sl);
-    float dc_term = dc / (kc * sc);
-    float dh_term = dh / (kh * sh);
-
-    return sqrtf(dl_term*dl_term + dc_term*dc_term + dh_term*dh_term);
-}
-
-// Delta E CIEDE2000 (most perceptually accurate)
-float color_delta_e_2000(color_lab_t a, color_lab_t b) {
-    float l1 = a.l, a1 = a.a, b1 = a.b;
-    float l2 = b.l, a2 = b.a, b2 = b.b;
-
-    float lbar = (l1 + l2) / 2.0f;
-    float c1 = sqrtf(a1*a1 + b1*b1);
-    float c2 = sqrtf(a2*a2 + b2*b2);
-    float cbar = (c1 + c2) / 2.0f;
-
-    float cbar7 = powf(cbar, 7.0f);
-    float g = 0.5f * (1.0f - sqrtf(cbar7 / (cbar7 + powf(25.0f, 7.0f))));
-
-    float ap1 = (1.0f + g) * a1;
-    float ap2 = (1.0f + g) * a2;
-    float cp1 = sqrtf(ap1*ap1 + b1*b1);
-    float cp2 = sqrtf(ap2*ap2 + b2*b2);
-
-    float hp1 = (b1 == 0 && ap1 == 0) ? 0 : atan2f(b1, ap1) * 180.0f / M_PI;
-    float hp2 = (b2 == 0 && ap2 == 0) ? 0 : atan2f(b2, ap2) * 180.0f / M_PI;
-
-    if (hp1 < 0) hp1 += 360.0f;
-    if (hp2 < 0) hp2 += 360.0f;
-
-    float dl = l2 - l1;
-    float dc = cp2 - cp1;
-    float dhp = 0;
-
-    if (cp1 * cp2 != 0) {
-        dhp = hp2 - hp1;
-        if (dhp > 180.0f) dhp -= 360.0f;
-        if (dhp < -180.0f) dhp += 360.0f;
-    }
-
-    float dh = 2.0f * sqrtf(cp1 * cp2) * sinf(dhp * M_PI / 360.0f);
-
-    float cpbar = (cp1 + cp2) / 2.0f;
-    float hpbar = 0;
-
-    if (cp1 * cp2 != 0) {
-        hpbar = (hp1 + hp2) / 2.0f;
-        if (fabsf(hp1 - hp2) > 180.0f) {
-            if (hpbar < 180.0f) hpbar += 180.0f;
-            else hpbar -= 180.0f;
-        }
-    }
-
-    float t = 1.0f - 0.17f * cosf((hpbar - 30.0f) * M_PI / 180.0f) +
-              0.24f * cosf(2.0f * hpbar * M_PI / 180.0f) +
-              0.32f * cosf((3.0f * hpbar + 6.0f) * M_PI / 180.0f) -
-              0.20f * cosf((4.0f * hpbar - 63.0f) * M_PI / 180.0f);
-
-    float dt = 30.0f * expf(-powf((hpbar - 275.0f) / 25.0f, 2.0f));
-    float cpbar7 = powf(cpbar, 7.0f);
-    float rc = 2.0f * sqrtf(cpbar7 / (cpbar7 + powf(25.0f, 7.0f)));
-
-    float sl = 1.0f + (0.015f * powf(lbar - 50.0f, 2.0f)) / sqrtf(20.0f + powf(lbar - 50.0f, 2.0f));
-    float sc = 1.0f + 0.045f * cpbar;
-    float sh = 1.0f + 0.015f * cpbar * t;
-    float rt = -sinf(2.0f * dt * M_PI / 180.0f) * rc;
-
-    float kl = 1.0f, kc = 1.0f, kh = 1.0f;
-
-    float dl_term = dl / (kl * sl);
-    float dc_term = dc / (kc * sc);
-    float dh_term = dh / (kh * sh);
-
-    return sqrtf(dl_term*dl_term + dc_term*dc_term + dh_term*dh_term + rt * dc_term * dh_term);
-}
 
 // Levels adjustment: black point, white point, gamma
 color_t color_levels(color_t color, float black_point, float white_point, float gamma) {
