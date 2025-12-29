@@ -1283,7 +1283,7 @@ quat quat_from_mat4(mat4 mat) {
     }
 }
 
-#ifndef
+#ifndef PAUL_MATH_NO_MATRICES
 vec3 vec3_unproject(vec3 source, mat4 projection, mat4 view) {
     quat p = quat_transform(Quat(source.x, source.y, source.z, 1.f), mat4_invert(view * projection));
     return Vec3(p.x / p.w,

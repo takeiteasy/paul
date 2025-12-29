@@ -369,6 +369,13 @@ char str_char_at(const str_t s, size_t index);
 */
 wchar_t str_wchar_at(const str_t s, size_t index);
 
+/*!
+ @function str_free
+ @brief Release str resources
+ @param s The str_t object
+*/
+void str_free(str_t s);
+
 #ifdef __cplusplus
 }
 #endif
@@ -827,4 +834,12 @@ wchar_t str_wchar_at(const str_t s, size_t index) {
     return ((const wchar_t *)s)[index];
 }
 
+void str_free(str_t s) {
+    if (s == NULL)
+        return;
+    uint32_t type = STR_TYPE(s);
+    size_t header_size = STR_HEADER_SIZE(type);
+    void *base_ptr = (char *)s - header_size;
+    free(base_ptr);
+}
 #endif // PAUL_STRING_IMPLEMENTATION
