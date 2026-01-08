@@ -8,16 +8,16 @@ A collection of header-only, zero-dependency, platform-agnostic C libraries.
 
 | Library | Min. C version | Notes |
 |:---:|:---:|:---:|
-| `paul_bitmap.h` | ?? | Bitmap manipulation utilities (optionally supports `paul_color`) |
-| `paul_bignum.h` | ?? | Big number library. Big int, float (real), and complex |
-| `paul_color.h` | ?? | Color manipulation utilities |
-| `paul_ecs.h` | ?? | Barebones pure entity-component-system (uses sparse arrays) |
-| `paul_list.h`¹ | ?? | Dynamic array (stretch-buffer) implementation |
+| `paul_bitmap.h` | C99 | Bitmap manipulation utilities (optionally supports `paul_color`) |
+| `paul_color.h` | C11 | Color manipulation utilities |
+| `paul_ecs.h` | C99 | Barebones pure entity-component-system (uses sparse arrays) |
+| `paul_list.h`¹ | C99 | Dynamic array (stretch-buffer) implementation |
 | `paul_math.h`³ | C11* | Linear algebra, vector + matrix math |
-| `paul_random.h`² | ?? | Pseudo-random number generation and noise functions |
+| `paul_random.h`² | C99 | Pseudo-random number generation and noise functions |
+| `paul_shell.h`⁵ | C99 | Embeddable bourne-like shell |
 | `paul_string.h` | C11 | Unified ascii+wide string type |
 | `paul_table.h`⁴ | C11† | Lua-like hash table implementation |
-| `paul_threads.h` | ?? | Thread pool + job queue |
+| `paul_threads.h` | C99 | Thread pool + job queue |
 
 ### Legend
 
@@ -29,6 +29,7 @@ A collection of header-only, zero-dependency, platform-agnostic C libraries.
 - 2: Uses prng generation from [prng](https://github.com/rdadolf/prng/tree/master) by rdadolf (Bob Adolf)
 - 3: Easing code taken from raylib's [reasing.h](https://github.com/raysan5/raylib/blob/master/examples/others/reasings.h) by raysan5 (Ramon Santamaria)
 - 4: Based on [imap](https://github.com/billziss-gh/imap) by billziss-gh (Bill Zissimopoulos)
+- 5: Based on [psh](https://github.com/proh14/psh) by proh14 (Hoorad Farrokh)
 
 ## LICENSE
 

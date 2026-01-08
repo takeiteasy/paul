@@ -321,6 +321,9 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/c/func/str_find_char" target="_top">str_find_char</a></tt></dt>
 <dd><p>Find the first occurrence of ASCII character c in s (ASCII only).
 </p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/str_free" target="_top">str_free</a></tt></dt>
+<dd><p>Release str resources
+</p></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/str_from_cstr" target="_top">str_from_cstr</a></tt></dt>
 <dd><p>Create a `str_t` from a NUL-terminated C string (ASCII).
 </p></dd>
@@ -735,6 +738,29 @@ character classes like [a-z] or [^aeiou].
 <p>Index or (size_t)-1 if not found.
 
 <!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/str_free;   name=str_free -->
+<a name="//apple_ref/c/func/str_free"></a>
+<h3><a name="str_free">str_free</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_free;name=start --><!-- begin abstract --></p>
+<p>Release str resources
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/str_free;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/str_free;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/str_free" logicalPath="//apple_ref/c/instm/str_free //apple_ref/c/clm/str_free //apple_ref/c/intfcm/str_free //apple_ref/c/intfm/str_free //apple_ref/c/func/str_free" target="_top"><span class="function">str_free</span></a>(
+    <a machinegenerated="true" href="index.html#//apple_ref/c/tdef/str_t" logicalPath="//apple_ref/c/cl/str_t //apple_ref/c/tdef/str_t" target="_top"><span class="type">str_t</span></a> <span class="param">s</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/str_free;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/str_free/s;   name=s -->
+<a name="//apple_ref/doc/functionparam/str_free/s"></a>
+<code>s</code>
+</dt>
+<dd><p>The str_t object</p></dd>
+</dl>
+</div>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/str_from_cstr;   name=str_from_cstr -->
 <a name="//apple_ref/c/func/str_from_cstr"></a>
