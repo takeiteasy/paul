@@ -1,4 +1,4 @@
-/* paul/paul_list.h -- https://github.com/takeiteasy/paul
+/* paul_list.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2024  George Watson
 

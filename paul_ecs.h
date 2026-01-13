@@ -1,4 +1,4 @@
-/* paul/paul_ecs.h -- https://github.com/takeiteasy/paul
+/* paul_ecs.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025 George Watson
 
@@ -269,7 +269,7 @@ void ecs_query(world_t *world, system_t fn, filter_system_t filter, int componen
 #endif
 #endif // PAUL_ECS_HEAD
 
-#ifdef PAUL_ECS_IMPLEMENTATION
+#if defined(PAUL_ECS_IMPLEMENTATION) || defined(PAUL_IMPLEMENTATION)
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -654,4 +654,3 @@ void ecs_step(world_t *world) {
     }
 }
 #endif
-

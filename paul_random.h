@@ -1,4 +1,4 @@
-/* paul/paul_random.h -- https://github.com/takeiteasy/paul
+/* paul_random.h -- https://github.com/takeiteasy/paul
 
  Copyright (C) 2025 George Watson
 

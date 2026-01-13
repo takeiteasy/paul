@@ -299,10 +299,30 @@ function disclosure_triangle(elt) {
 <h2 class="h2tight">Functions</h2>
 <dl>
 <dt><tt><a href="index.html#//apple_ref/c/func/shell" target="_top">shell</a></tt></dt>
-<dd><p>Main entry point: execute the command line `cmd` with I/O control via `io`. If `io` is NULL, no I/O capture or streaming is performed. Returns child's exit code (non-negative) or negative error code.
+<dd><p>Execute command using the default context.
 </p></dd>
-<dt><tt><a href="index.html#//apple_ref/c/func/shell_fmt" target="_top">shell_fmt</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_ctx_add_builtin" target="_top">shell_ctx_add_builtin</a></tt></dt>
+<dd><p>Register a builtin command. Overrides existing builtins with the same name.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_ctx_blacklist_cmd" target="_top">shell_ctx_blacklist_cmd</a></tt></dt>
+<dd><p>Add a command name to the blacklist (e.g., "rm").
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_ctx_blacklist_path" target="_top">shell_ctx_blacklist_path</a></tt></dt>
+<dd><p>Add a path to the blacklist (preventing redirection or execution).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_ctx_create" target="_top">shell_ctx_create</a></tt></dt>
 <dd></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_ctx_destroy" target="_top">shell_ctx_destroy</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_fmt" target="_top">shell_fmt</a></tt></dt>
+<dd><p>Format and execute command using the default context.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_set_default_ctx" target="_top">shell_set_default_ctx</a></tt></dt>
+<dd><p>Sets the global default context used by `shell()`.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/shell_with_ctx" target="_top">shell_with_ctx</a></tt></dt>
+<dd><p>Execute command using a specific context.
+</p></dd>
 </dl>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/shell;   name=shell -->
@@ -310,68 +330,138 @@ function disclosure_triangle(elt) {
 <h3><a name="shell">shell</a></h3>
 <hr class="afterName">
 <p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell;name=start --><!-- begin abstract --></p>
-<p>Main entry point: execute the command line `cmd` with I/O control via `io`. If `io` is NULL, no I/O capture or streaming is performed. Returns child's exit code (non-negative) or negative error code.
+<p>Execute command using the default context.
 <!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell;name=end --></p>
 <div class="declaration_indent">
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell" logicalPath="//apple_ref/c/instm/shell //apple_ref/c/clm/shell //apple_ref/c/intfcm/shell //apple_ref/c/intfm/shell //apple_ref/c/func/shell" target="_top"><span class="function">shell</span></a>(
     <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">cmd</span>,
     <!-- a logicalPath="//apple_ref/c/cl/shell_io //apple_ref/c/tdef/shell_io //apple_ref/c/tag/shell_io //apple_ref/c/struct/shell_io //apple_ref/c/intf/shell_io //apple_ref/doc/anysymbol/shell_io" machineGenerated="true" --><span class="type">shell_io</span><!-- /a --> <span class="type">*</span><span class="param">io</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell;name=end --></pre>
 </div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_ctx_add_builtin;   name=shell_ctx_add_builtin -->
+<a name="//apple_ref/c/func/shell_ctx_add_builtin"></a>
+<h3><a name="shell_ctx_add_builtin">shell_ctx_add_builtin</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_add_builtin;name=start --><!-- begin abstract --></p>
+<p>Register a builtin command. Overrides existing builtins with the same name.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_add_builtin;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_add_builtin;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_ctx_add_builtin" logicalPath="//apple_ref/c/instm/shell_ctx_add_builtin //apple_ref/c/clm/shell_ctx_add_builtin //apple_ref/c/intfcm/shell_ctx_add_builtin //apple_ref/c/intfm/shell_ctx_add_builtin //apple_ref/c/func/shell_ctx_add_builtin" target="_top"><span class="function">shell_ctx_add_builtin</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>,
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">name</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/shell_builtin_func_t //apple_ref/c/tdef/shell_builtin_func_t //apple_ref/c/tag/shell_builtin_func_t //apple_ref/c/struct/shell_builtin_func_t //apple_ref/c/intf/shell_builtin_func_t //apple_ref/doc/anysymbol/shell_builtin_func_t" machineGenerated="true" --><span class="type">shell_builtin_func_t</span><!-- /a --> <span class="param">func</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_add_builtin;name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_ctx_blacklist_cmd;   name=shell_ctx_blacklist_cmd -->
+<a name="//apple_ref/c/func/shell_ctx_blacklist_cmd"></a>
+<h3><a name="shell_ctx_blacklist_cmd">shell_ctx_blacklist_cmd</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_blacklist_cmd;name=start --><!-- begin abstract --></p>
+<p>Add a command name to the blacklist (e.g., "rm").
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_blacklist_cmd;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_blacklist_cmd;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_ctx_blacklist_cmd" logicalPath="//apple_ref/c/instm/shell_ctx_blacklist_cmd //apple_ref/c/clm/shell_ctx_blacklist_cmd //apple_ref/c/intfcm/shell_ctx_blacklist_cmd //apple_ref/c/intfm/shell_ctx_blacklist_cmd //apple_ref/c/func/shell_ctx_blacklist_cmd" target="_top"><span class="function">shell_ctx_blacklist_cmd</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>,
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">cmd</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_blacklist_cmd;name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_ctx_blacklist_path;   name=shell_ctx_blacklist_path -->
+<a name="//apple_ref/c/func/shell_ctx_blacklist_path"></a>
+<h3><a name="shell_ctx_blacklist_path">shell_ctx_blacklist_path</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_blacklist_path;name=start --><!-- begin abstract --></p>
+<p>Add a path to the blacklist (preventing redirection or execution).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_ctx_blacklist_path;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_blacklist_path;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_ctx_blacklist_path" logicalPath="//apple_ref/c/instm/shell_ctx_blacklist_path //apple_ref/c/clm/shell_ctx_blacklist_path //apple_ref/c/intfcm/shell_ctx_blacklist_path //apple_ref/c/intfm/shell_ctx_blacklist_path //apple_ref/c/func/shell_ctx_blacklist_path" target="_top"><span class="function">shell_ctx_blacklist_path</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>,
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">path</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_blacklist_path;name=end --></pre>
+</div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_ctx_create;   name=shell_ctx_create -->
+<a name="//apple_ref/c/func/shell_ctx_create"></a>
+<h3><a name="shell_ctx_create">shell_ctx_create</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_create;name=start --><!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --><span class="type">*</span> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_ctx_create" logicalPath="//apple_ref/c/instm/shell_ctx_create //apple_ref/c/clm/shell_ctx_create //apple_ref/c/intfcm/shell_ctx_create //apple_ref/c/intfm/shell_ctx_create //apple_ref/c/func/shell_ctx_create" target="_top"><span class="function">shell_ctx_create</span></a>(
+    <span class="param">void</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_create;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>A new shell context with default settings (standard builtins enabled).
+
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_ctx_destroy;   name=shell_ctx_destroy -->
+<a name="//apple_ref/c/func/shell_ctx_destroy"></a>
+<h3><a name="shell_ctx_destroy">shell_ctx_destroy</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_destroy;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_ctx_destroy" logicalPath="//apple_ref/c/instm/shell_ctx_destroy //apple_ref/c/clm/shell_ctx_destroy //apple_ref/c/intfcm/shell_ctx_destroy //apple_ref/c/intfm/shell_ctx_destroy //apple_ref/c/func/shell_ctx_destroy" target="_top"><span class="function">shell_ctx_destroy</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_ctx_destroy;name=end --></pre>
+</div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
 <div class="param_indent">
 <dl>
 <dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell/cmd;   name=cmd -->
-<a name="//apple_ref/doc/functionparam/shell/cmd"></a>
-<code>cmd</code>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell_ctx_destroy/ctx;   name=ctx -->
+<a name="//apple_ref/doc/functionparam/shell_ctx_destroy/ctx"></a>
+<code>ctx</code>
 </dt>
-<dd><p>The shell command to execute</p></dd>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell/io;   name=io -->
-<a name="//apple_ref/doc/functionparam/shell/io"></a>
-<code>io</code>
-</dt>
-<dd><p>The io object to capture command output (nilable)</p></dd>
+<dd><p>The context to destroy.</p></dd>
 </dl>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>Returns last command's status code
-
-<!-- end return value --></p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/shell_fmt;   name=shell_fmt -->
 <a name="//apple_ref/c/func/shell_fmt"></a>
 <h3><a name="shell_fmt">shell_fmt</a></h3>
 <hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_fmt;name=start --><!-- begin abstract --></p>
+<p>Format and execute command using the default context.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_fmt;name=end --></p>
 <div class="declaration_indent">
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_fmt;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_fmt" logicalPath="//apple_ref/c/instm/shell_fmt //apple_ref/c/clm/shell_fmt //apple_ref/c/intfcm/shell_fmt //apple_ref/c/intfm/shell_fmt //apple_ref/c/func/shell_fmt" target="_top"><span class="function">shell_fmt</span></a>(
     <!-- a logicalPath="//apple_ref/c/cl/shell_io //apple_ref/c/tdef/shell_io //apple_ref/c/tag/shell_io //apple_ref/c/struct/shell_io //apple_ref/c/intf/shell_io //apple_ref/doc/anysymbol/shell_io" machineGenerated="true" --><span class="type">shell_io</span><!-- /a --> <span class="type">*</span><span class="param">io</span>,
     <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">fmt</span>,
     ...);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_fmt;name=end --></pre>
 </div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_set_default_ctx;   name=shell_set_default_ctx -->
+<a name="//apple_ref/c/func/shell_set_default_ctx"></a>
+<h3><a name="shell_set_default_ctx">shell_set_default_ctx</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_set_default_ctx;name=start --><!-- begin abstract --></p>
+<p>Sets the global default context used by `shell()`.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_set_default_ctx;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_set_default_ctx;name=start --><!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_set_default_ctx" logicalPath="//apple_ref/c/instm/shell_set_default_ctx //apple_ref/c/clm/shell_set_default_ctx //apple_ref/c/intfcm/shell_set_default_ctx //apple_ref/c/intfm/shell_set_default_ctx //apple_ref/c/func/shell_set_default_ctx" target="_top"><span class="function">shell_set_default_ctx</span></a>(
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_set_default_ctx;name=end --></pre>
+</div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
 <div class="param_indent">
 <dl>
 <dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell_fmt/io;   name=io -->
-<a name="//apple_ref/doc/functionparam/shell_fmt/io"></a>
-<code>io</code>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell_set_default_ctx/ctx;   name=ctx -->
+<a name="//apple_ref/doc/functionparam/shell_set_default_ctx/ctx"></a>
+<code>ctx</code>
 </dt>
-<dd><p>The io object to capture command output (nilable)</p></dd>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/shell_fmt/fmt;   name=fmt -->
-<a name="//apple_ref/doc/functionparam/shell_fmt/fmt"></a>
-<code>fmt</code>
-</dt>
-<dd><p>The shell command to format and execute</p></dd>
+<dd><p>The context to use. If NULL, `shell()` creates a temporary context per call.</p></dd>
 </dl>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>Returns last command's status code
-
-<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/shell_with_ctx;   name=shell_with_ctx -->
+<a name="//apple_ref/c/func/shell_with_ctx"></a>
+<h3><a name="shell_with_ctx">shell_with_ctx</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_with_ctx;name=start --><!-- begin abstract --></p>
+<p>Execute command using a specific context.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/c/func/shell_with_ctx;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_with_ctx;name=start --><!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --><span class="type">int</span><!-- /a --> <a machinegenerated="true" href="index.html#//apple_ref/c/func/shell_with_ctx" logicalPath="//apple_ref/c/instm/shell_with_ctx //apple_ref/c/clm/shell_with_ctx //apple_ref/c/intfcm/shell_with_ctx //apple_ref/c/intfm/shell_with_ctx //apple_ref/c/func/shell_with_ctx" target="_top"><span class="function">shell_with_ctx</span></a>(
+    <span class="keyword">const</span> <!-- a logicalPath="//apple_ref/c/cl/char //apple_ref/c/tdef/char //apple_ref/c/tag/char //apple_ref/c/struct/char //apple_ref/c/intf/char //apple_ref/doc/anysymbol/char" machineGenerated="true" --><span class="type">char</span><!-- /a --> <span class="type">*</span><span class="param">cmd</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/shell_io //apple_ref/c/tdef/shell_io //apple_ref/c/tag/shell_io //apple_ref/c/struct/shell_io //apple_ref/c/intf/shell_io //apple_ref/doc/anysymbol/shell_io" machineGenerated="true" --><span class="type">shell_io</span><!-- /a --> <span class="type">*</span><span class="param">io</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/shell_ctx //apple_ref/c/tdef/shell_ctx //apple_ref/c/tag/shell_ctx //apple_ref/c/struct/shell_ctx //apple_ref/c/intf/shell_ctx //apple_ref/doc/anysymbol/shell_ctx" machineGenerated="true" --><span class="type">shell_ctx</span><!-- /a --> <span class="type">*</span><span class="param">ctx</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/func/shell_with_ctx;name=end --></pre>
+</div>
 <p class="gapBeforeFooter"> </p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
