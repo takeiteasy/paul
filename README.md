@@ -10,12 +10,13 @@ A collection of header-only, zero-dependency, platform-agnostic C libraries.
 |:---:|:---:|:---:|
 | `paul_ecs.h` | C99 | Barebones pure entity-component-system (uses sparse arrays) |
 | `paul_list.h`³ | ?? | Dynamic array (stretch-buffer) implementation |
+| `paul_os.h` | C11 | Path and file library for Windows, Posix, and MacOS |
 | `paul_format.h` | C11 | Common Lisp `format` port |
 | `paul_random.h`¹ | C99 | Pseudo-random number generation and noise functions |
 | `paul_shell.h`² | C99 | Embeddable bourne-like shell |
 | `paul_string.h` | C11 | Unified ascii+wide string type |
 | `paul_table.h`⁴ | C11† | Lua-like hash table implementation |
-| `paul_threads.h` | C99 | Thread pool + job queue |
+| `paul_threads.h` | C99 | Thread pool + job queue for Windows and pthread |
 
 ### Legend
 

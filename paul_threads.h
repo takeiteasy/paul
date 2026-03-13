@@ -46,13 +46,20 @@ typedef CONDITION_VARIABLE cnd_t;
 typedef HANDLE thrd_t;
 typedef volatile LONG atomic_bool;
 typedef volatile LONG atomic_size_t;
+#define thrd_yield() SwitchToThread()
 #else
 #include <pthread.h>
 typedef pthread_mutex_t mtx_t;
 typedef pthread_cond_t cnd_t;
 typedef pthread_t thrd_t;
+#ifndef __APPLE__
 typedef volatile int atomic_bool;
 typedef volatile size_t atomic_size_t;
+#else
+#include <stdatomic.h>
+#include <sys/sysctl.h>
+#endif
+#define thrd_yield() sched_yield()
 #endif
 #endif
 
@@ -309,10 +316,12 @@ int thrd_join(thrd_t thr, int *res) {
     return thrd_success;
 }
 #else
+#ifndef __APPLE__
 #define atomic_store(PTR, VAL) __atomic_store_n((PTR), (VAL), __ATOMIC_SEQ_CST)
 #define atomic_load(PTR) __atomic_load_n((PTR), __ATOMIC_SEQ_CST)
 #define atomic_fetch_add(PTR, VAL) __atomic_fetch_add((PTR), (VAL), __ATOMIC_SEQ_CST)
 #define atomic_fetch_sub(PTR, VAL) __atomic_fetch_sub((PTR), (VAL), __ATOMIC_SEQ_CST)
+#endif
 
 int mtx_init(mtx_t *mtx, int type) {
     pthread_mutexattr_t attr;
@@ -647,4 +656,31 @@ size_t thrd_pool_get_queue_size(thrd_pool_t *pool) {
     mtx_unlock(&pool->job_queue.mutex);
     return size;
 }
+
+unsigned int thread_hardware_concurrency(void) {
+#ifdef PAUL_THREADS_PLATFORM_WINDOWS
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo(&sysinfo);
+    return sysinfo.dwNumberOfProcessors;
+#elif defined(__APPLE__)
+    int nm[2];
+    size_t len = 4;
+    uint32_t count;
+
+    nm[0] = CTL_HW;
+    nm[1] = HW_AVAILCPU;
+    sysctl(nm, 2, &count, &len, NULL, 0);
+
+    if(count < 1) {
+        nm[1] = HW_NCPU;
+        sysctl(nm, 2, &count, &len, NULL, 0);
+        if(count < 1) { count = 1; }
+    }
+    return count;
+#else
+    long nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    return nprocs > 0 ? (unsigned int)nprocs : 0;
+#endif
+}
+
 #endif // PAUL_THREADS_IMPLEMENTATION
